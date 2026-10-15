@@ -1,0 +1,49 @@
+# Overrides the generator's own `pyproject_uv.toml.jinja`.
+#
+# The default has `authors = []` and no licence, no repository and no
+# keywords, which is not a package anybody should publish. Everything added
+# below is a constant of this project rather than a fact about the API, so
+# it lives here instead of in `openapi.json` — the document describes the
+# API, not who ships a client for it.
+#
+# `name`, `version` and `description` still come from the spec, so bumping
+# the API's `info.version` is what releases the client.
+# `prd/one-source-of-capability.md`.
+[project]
+name = "pidgeon"
+version = "1.2.0"
+description = "A client library for accessing Pidgeon API"
+authors = [{ name = "Pidgeon" }]
+requires-python = ">=3.11"
+readme = "README.md"
+license = "MIT"
+keywords = ["pidgeon", "email", "webhooks", "api-client", "agents"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Topic :: Communications :: Email",
+    "Typing :: Typed",
+]
+dependencies = [
+    "httpx>=0.23.1,<0.29.0",
+    "attrs>=22.2.0",
+]
+
+[project.urls]
+Homepage = "https://pidgeon.ai"
+Documentation = "https://pidgeon.ai/docs"
+Repository = "https://github.com/pidgeon-ai/pidgeon-python"
+
+[tool.uv.build-backend]
+module-name = "pidgeon"
+module-root = ""
+
+[build-system]
+requires = ["uv_build>=0.12.0,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["F", "I", "UP"]

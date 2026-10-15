@@ -1,0 +1,236 @@
+from http import HTTPStatus
+from typing import Any
+from uuid import UUID
+
+import httpx
+
+from ... import errors
+from ...client import AuthenticatedClient, Client
+from ...models.error import Error
+from ...models.mailboxes_changes_response_200 import MailboxesChangesResponse200
+from ...types import UNSET, Response, Unset
+
+
+def _get_kwargs(
+    *,
+    identity_id: UUID,
+    since: str,
+    limit: int | Unset = 100,
+) -> dict[str, Any]:
+
+    params: dict[str, Any] = {}
+
+    json_identity_id = str(identity_id)
+    params["identity_id"] = json_identity_id
+
+    params["since"] = since
+
+    params["limit"] = limit
+
+    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+
+    _kwargs: dict[str, Any] = {
+        "method": "get",
+        "url": "/mailboxes/changes",
+        "params": params,
+    }
+
+    return _kwargs
+
+
+def _parse_response(
+    *, client: AuthenticatedClient | Client, response: httpx.Response
+) -> Error | MailboxesChangesResponse200 | None:
+    if response.status_code == 200:
+        response_200 = MailboxesChangesResponse200.from_dict(response.json())
+
+        return response_200
+
+    if response.status_code == 401:
+        response_401 = Error.from_dict(response.json())
+
+        return response_401
+
+    if response.status_code == 404:
+        response_404 = Error.from_dict(response.json())
+
+        return response_404
+
+    if response.status_code == 429:
+        response_429 = Error.from_dict(response.json())
+
+        return response_429
+
+    if client.raise_on_unexpected_status:
+        raise errors.UnexpectedStatus(response.status_code, response.content)
+    else:
+        return None
+
+
+def _build_response(
+    *, client: AuthenticatedClient | Client, response: httpx.Response
+) -> Response[Error | MailboxesChangesResponse200]:
+    return Response(
+        status_code=HTTPStatus(response.status_code),
+        content=response.content,
+        headers=response.headers,
+        parsed=_parse_response(client=client, response=response),
+    )
+
+
+def sync_detailed(
+    *,
+    client: AuthenticatedClient | Client,
+    identity_id: UUID,
+    since: str,
+    limit: int | Unset = 100,
+) -> Response[Error | MailboxesChangesResponse200]:
+    """What changed since you last looked
+
+     Per mailbox, not per folder: a message moving from the inbox to the archive is one event, and the
+    row says where it went. Arrivals are included, so this is the only thing to poll. `since` is the
+    `sync_cursor` from a listing or the `next_cursor` from a previous delta — **not** a page cursor,
+    which walks a different order and is refused rather than guessed at. A cursor older than the window
+    in which we keep the record of what was deleted returns `410 resync`, because an empty delta would
+    be indistinguishable from "nothing changed".
+
+    Args:
+        identity_id (UUID):
+        since (str):
+        limit (int | Unset):  Default: 100.
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
+
+    Returns:
+        Response[Error | MailboxesChangesResponse200]
+    """
+
+    kwargs = _get_kwargs(
+        identity_id=identity_id,
+        since=since,
+        limit=limit,
+    )
+
+    response = client.get_httpx_client().request(
+        **kwargs,
+    )
+
+    return _build_response(client=client, response=response)
+
+
+def sync(
+    *,
+    client: AuthenticatedClient | Client,
+    identity_id: UUID,
+    since: str,
+    limit: int | Unset = 100,
+) -> Error | MailboxesChangesResponse200 | None:
+    """What changed since you last looked
+
+     Per mailbox, not per folder: a message moving from the inbox to the archive is one event, and the
+    row says where it went. Arrivals are included, so this is the only thing to poll. `since` is the
+    `sync_cursor` from a listing or the `next_cursor` from a previous delta — **not** a page cursor,
+    which walks a different order and is refused rather than guessed at. A cursor older than the window
+    in which we keep the record of what was deleted returns `410 resync`, because an empty delta would
+    be indistinguishable from "nothing changed".
+
+    Args:
+        identity_id (UUID):
+        since (str):
+        limit (int | Unset):  Default: 100.
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
+
+    Returns:
+        Error | MailboxesChangesResponse200
+    """
+
+    return sync_detailed(
+        client=client,
+        identity_id=identity_id,
+        since=since,
+        limit=limit,
+    ).parsed
+
+
+async def asyncio_detailed(
+    *,
+    client: AuthenticatedClient | Client,
+    identity_id: UUID,
+    since: str,
+    limit: int | Unset = 100,
+) -> Response[Error | MailboxesChangesResponse200]:
+    """What changed since you last looked
+
+     Per mailbox, not per folder: a message moving from the inbox to the archive is one event, and the
+    row says where it went. Arrivals are included, so this is the only thing to poll. `since` is the
+    `sync_cursor` from a listing or the `next_cursor` from a previous delta — **not** a page cursor,
+    which walks a different order and is refused rather than guessed at. A cursor older than the window
+    in which we keep the record of what was deleted returns `410 resync`, because an empty delta would
+    be indistinguishable from "nothing changed".
+
+    Args:
+        identity_id (UUID):
+        since (str):
+        limit (int | Unset):  Default: 100.
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
+
+    Returns:
+        Response[Error | MailboxesChangesResponse200]
+    """
+
+    kwargs = _get_kwargs(
+        identity_id=identity_id,
+        since=since,
+        limit=limit,
+    )
+
+    response = await client.get_async_httpx_client().request(**kwargs)
+
+    return _build_response(client=client, response=response)
+
+
+async def asyncio(
+    *,
+    client: AuthenticatedClient | Client,
+    identity_id: UUID,
+    since: str,
+    limit: int | Unset = 100,
+) -> Error | MailboxesChangesResponse200 | None:
+    """What changed since you last looked
+
+     Per mailbox, not per folder: a message moving from the inbox to the archive is one event, and the
+    row says where it went. Arrivals are included, so this is the only thing to poll. `since` is the
+    `sync_cursor` from a listing or the `next_cursor` from a previous delta — **not** a page cursor,
+    which walks a different order and is refused rather than guessed at. A cursor older than the window
+    in which we keep the record of what was deleted returns `410 resync`, because an empty delta would
+    be indistinguishable from "nothing changed".
+
+    Args:
+        identity_id (UUID):
+        since (str):
+        limit (int | Unset):  Default: 100.
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
+
+    Returns:
+        Error | MailboxesChangesResponse200
+    """
+
+    return (
+        await asyncio_detailed(
+            client=client,
+            identity_id=identity_id,
+            since=since,
+            limit=limit,
+        )
+    ).parsed

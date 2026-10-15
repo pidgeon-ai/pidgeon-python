@@ -1,0 +1,32 @@
+from enum import StrEnum
+
+
+class WebhooksCreateBodyEventTypesItem(StrEnum):
+    CALENDAR_EVENT_CREATED = "calendar.event.created"
+    CALENDAR_EVENT_DELETED = "calendar.event.deleted"
+    CALENDAR_EVENT_ENDING = "calendar.event.ending"
+    CALENDAR_EVENT_RESPONDED = "calendar.event.responded"
+    CALENDAR_EVENT_STARTING = "calendar.event.starting"
+    CALENDAR_EVENT_UPDATED = "calendar.event.updated"
+    DOMAIN_VERIFIED = "domain.verified"
+    IDENTITY_CREATED = "identity.created"
+    IDENTITY_SUSPENDED = "identity.suspended"
+    IDENTITY_TRANSFERRED = "identity.transferred"
+    IDENTITY_UPDATED = "identity.updated"
+    MESSAGE_ARCHIVED = "message.archived"
+    MESSAGE_BOUNCED = "message.bounced"
+    MESSAGE_COMPLAINED = "message.complained"
+    MESSAGE_DELETED = "message.deleted"
+    MESSAGE_DELIVERED = "message.delivered"
+    MESSAGE_INVITATION = "message.invitation"
+    MESSAGE_RECEIVED = "message.received"
+    MESSAGE_REJECTED = "message.rejected"
+    MESSAGE_SENT = "message.sent"
+    MESSAGE_SPAM = "message.spam"
+    THREAD_ASSIGNED = "thread.assigned"
+    THREAD_CREATED = "thread.created"
+    THREAD_UNASSIGNED = "thread.unassigned"
+    THREAD_UPDATED = "thread.updated"
+
+    def __str__(self) -> str:
+        return str(self.value)
