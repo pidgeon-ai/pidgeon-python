@@ -109,6 +109,11 @@ def sync_detailed(
     receive a webhook does: ask for everything since the last event you saw, act on it, and keep the
     last `created_at` as the next cursor. Naming both is refused — they are different reads.
 
+    **Starting from nothing: pass `after=1970-01-01T00:00:00Z`.** With neither parameter this answers
+    newest first, so a first-time consumer that takes the last row as its high-water mark stores the
+    *oldest* event in the log and never advances. Any timestamp at or before the oldest event you hold
+    will do; the epoch is the one nobody has to think about.
+
     A forward page is ordered oldest first precisely so its **last** row is the high-water mark to
     resume from; `next_cursor` is that row either way.
 
@@ -161,6 +166,11 @@ def sync(
     receive a webhook does: ask for everything since the last event you saw, act on it, and keep the
     last `created_at` as the next cursor. Naming both is refused — they are different reads.
 
+    **Starting from nothing: pass `after=1970-01-01T00:00:00Z`.** With neither parameter this answers
+    newest first, so a first-time consumer that takes the last row as its high-water mark stores the
+    *oldest* event in the log and never advances. Any timestamp at or before the oldest event you hold
+    will do; the epoch is the one nobody has to think about.
+
     A forward page is ordered oldest first precisely so its **last** row is the high-water mark to
     resume from; `next_cursor` is that row either way.
 
@@ -207,6 +217,11 @@ async def asyncio_detailed(
     dashboard shows. `after` tails the log forwards, oldest first, which is what a caller that cannot
     receive a webhook does: ask for everything since the last event you saw, act on it, and keep the
     last `created_at` as the next cursor. Naming both is refused — they are different reads.
+
+    **Starting from nothing: pass `after=1970-01-01T00:00:00Z`.** With neither parameter this answers
+    newest first, so a first-time consumer that takes the last row as its high-water mark stores the
+    *oldest* event in the log and never advances. Any timestamp at or before the oldest event you hold
+    will do; the epoch is the one nobody has to think about.
 
     A forward page is ordered oldest first precisely so its **last** row is the high-water mark to
     resume from; `next_cursor` is that row either way.
@@ -257,6 +272,11 @@ async def asyncio(
     dashboard shows. `after` tails the log forwards, oldest first, which is what a caller that cannot
     receive a webhook does: ask for everything since the last event you saw, act on it, and keep the
     last `created_at` as the next cursor. Naming both is refused — they are different reads.
+
+    **Starting from nothing: pass `after=1970-01-01T00:00:00Z`.** With neither parameter this answers
+    newest first, so a first-time consumer that takes the last row as its high-water mark stores the
+    *oldest* event in the log and never advances. Any timestamp at or before the oldest event you hold
+    will do; the epoch is the one nobody has to think about.
 
     A forward page is ordered oldest first precisely so its **last** row is the high-water mark to
     resume from; `next_cursor` is that row either way.

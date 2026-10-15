@@ -177,8 +177,10 @@ from .member import Member
 from .member_role import MemberRole
 from .message import Message
 from .message_attachments_item import MessageAttachmentsItem
+from .message_authentication import MessageAuthentication
 from .message_cc_item import MessageCcItem
 from .message_from import MessageFrom
+from .message_headers import MessageHeaders
 from .message_invitation_type_0 import MessageInvitationType0
 from .message_invitation_type_0_attendees_item import MessageInvitationType0AttendeesItem
 from .message_list_item import MessageListItem
@@ -243,6 +245,7 @@ from .setup_link import SetupLink
 from .setup_link_reason_type_0 import SetupLinkReasonType0
 from .tenant_suspended import TenantSuspended
 from .thread import Thread
+from .thread_folder_type_0 import ThreadFolderType0
 from .thread_owner_type import ThreadOwnerType
 from .thread_status import ThreadStatus
 from .threads_get_response_200 import ThreadsGetResponse200
@@ -462,8 +465,10 @@ __all__ = (
     "MemberRole",
     "Message",
     "MessageAttachmentsItem",
+    "MessageAuthentication",
     "MessageCcItem",
     "MessageFrom",
+    "MessageHeaders",
     "MessageInvitationType0",
     "MessageInvitationType0AttendeesItem",
     "MessageListItem",
@@ -529,6 +534,7 @@ __all__ = (
     "SetupLinkReasonType0",
     "TenantSuspended",
     "Thread",
+    "ThreadFolderType0",
     "ThreadOwnerType",
     "ThreadsGetResponse200",
     "ThreadsLabelsCreateBody",

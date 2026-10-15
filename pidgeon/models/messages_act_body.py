@@ -16,7 +16,8 @@ class MessagesActBody:
     """
     Attributes:
         message_ids (list[UUID]):
-        action (MessagesActBodyAction):
+        action (MessagesActBodyAction): `read` and `unread` are refused for an API key: read state belongs to a person
+            and a key is not one. Every other action works.
     """
 
     message_ids: list[UUID]

@@ -15,7 +15,9 @@ T = TypeVar("T", bound="MessagesUpdateBody")
 class MessagesUpdateBody:
     """
     Attributes:
-        is_read (bool | Unset):
+        is_read (bool | Unset): Refused for an API key: read state belongs to a person and a key is not one. Archive the
+            message, or track what you have seen with `GET /v1/mailboxes/changes`. A person signed in to the dashboard sets
+            this.
         is_starred (bool | Unset):
         folder (MessagesUpdateBodyFolder | Unset):
     """

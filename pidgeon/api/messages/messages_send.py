@@ -78,8 +78,10 @@ def sync_detailed(
     """Send a message
 
      Idempotent with an `Idempotency-Key` header. Answers `202` with the id, the thread and anything
-    **rejected** — a recipient the address is not allowed to write to is refused here rather than
-    failing later, so read `rejected` before assuming it went.
+    **rejected** — addresses the provider would not accept at hand-off, so read it before assuming every
+    recipient got it. A recipient this address is not allowed to write to is a different thing and
+    refuses the whole send: `403` with `blocked` when a rule says no, `not_permitted` when the send
+    policy does. Nothing is sent to anybody in that case.
 
     Args:
         body (MessagesSendBody):
@@ -111,8 +113,10 @@ def sync(
     """Send a message
 
      Idempotent with an `Idempotency-Key` header. Answers `202` with the id, the thread and anything
-    **rejected** — a recipient the address is not allowed to write to is refused here rather than
-    failing later, so read `rejected` before assuming it went.
+    **rejected** — addresses the provider would not accept at hand-off, so read it before assuming every
+    recipient got it. A recipient this address is not allowed to write to is a different thing and
+    refuses the whole send: `403` with `blocked` when a rule says no, `not_permitted` when the send
+    policy does. Nothing is sent to anybody in that case.
 
     Args:
         body (MessagesSendBody):
@@ -139,8 +143,10 @@ async def asyncio_detailed(
     """Send a message
 
      Idempotent with an `Idempotency-Key` header. Answers `202` with the id, the thread and anything
-    **rejected** — a recipient the address is not allowed to write to is refused here rather than
-    failing later, so read `rejected` before assuming it went.
+    **rejected** — addresses the provider would not accept at hand-off, so read it before assuming every
+    recipient got it. A recipient this address is not allowed to write to is a different thing and
+    refuses the whole send: `403` with `blocked` when a rule says no, `not_permitted` when the send
+    policy does. Nothing is sent to anybody in that case.
 
     Args:
         body (MessagesSendBody):
@@ -170,8 +176,10 @@ async def asyncio(
     """Send a message
 
      Idempotent with an `Idempotency-Key` header. Answers `202` with the id, the thread and anything
-    **rejected** — a recipient the address is not allowed to write to is refused here rather than
-    failing later, so read `rejected` before assuming it went.
+    **rejected** — addresses the provider would not accept at hand-off, so read it before assuming every
+    recipient got it. A recipient this address is not allowed to write to is a different thing and
+    refuses the whole send: `403` with `blocked` when a rule says no, `not_permitted` when the send
+    policy does. Nothing is sent to anybody in that case.
 
     Args:
         body (MessagesSendBody):

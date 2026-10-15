@@ -6,6 +6,7 @@ from uuid import UUID
 
 from attrs import define as _attrs_define
 
+from ..models.thread_folder_type_0 import ThreadFolderType0
 from ..models.thread_owner_type import ThreadOwnerType
 from ..models.thread_status import ThreadStatus
 
@@ -24,6 +25,11 @@ class Thread:
         assignee_id (None | UUID):
         assigned_at (None | str):
         message_count (int):
+        folder (None | ThreadFolderType0): Where the newest message is filed. Null on a thread with no messages.
+        from_ (None | str): Who sent the newest message.
+        from_name (None | str):
+        preview (None | str): The first line of the newest message.
+        has_attachments (bool):
         last_message_at (None | str):
         created_at (str): ISO-8601, UTC.
     """
@@ -36,6 +42,11 @@ class Thread:
     assignee_id: None | UUID
     assigned_at: None | str
     message_count: int
+    folder: None | ThreadFolderType0
+    from_: None | str
+    from_name: None | str
+    preview: None | str
+    has_attachments: bool
     last_message_at: None | str
     created_at: str
 
@@ -62,6 +73,23 @@ class Thread:
 
         message_count = self.message_count
 
+        folder: None | str
+        if isinstance(self.folder, ThreadFolderType0):
+            folder = self.folder.value
+        else:
+            folder = self.folder
+
+        from_: None | str
+        from_ = self.from_
+
+        from_name: None | str
+        from_name = self.from_name
+
+        preview: None | str
+        preview = self.preview
+
+        has_attachments = self.has_attachments
+
         last_message_at: None | str
         last_message_at = self.last_message_at
 
@@ -79,6 +107,11 @@ class Thread:
                 "assignee_id": assignee_id,
                 "assigned_at": assigned_at,
                 "message_count": message_count,
+                "folder": folder,
+                "from": from_,
+                "from_name": from_name,
+                "preview": preview,
+                "has_attachments": has_attachments,
                 "last_message_at": last_message_at,
                 "created_at": created_at,
             }
@@ -128,6 +161,44 @@ class Thread:
 
         message_count = d.pop("message_count")
 
+        def _parse_folder(data: object) -> None | ThreadFolderType0:
+            if data is None:
+                return data
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                folder_type_0 = ThreadFolderType0(data)
+
+                return folder_type_0
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(None | ThreadFolderType0, data)
+
+        folder = _parse_folder(d.pop("folder"))
+
+        def _parse_from_(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        from_ = _parse_from_(d.pop("from"))
+
+        def _parse_from_name(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        from_name = _parse_from_name(d.pop("from_name"))
+
+        def _parse_preview(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        preview = _parse_preview(d.pop("preview"))
+
+        has_attachments = d.pop("has_attachments")
+
         def _parse_last_message_at(data: object) -> None | str:
             if data is None:
                 return data
@@ -146,6 +217,11 @@ class Thread:
             assignee_id=assignee_id,
             assigned_at=assigned_at,
             message_count=message_count,
+            folder=folder,
+            from_=from_,
+            from_name=from_name,
+            preview=preview,
+            has_attachments=has_attachments,
             last_message_at=last_message_at,
             created_at=created_at,
         )

@@ -7,8 +7,10 @@ from attrs import define as _attrs_define
 
 if TYPE_CHECKING:
     from ..models.message_attachments_item import MessageAttachmentsItem
+    from ..models.message_authentication import MessageAuthentication
     from ..models.message_cc_item import MessageCcItem
     from ..models.message_from import MessageFrom
+    from ..models.message_headers import MessageHeaders
     from ..models.message_invitation_type_0 import MessageInvitationType0
     from ..models.message_to_item import MessageToItem
 
@@ -38,6 +40,13 @@ class Message:
         reply_text (str): The reply as plain text. `text` is the message’s own text part, quote and all.
         is_read (bool):
         is_spam (bool):
+        headers (MessageHeaders): The headers we keep, lowercased: `message-id`, `in-reply-to`, `references`, `date`,
+            `reply-to`, `return-path`, `list-id`, `list-unsubscribe`, `precedence`, `auto-submitted`, `x-auto-response-
+            suppress`, `x-mailer` and `x-priority`. Not the whole envelope — that is `GET /messages/{id}/raw`. Empty when
+            none were present.
+        authentication (MessageAuthentication): What the receiving transport said about the sending domain. Null means
+            it did not report, not that the check failed — normal on outbound, and on inbound it is the difference between
+            unknown and forged.
         attachments (list[MessageAttachmentsItem]):
         invitation (MessageInvitationType0 | None): The calendar part this message carried, or null — the invitation,
             who was asked, and what they answered.
@@ -64,6 +73,8 @@ class Message:
     reply_text: str
     is_read: bool
     is_spam: bool
+    headers: MessageHeaders
+    authentication: MessageAuthentication
     attachments: list[MessageAttachmentsItem]
     invitation: MessageInvitationType0 | None
     calendar_event_id: None | str
@@ -118,6 +129,10 @@ class Message:
 
         is_spam = self.is_spam
 
+        headers = self.headers.to_dict()
+
+        authentication = self.authentication.to_dict()
+
         attachments = []
         for attachments_item_data in self.attachments:
             attachments_item = attachments_item_data.to_dict()
@@ -155,6 +170,8 @@ class Message:
                 "reply_text": reply_text,
                 "is_read": is_read,
                 "is_spam": is_spam,
+                "headers": headers,
+                "authentication": authentication,
                 "attachments": attachments,
                 "invitation": invitation,
                 "calendar_event_id": calendar_event_id,
@@ -167,8 +184,10 @@ class Message:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         from ..models.message_attachments_item import MessageAttachmentsItem  # noqa: PLC0415
+        from ..models.message_authentication import MessageAuthentication  # noqa: PLC0415
         from ..models.message_cc_item import MessageCcItem  # noqa: PLC0415
         from ..models.message_from import MessageFrom  # noqa: PLC0415
+        from ..models.message_headers import MessageHeaders  # noqa: PLC0415
         from ..models.message_invitation_type_0 import MessageInvitationType0  # noqa: PLC0415
         from ..models.message_to_item import MessageToItem  # noqa: PLC0415
 
@@ -247,6 +266,10 @@ class Message:
 
         is_spam = d.pop("is_spam")
 
+        headers = MessageHeaders.from_dict(d.pop("headers"))
+
+        authentication = MessageAuthentication.from_dict(d.pop("authentication"))
+
         attachments = []
         _attachments = d.pop("attachments")
         for attachments_item_data in _attachments:
@@ -296,6 +319,8 @@ class Message:
             reply_text=reply_text,
             is_read=is_read,
             is_spam=is_spam,
+            headers=headers,
+            authentication=authentication,
             attachments=attachments,
             invitation=invitation,
             calendar_event_id=calendar_event_id,
