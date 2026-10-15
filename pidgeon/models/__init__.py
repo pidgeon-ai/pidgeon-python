@@ -146,12 +146,15 @@ from .keys_revoke_response_200 import KeysRevokeResponse200
 from .keys_update_body import KeysUpdateBody
 from .keys_update_response_200 import KeysUpdateResponse200
 from .label import Label
+from .label_colour import LabelColour
 from .label_removed import LabelRemoved
 from .labels_create_body import LabelsCreateBody
+from .labels_create_body_colour import LabelsCreateBodyColour
 from .labels_create_response_201 import LabelsCreateResponse201
 from .labels_delete_response_200 import LabelsDeleteResponse200
 from .labels_list_response_200 import LabelsListResponse200
 from .labels_update_body import LabelsUpdateBody
+from .labels_update_body_colour import LabelsUpdateBodyColour
 from .labels_update_response_200 import LabelsUpdateResponse200
 from .mailbox import Mailbox
 from .mailbox_access import MailboxAccess
@@ -228,6 +231,8 @@ from .routing_rule_status import RoutingRuleStatus
 from .routing_update_body import RoutingUpdateBody
 from .routing_update_body_status import RoutingUpdateBodyStatus
 from .routing_update_response_200 import RoutingUpdateResponse200
+from .search_hit import SearchHit
+from .search_hit_folder import SearchHitFolder
 from .send_rule_removed import SendRuleRemoved
 from .send_rules import SendRules
 from .send_rules_rules_item import SendRulesRulesItem
@@ -427,12 +432,15 @@ __all__ = (
     "KeysUpdateBody",
     "KeysUpdateResponse200",
     "Label",
+    "LabelColour",
     "LabelRemoved",
     "LabelsCreateBody",
+    "LabelsCreateBodyColour",
     "LabelsCreateResponse201",
     "LabelsDeleteResponse200",
     "LabelsListResponse200",
     "LabelsUpdateBody",
+    "LabelsUpdateBodyColour",
     "LabelsUpdateResponse200",
     "Mailbox",
     "MailboxAccess",
@@ -509,6 +517,8 @@ __all__ = (
     "RoutingUpdateBody",
     "RoutingUpdateBodyStatus",
     "RoutingUpdateResponse200",
+    "SearchHit",
+    "SearchHitFolder",
     "SendRuleRemoved",
     "SendRules",
     "SendRulesRulesItem",

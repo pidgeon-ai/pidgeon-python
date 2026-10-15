@@ -7,7 +7,7 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.message_list_item import MessageListItem
+    from ..models.search_hit import SearchHit
 
 
 T = TypeVar("T", bound="MessagesSearchResponse200")
@@ -17,12 +17,12 @@ T = TypeVar("T", bound="MessagesSearchResponse200")
 class MessagesSearchResponse200:
     """
     Attributes:
-        data (list[MessageListItem]):
+        data (list[SearchHit]):
         has_more (bool):
         next_cursor (None | str): Pass as `cursor` to continue. Null on the last page.
     """
 
-    data: list[MessageListItem]
+    data: list[SearchHit]
     has_more: bool
     next_cursor: None | str
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -52,13 +52,13 @@ class MessagesSearchResponse200:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.message_list_item import MessageListItem  # noqa: PLC0415
+        from ..models.search_hit import SearchHit  # noqa: PLC0415
 
         d = dict(src_dict)
         data = []
         _data = d.pop("data")
         for data_item_data in _data:
-            data_item = MessageListItem.from_dict(data_item_data)
+            data_item = SearchHit.from_dict(data_item_data)
 
             data.append(data_item)
 

@@ -20,11 +20,14 @@ class MailboxesListFolderResponse200:
         data (list[MessageListItem]):
         has_more (bool):
         next_cursor (None | str): Pass as `cursor` to continue. Null on the last page.
+        sync_cursor (str): Hand to `GET /mailboxes/changes` as `since` to be told what has changed since this page,
+            rather than fetching it again. Not a page cursor — the two are different reads and each refuses the other.
     """
 
     data: list[MessageListItem]
     has_more: bool
     next_cursor: None | str
+    sync_cursor: str
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -38,6 +41,8 @@ class MailboxesListFolderResponse200:
         next_cursor: None | str
         next_cursor = self.next_cursor
 
+        sync_cursor = self.sync_cursor
+
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
@@ -45,6 +50,7 @@ class MailboxesListFolderResponse200:
                 "data": data,
                 "has_more": has_more,
                 "next_cursor": next_cursor,
+                "sync_cursor": sync_cursor,
             }
         )
 
@@ -71,10 +77,13 @@ class MailboxesListFolderResponse200:
 
         next_cursor = _parse_next_cursor(d.pop("next_cursor"))
 
+        sync_cursor = d.pop("sync_cursor")
+
         mailboxes_list_folder_response_200 = cls(
             data=data,
             has_more=has_more,
             next_cursor=next_cursor,
+            sync_cursor=sync_cursor,
         )
 
         mailboxes_list_folder_response_200.additional_properties = d

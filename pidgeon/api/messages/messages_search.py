@@ -123,10 +123,12 @@ def sync_detailed(
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
 ) -> Response[Error | MessagesSearchResponse200]:
-    """Search one mailbox
+    """Search messages
 
-     Full-text, ranked by relevance, one mailbox at a time. Results carry the folder they were found in.
-    Not paged: page two of a relevance ranking is a place nobody goes, so narrow the query instead.
+     Full-text, ranked by relevance, across every address this credential can reach. Name an
+    `identity_id` to search exactly one. Every result carries the address it was found in and the folder
+    it is in, because a hit you cannot attribute to a mailbox is a hit you cannot open. Not paged: page
+    two of a relevance ranking is a place nobody goes, so narrow the query instead.
 
     Args:
         identity_id (UUID | Unset):
@@ -182,10 +184,12 @@ def sync(
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
 ) -> Error | MessagesSearchResponse200 | None:
-    """Search one mailbox
+    """Search messages
 
-     Full-text, ranked by relevance, one mailbox at a time. Results carry the folder they were found in.
-    Not paged: page two of a relevance ranking is a place nobody goes, so narrow the query instead.
+     Full-text, ranked by relevance, across every address this credential can reach. Name an
+    `identity_id` to search exactly one. Every result carries the address it was found in and the folder
+    it is in, because a hit you cannot attribute to a mailbox is a hit you cannot open. Not paged: page
+    two of a relevance ranking is a place nobody goes, so narrow the query instead.
 
     Args:
         identity_id (UUID | Unset):
@@ -236,10 +240,12 @@ async def asyncio_detailed(
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
 ) -> Response[Error | MessagesSearchResponse200]:
-    """Search one mailbox
+    """Search messages
 
-     Full-text, ranked by relevance, one mailbox at a time. Results carry the folder they were found in.
-    Not paged: page two of a relevance ranking is a place nobody goes, so narrow the query instead.
+     Full-text, ranked by relevance, across every address this credential can reach. Name an
+    `identity_id` to search exactly one. Every result carries the address it was found in and the folder
+    it is in, because a hit you cannot attribute to a mailbox is a hit you cannot open. Not paged: page
+    two of a relevance ranking is a place nobody goes, so narrow the query instead.
 
     Args:
         identity_id (UUID | Unset):
@@ -293,10 +299,12 @@ async def asyncio(
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
 ) -> Error | MessagesSearchResponse200 | None:
-    """Search one mailbox
+    """Search messages
 
-     Full-text, ranked by relevance, one mailbox at a time. Results carry the folder they were found in.
-    Not paged: page two of a relevance ranking is a place nobody goes, so narrow the query instead.
+     Full-text, ranked by relevance, across every address this credential can reach. Name an
+    `identity_id` to search exactly one. Every result carries the address it was found in and the folder
+    it is in, because a hit you cannot attribute to a mailbox is a hit you cannot open. Not paged: page
+    two of a relevance ranking is a place nobody goes, so narrow the query instead.
 
     Args:
         identity_id (UUID | Unset):

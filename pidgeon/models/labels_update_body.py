@@ -5,6 +5,7 @@ from typing import Any, TypeVar
 
 from attrs import define as _attrs_define
 
+from ..models.labels_update_body_colour import LabelsUpdateBodyColour
 from ..types import UNSET, Unset
 
 T = TypeVar("T", bound="LabelsUpdateBody")
@@ -15,16 +16,18 @@ class LabelsUpdateBody:
     """
     Attributes:
         name (str | Unset):
-        colour (str | Unset):
+        colour (LabelsUpdateBodyColour | Unset):
     """
 
     name: str | Unset = UNSET
-    colour: str | Unset = UNSET
+    colour: LabelsUpdateBodyColour | Unset = UNSET
 
     def to_dict(self) -> dict[str, Any]:
         name = self.name
 
-        colour = self.colour
+        colour: str | Unset = UNSET
+        if not isinstance(self.colour, Unset):
+            colour = self.colour.value
 
         field_dict: dict[str, Any] = {}
 
@@ -41,7 +44,12 @@ class LabelsUpdateBody:
         d = dict(src_dict)
         name = d.pop("name", UNSET)
 
-        colour = d.pop("colour", UNSET)
+        _colour = d.pop("colour", UNSET)
+        colour: LabelsUpdateBodyColour | Unset
+        if isinstance(_colour, Unset):
+            colour = UNSET
+        else:
+            colour = LabelsUpdateBodyColour(_colour)
 
         labels_update_body = cls(
             name=name,

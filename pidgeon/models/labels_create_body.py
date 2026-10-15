@@ -6,6 +6,7 @@ from uuid import UUID
 
 from attrs import define as _attrs_define
 
+from ..models.labels_create_body_colour import LabelsCreateBodyColour
 from ..types import UNSET, Unset
 
 T = TypeVar("T", bound="LabelsCreateBody")
@@ -17,19 +18,21 @@ class LabelsCreateBody:
     Attributes:
         identity_id (UUID): The address this belongs to.
         name (str):
-        colour (str | Unset):
+        colour (LabelsCreateBodyColour | Unset):
     """
 
     identity_id: UUID
     name: str
-    colour: str | Unset = UNSET
+    colour: LabelsCreateBodyColour | Unset = UNSET
 
     def to_dict(self) -> dict[str, Any]:
         identity_id = str(self.identity_id)
 
         name = self.name
 
-        colour = self.colour
+        colour: str | Unset = UNSET
+        if not isinstance(self.colour, Unset):
+            colour = self.colour.value
 
         field_dict: dict[str, Any] = {}
 
@@ -51,7 +54,12 @@ class LabelsCreateBody:
 
         name = d.pop("name")
 
-        colour = d.pop("colour", UNSET)
+        _colour = d.pop("colour", UNSET)
+        colour: LabelsCreateBodyColour | Unset
+        if isinstance(_colour, Unset):
+            colour = UNSET
+        else:
+            colour = LabelsCreateBodyColour(_colour)
 
         labels_create_body = cls(
             identity_id=identity_id,

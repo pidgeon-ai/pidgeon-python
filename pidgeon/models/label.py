@@ -5,6 +5,8 @@ from typing import Any, TypeVar
 
 from attrs import define as _attrs_define
 
+from ..models.label_colour import LabelColour
+
 T = TypeVar("T", bound="Label")
 
 
@@ -15,14 +17,14 @@ class Label:
         id (str):
         identity_id (str):
         name (str):
-        colour (str):
+        colour (LabelColour):
         created_at (str): ISO-8601, UTC.
     """
 
     id: str
     identity_id: str
     name: str
-    colour: str
+    colour: LabelColour
     created_at: str
 
     def to_dict(self) -> dict[str, Any]:
@@ -32,7 +34,7 @@ class Label:
 
         name = self.name
 
-        colour = self.colour
+        colour = self.colour.value
 
         created_at = self.created_at
 
@@ -59,7 +61,7 @@ class Label:
 
         name = d.pop("name")
 
-        colour = d.pop("colour")
+        colour = LabelColour(d.pop("colour"))
 
         created_at = d.pop("created_at")
 
