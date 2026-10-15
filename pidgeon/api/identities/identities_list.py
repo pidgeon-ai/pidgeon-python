@@ -1,5 +1,6 @@
 from http import HTTPStatus
 from typing import Any
+from uuid import UUID
 
 import httpx
 
@@ -15,6 +16,7 @@ def _get_kwargs(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     tenant_id: str | Unset = UNSET,
+    pod_id: UUID | Unset = UNSET,
 ) -> dict[str, Any]:
 
     params: dict[str, Any] = {}
@@ -24,6 +26,11 @@ def _get_kwargs(
     params["cursor"] = cursor
 
     params["tenant_id"] = tenant_id
+
+    json_pod_id: str | Unset = UNSET
+    if not isinstance(pod_id, Unset):
+        json_pod_id = str(pod_id)
+    params["pod_id"] = json_pod_id
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -82,6 +89,7 @@ def sync_detailed(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     tenant_id: str | Unset = UNSET,
+    pod_id: UUID | Unset = UNSET,
 ) -> Response[Error | IdentitiesListResponse200]:
     """List addresses
 
@@ -93,6 +101,7 @@ def sync_detailed(
         limit (int | Unset):  Default: 50.
         cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
         tenant_id (str | Unset):
+        pod_id (UUID | Unset):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -106,6 +115,7 @@ def sync_detailed(
         limit=limit,
         cursor=cursor,
         tenant_id=tenant_id,
+        pod_id=pod_id,
     )
 
     response = client.get_httpx_client().request(
@@ -121,6 +131,7 @@ def sync(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     tenant_id: str | Unset = UNSET,
+    pod_id: UUID | Unset = UNSET,
 ) -> Error | IdentitiesListResponse200 | None:
     """List addresses
 
@@ -132,6 +143,7 @@ def sync(
         limit (int | Unset):  Default: 50.
         cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
         tenant_id (str | Unset):
+        pod_id (UUID | Unset):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -146,6 +158,7 @@ def sync(
         limit=limit,
         cursor=cursor,
         tenant_id=tenant_id,
+        pod_id=pod_id,
     ).parsed
 
 
@@ -155,6 +168,7 @@ async def asyncio_detailed(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     tenant_id: str | Unset = UNSET,
+    pod_id: UUID | Unset = UNSET,
 ) -> Response[Error | IdentitiesListResponse200]:
     """List addresses
 
@@ -166,6 +180,7 @@ async def asyncio_detailed(
         limit (int | Unset):  Default: 50.
         cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
         tenant_id (str | Unset):
+        pod_id (UUID | Unset):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -179,6 +194,7 @@ async def asyncio_detailed(
         limit=limit,
         cursor=cursor,
         tenant_id=tenant_id,
+        pod_id=pod_id,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -192,6 +208,7 @@ async def asyncio(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     tenant_id: str | Unset = UNSET,
+    pod_id: UUID | Unset = UNSET,
 ) -> Error | IdentitiesListResponse200 | None:
     """List addresses
 
@@ -203,6 +220,7 @@ async def asyncio(
         limit (int | Unset):  Default: 50.
         cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
         tenant_id (str | Unset):
+        pod_id (UUID | Unset):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -218,5 +236,6 @@ async def asyncio(
             limit=limit,
             cursor=cursor,
             tenant_id=tenant_id,
+            pod_id=pod_id,
         )
     ).parsed

@@ -35,6 +35,8 @@ class IdentitiesCreateBody:
             structurally unable to start a conversation with a stranger.
         tenant_id (None | str | Unset): Your own opaque grouping — a customer id, whatever your side calls it. Never
             parsed here.
+        pod_id (None | Unset | UUID): The pod this belongs to. Your account’s default when you name none. A container,
+            not a boundary: it does not change what an address can do, and no key is scoped to one.
     """
 
     domain_id: UUID | Unset = UNSET
@@ -48,6 +50,7 @@ class IdentitiesCreateBody:
     expires_at: datetime.datetime | None | Unset = UNSET
     send_policy: IdentitiesCreateBodySendPolicy | Unset = UNSET
     tenant_id: None | str | Unset = UNSET
+    pod_id: None | Unset | UUID = UNSET
 
     def to_dict(self) -> dict[str, Any]:
         domain_id: str | Unset = UNSET
@@ -94,6 +97,14 @@ class IdentitiesCreateBody:
         else:
             tenant_id = self.tenant_id
 
+        pod_id: None | str | Unset
+        if isinstance(self.pod_id, Unset):
+            pod_id = UNSET
+        elif isinstance(self.pod_id, UUID):
+            pod_id = str(self.pod_id)
+        else:
+            pod_id = self.pod_id
+
         field_dict: dict[str, Any] = {}
 
         field_dict.update({})
@@ -119,6 +130,8 @@ class IdentitiesCreateBody:
             field_dict["send_policy"] = send_policy
         if tenant_id is not UNSET:
             field_dict["tenant_id"] = tenant_id
+        if pod_id is not UNSET:
+            field_dict["pod_id"] = pod_id
 
         return field_dict
 
@@ -196,6 +209,23 @@ class IdentitiesCreateBody:
 
         tenant_id = _parse_tenant_id(d.pop("tenant_id", UNSET))
 
+        def _parse_pod_id(data: object) -> None | Unset | UUID:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                pod_id_type_0 = UUID(data)
+
+                return pod_id_type_0
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(None | Unset | UUID, data)
+
+        pod_id = _parse_pod_id(d.pop("pod_id", UNSET))
+
         identities_create_body = cls(
             domain_id=domain_id,
             domain=domain,
@@ -208,6 +238,7 @@ class IdentitiesCreateBody:
             expires_at=expires_at,
             send_policy=send_policy,
             tenant_id=tenant_id,
+            pod_id=pod_id,
         )
 
         return identities_create_body

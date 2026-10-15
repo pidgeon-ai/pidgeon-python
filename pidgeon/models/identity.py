@@ -32,6 +32,8 @@ class Identity:
         expires_at (None | str): When it stops accepting mail. Expiry suspends the address; it never deletes it.
         send_policy (str): Who it may write to: open, reply_only (somebody who wrote to it first), or list.
         tenant_id (None | str): Your own opaque grouping for this address. Never parsed here.
+        pod_id (str): The pod this address is in. Every workspace has one to start with and every address is in one, so
+            this is never null.
     """
 
     id: str
@@ -50,6 +52,7 @@ class Identity:
     expires_at: None | str
     send_policy: str
     tenant_id: None | str
+    pod_id: str
 
     def to_dict(self) -> dict[str, Any]:
         id = self.id
@@ -87,6 +90,8 @@ class Identity:
         tenant_id: None | str
         tenant_id = self.tenant_id
 
+        pod_id = self.pod_id
+
         field_dict: dict[str, Any] = {}
 
         field_dict.update(
@@ -107,6 +112,7 @@ class Identity:
                 "expires_at": expires_at,
                 "send_policy": send_policy,
                 "tenant_id": tenant_id,
+                "pod_id": pod_id,
             }
         )
 
@@ -164,6 +170,8 @@ class Identity:
 
         tenant_id = _parse_tenant_id(d.pop("tenant_id"))
 
+        pod_id = d.pop("pod_id")
+
         identity = cls(
             id=id,
             email=email,
@@ -181,6 +189,7 @@ class Identity:
             expires_at=expires_at,
             send_policy=send_policy,
             tenant_id=tenant_id,
+            pod_id=pod_id,
         )
 
         return identity
