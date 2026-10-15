@@ -1,0 +1,55 @@
+name: Publish
+
+# Tag-driven: `python-v1.3.0` publishes `pidgeon` to PyPI.
+#
+# Here rather than in the private repository so the upload carries PEP 740
+# attestations — `gh-action-pypi-publish` generates them from the workflow's
+# OIDC identity, and a statement about a commit nobody can read is worth
+# nothing. The generator stays private; the generated client does not need
+# to be.
+on:
+  push:
+    tags: ['python-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  # PyPI trusted publishing exchanges this for a credential that lives for
+  # one job, so no PyPI token exists in this repository's secrets.
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # The environment a PyPI trusted publisher can be pinned to. Naming it
+    # here means the publisher can require it, which stops any other
+    # workflow in this repository from uploading.
+    environment: pypi
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v7
+
+      - name: The tag matches the version
+        if: github.event_name == 'push'
+        run: |
+          declared=$(grep -m1 '^version = ' pyproject.toml | cut -d'"' -f2)
+          tagged="${GITHUB_REF_NAME#python-v}"
+
+          if [ "$declared" != "$tagged" ]; then
+            echo "Tag says $tagged; pyproject.toml says $declared." >&2
+            exit 1
+          fi
+
+      - name: Build
+        run: uv build
+
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          # Attestations are the default and are stated anyway: they are the
+          # reason this workflow is in a public repository.
+          attestations: true
