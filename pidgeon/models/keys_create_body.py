@@ -18,24 +18,34 @@ class KeysCreateBody:
     """
     Attributes:
         name (str):
-        identity_ids (list[UUID]):
+        identity_ids (list[UUID] | Unset):
+        pod_id (UUID | Unset): The pod this belongs to — your account’s default when you name none. A pod is a sending
+            boundary: mail from it lands on its own reputation, so one of your customers cannot damage another’s delivery.
+            It does not change what an address can do, and no key is scoped to one.
         access (KeysCreateBodyAccess | Unset): What a key may do. Give an agent the narrowest one that works.
         expires_at (datetime.datetime | None | Unset): When it stops accepting mail. Expiry suspends; it never deletes,
             so the correspondence survives.
     """
 
     name: str
-    identity_ids: list[UUID]
+    identity_ids: list[UUID] | Unset = UNSET
+    pod_id: UUID | Unset = UNSET
     access: KeysCreateBodyAccess | Unset = UNSET
     expires_at: datetime.datetime | None | Unset = UNSET
 
     def to_dict(self) -> dict[str, Any]:
         name = self.name
 
-        identity_ids = []
-        for identity_ids_item_data in self.identity_ids:
-            identity_ids_item = str(identity_ids_item_data)
-            identity_ids.append(identity_ids_item)
+        identity_ids: list[str] | Unset = UNSET
+        if not isinstance(self.identity_ids, Unset):
+            identity_ids = []
+            for identity_ids_item_data in self.identity_ids:
+                identity_ids_item = str(identity_ids_item_data)
+                identity_ids.append(identity_ids_item)
+
+        pod_id: str | Unset = UNSET
+        if not isinstance(self.pod_id, Unset):
+            pod_id = str(self.pod_id)
 
         access: str | Unset = UNSET
         if not isinstance(self.access, Unset):
@@ -54,9 +64,12 @@ class KeysCreateBody:
         field_dict.update(
             {
                 "name": name,
-                "identity_ids": identity_ids,
             }
         )
+        if identity_ids is not UNSET:
+            field_dict["identity_ids"] = identity_ids
+        if pod_id is not UNSET:
+            field_dict["pod_id"] = pod_id
         if access is not UNSET:
             field_dict["access"] = access
         if expires_at is not UNSET:
@@ -69,12 +82,21 @@ class KeysCreateBody:
         d = dict(src_dict)
         name = d.pop("name")
 
-        identity_ids = []
-        _identity_ids = d.pop("identity_ids")
-        for identity_ids_item_data in _identity_ids:
-            identity_ids_item = UUID(identity_ids_item_data)
+        _identity_ids = d.pop("identity_ids", UNSET)
+        identity_ids: list[UUID] | Unset = UNSET
+        if _identity_ids is not UNSET:
+            identity_ids = []
+            for identity_ids_item_data in _identity_ids:
+                identity_ids_item = UUID(identity_ids_item_data)
 
-            identity_ids.append(identity_ids_item)
+                identity_ids.append(identity_ids_item)
+
+        _pod_id = d.pop("pod_id", UNSET)
+        pod_id: UUID | Unset
+        if isinstance(_pod_id, Unset):
+            pod_id = UNSET
+        else:
+            pod_id = UUID(_pod_id)
 
         _access = d.pop("access", UNSET)
         access: KeysCreateBodyAccess | Unset
@@ -103,6 +125,7 @@ class KeysCreateBody:
         keys_create_body = cls(
             name=name,
             identity_ids=identity_ids,
+            pod_id=pod_id,
             access=access,
             expires_at=expires_at,
         )

@@ -18,6 +18,8 @@ class ApiKey:
         name (str):
         prefix (str):
         identity_ids (list[str]):
+        pod_id (None | str): The pod this key belongs to, or null. A pod key reaches every address in the pod —
+            `identity_ids` lists them today — and the addresses the pod gains later.
         access (ApiKeyAccess): The highest rung on any address. Composed with the grant; lower wins.
         created_by_key_id (None | str):
         last_used_at (None | str):
@@ -29,6 +31,7 @@ class ApiKey:
     name: str
     prefix: str
     identity_ids: list[str]
+    pod_id: None | str
     access: ApiKeyAccess
     created_by_key_id: None | str
     last_used_at: None | str
@@ -43,6 +46,9 @@ class ApiKey:
         prefix = self.prefix
 
         identity_ids = self.identity_ids
+
+        pod_id: None | str
+        pod_id = self.pod_id
 
         access = self.access.value
 
@@ -65,6 +71,7 @@ class ApiKey:
                 "name": name,
                 "prefix": prefix,
                 "identity_ids": identity_ids,
+                "pod_id": pod_id,
                 "access": access,
                 "created_by_key_id": created_by_key_id,
                 "last_used_at": last_used_at,
@@ -85,6 +92,13 @@ class ApiKey:
         prefix = d.pop("prefix")
 
         identity_ids = cast(list[str], d.pop("identity_ids"))
+
+        def _parse_pod_id(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        pod_id = _parse_pod_id(d.pop("pod_id"))
 
         access = ApiKeyAccess(d.pop("access"))
 
@@ -116,6 +130,7 @@ class ApiKey:
             name=name,
             prefix=prefix,
             identity_ids=identity_ids,
+            pod_id=pod_id,
             access=access,
             created_by_key_id=created_by_key_id,
             last_used_at=last_used_at,
