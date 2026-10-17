@@ -31,6 +31,17 @@ from .awaited_message_message_type_0_extracted_codes_item import AwaitedMessageM
 from .awaited_message_message_type_0_extracted_codes_item_kind import AwaitedMessageMessageType0ExtractedCodesItemKind
 from .awaited_message_message_type_0_extracted_links_item import AwaitedMessageMessageType0ExtractedLinksItem
 from .awaited_message_message_type_0_extracted_links_item_kind import AwaitedMessageMessageType0ExtractedLinksItemKind
+from .awaited_message_message_type_0_firewall_type_0 import AwaitedMessageMessageType0FirewallType0
+from .awaited_message_message_type_0_firewall_type_0_signals_item import (
+    AwaitedMessageMessageType0FirewallType0SignalsItem,
+)
+from .awaited_message_message_type_0_firewall_type_0_signals_item_kind import (
+    AwaitedMessageMessageType0FirewallType0SignalsItemKind,
+)
+from .awaited_message_message_type_0_firewall_type_0_signals_item_where import (
+    AwaitedMessageMessageType0FirewallType0SignalsItemWhere,
+)
+from .awaited_message_message_type_0_firewall_type_0_verdict import AwaitedMessageMessageType0FirewallType0Verdict
 from .awaited_message_message_type_0_from import AwaitedMessageMessageType0From
 from .awaited_message_message_type_0_headers import AwaitedMessageMessageType0Headers
 from .awaited_message_message_type_0_invitation_type_0 import AwaitedMessageMessageType0InvitationType0
@@ -201,6 +212,11 @@ from .message_extracted_codes_item import MessageExtractedCodesItem
 from .message_extracted_codes_item_kind import MessageExtractedCodesItemKind
 from .message_extracted_links_item import MessageExtractedLinksItem
 from .message_extracted_links_item_kind import MessageExtractedLinksItemKind
+from .message_firewall_type_0 import MessageFirewallType0
+from .message_firewall_type_0_signals_item import MessageFirewallType0SignalsItem
+from .message_firewall_type_0_signals_item_kind import MessageFirewallType0SignalsItemKind
+from .message_firewall_type_0_signals_item_where import MessageFirewallType0SignalsItemWhere
+from .message_firewall_type_0_verdict import MessageFirewallType0Verdict
 from .message_from import MessageFrom
 from .message_headers import MessageHeaders
 from .message_invitation_type_0 import MessageInvitationType0
@@ -354,6 +370,11 @@ __all__ = (
     "AwaitedMessageMessageType0ExtractedCodesItemKind",
     "AwaitedMessageMessageType0ExtractedLinksItem",
     "AwaitedMessageMessageType0ExtractedLinksItemKind",
+    "AwaitedMessageMessageType0FirewallType0",
+    "AwaitedMessageMessageType0FirewallType0SignalsItem",
+    "AwaitedMessageMessageType0FirewallType0SignalsItemKind",
+    "AwaitedMessageMessageType0FirewallType0SignalsItemWhere",
+    "AwaitedMessageMessageType0FirewallType0Verdict",
     "AwaitedMessageMessageType0From",
     "AwaitedMessageMessageType0Headers",
     "AwaitedMessageMessageType0InvitationType0",
@@ -521,6 +542,11 @@ __all__ = (
     "MessageExtractedCodesItemKind",
     "MessageExtractedLinksItem",
     "MessageExtractedLinksItemKind",
+    "MessageFirewallType0",
+    "MessageFirewallType0SignalsItem",
+    "MessageFirewallType0SignalsItemKind",
+    "MessageFirewallType0SignalsItemWhere",
+    "MessageFirewallType0Verdict",
     "MessageFrom",
     "MessageHeaders",
     "MessageInvitationType0",

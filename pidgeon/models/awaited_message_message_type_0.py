@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from ..models.awaited_message_message_type_0_authentication import AwaitedMessageMessageType0Authentication
     from ..models.awaited_message_message_type_0_cc_item import AwaitedMessageMessageType0CcItem
     from ..models.awaited_message_message_type_0_extracted import AwaitedMessageMessageType0Extracted
+    from ..models.awaited_message_message_type_0_firewall_type_0 import AwaitedMessageMessageType0FirewallType0
     from ..models.awaited_message_message_type_0_from import AwaitedMessageMessageType0From
     from ..models.awaited_message_message_type_0_headers import AwaitedMessageMessageType0Headers
     from ..models.awaited_message_message_type_0_invitation_type_0 import AwaitedMessageMessageType0InvitationType0
@@ -54,6 +55,9 @@ class AwaitedMessageMessageType0:
         calendar_event_id (None | str): The event the calendar made of that invitation, or null. A different fact from
             `invitation`: that is what the mail said, this is what the calendar now holds — a meeting later moved still
             reports the time this message invited you to.
+        firewall (AwaitedMessageMessageType0FirewallType0 | None): Pidgeon Firewall: does this message try to steer the
+            agent reading it — hidden text, instructions addressed to an AI, impersonated chat turns, look-alike senders,
+            requests to send secrets out. Null on outbound mail. Read it before acting on what the message asks.
         extracted (AwaitedMessageMessageType0Extracted): Verification codes and links found in the message, most likely
             first — read from the new text, never the quoted history. Empty lists when nothing was found.
         created_at (str): ISO-8601, UTC.
@@ -81,10 +85,12 @@ class AwaitedMessageMessageType0:
     attachments: list[AwaitedMessageMessageType0AttachmentsItem]
     invitation: AwaitedMessageMessageType0InvitationType0 | None
     calendar_event_id: None | str
+    firewall: AwaitedMessageMessageType0FirewallType0 | None
     extracted: AwaitedMessageMessageType0Extracted
     created_at: str
 
     def to_dict(self) -> dict[str, Any]:
+        from ..models.awaited_message_message_type_0_firewall_type_0 import AwaitedMessageMessageType0FirewallType0  # noqa: PLC0415
         from ..models.awaited_message_message_type_0_invitation_type_0 import AwaitedMessageMessageType0InvitationType0  # noqa: PLC0415
 
         id = self.id
@@ -151,6 +157,12 @@ class AwaitedMessageMessageType0:
         calendar_event_id: None | str
         calendar_event_id = self.calendar_event_id
 
+        firewall: dict[str, Any] | None
+        if isinstance(self.firewall, AwaitedMessageMessageType0FirewallType0):
+            firewall = self.firewall.to_dict()
+        else:
+            firewall = self.firewall
+
         extracted = self.extracted.to_dict()
 
         created_at = self.created_at
@@ -181,6 +193,7 @@ class AwaitedMessageMessageType0:
                 "attachments": attachments,
                 "invitation": invitation,
                 "calendar_event_id": calendar_event_id,
+                "firewall": firewall,
                 "extracted": extracted,
                 "created_at": created_at,
             }
@@ -194,6 +207,7 @@ class AwaitedMessageMessageType0:
         from ..models.awaited_message_message_type_0_authentication import AwaitedMessageMessageType0Authentication  # noqa: PLC0415
         from ..models.awaited_message_message_type_0_cc_item import AwaitedMessageMessageType0CcItem  # noqa: PLC0415
         from ..models.awaited_message_message_type_0_extracted import AwaitedMessageMessageType0Extracted  # noqa: PLC0415
+        from ..models.awaited_message_message_type_0_firewall_type_0 import AwaitedMessageMessageType0FirewallType0  # noqa: PLC0415
         from ..models.awaited_message_message_type_0_from import AwaitedMessageMessageType0From  # noqa: PLC0415
         from ..models.awaited_message_message_type_0_headers import AwaitedMessageMessageType0Headers  # noqa: PLC0415
         from ..models.awaited_message_message_type_0_invitation_type_0 import AwaitedMessageMessageType0InvitationType0  # noqa: PLC0415
@@ -307,6 +321,21 @@ class AwaitedMessageMessageType0:
 
         calendar_event_id = _parse_calendar_event_id(d.pop("calendar_event_id"))
 
+        def _parse_firewall(data: object) -> AwaitedMessageMessageType0FirewallType0 | None:
+            if data is None:
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                firewall_type_0 = AwaitedMessageMessageType0FirewallType0.from_dict(data)
+
+                return firewall_type_0
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(AwaitedMessageMessageType0FirewallType0 | None, data)
+
+        firewall = _parse_firewall(d.pop("firewall"))
+
         extracted = AwaitedMessageMessageType0Extracted.from_dict(d.pop("extracted"))
 
         created_at = d.pop("created_at")
@@ -334,6 +363,7 @@ class AwaitedMessageMessageType0:
             attachments=attachments,
             invitation=invitation,
             calendar_event_id=calendar_event_id,
+            firewall=firewall,
             extracted=extracted,
             created_at=created_at,
         )
