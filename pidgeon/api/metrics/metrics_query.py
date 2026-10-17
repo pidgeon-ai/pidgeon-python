@@ -15,6 +15,7 @@ def _get_kwargs(
     *,
     days: int | Unset = UNSET,
     identity_id: UUID | Unset = UNSET,
+    pod_id: UUID | Unset = UNSET,
 ) -> dict[str, Any]:
 
     params: dict[str, Any] = {}
@@ -25,6 +26,11 @@ def _get_kwargs(
     if not isinstance(identity_id, Unset):
         json_identity_id = str(identity_id)
     params["identity_id"] = json_identity_id
+
+    json_pod_id: str | Unset = UNSET
+    if not isinstance(pod_id, Unset):
+        json_pod_id = str(pod_id)
+    params["pod_id"] = json_pod_id
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -82,17 +88,23 @@ def sync_detailed(
     client: AuthenticatedClient | Client,
     days: int | Unset = UNSET,
     identity_id: UUID | Unset = UNSET,
+    pod_id: UUID | Unset = UNSET,
 ) -> Response[Error | MetricsQueryResponse200]:
     """What happened to the mail
 
      Counted from the event log rather than from the messages: a message row says what was sent, and
     whether it bounced is something the provider told us afterwards. `identity_id` narrows it to one
     mailbox, which is the question worth asking when you run several — reputation belongs to the address
-    that sent the mail. `delivery_rate` is null rather than zero when nothing was sent.
+    that sent the mail. `pod_id` narrows it to one pod, which is the question a platform asks: sending
+    reputation is isolated per pod, so this is the scope that isolation is claimed at, and the response
+    carries `reputation.sending` — `paused` is the provider having suspended that pod and nobody else.
+    `delivery_rate` is null rather than zero when nothing was sent. An unknown parameter is refused
+    rather than ignored.
 
     Args:
         days (int | Unset):
         identity_id (UUID | Unset):
+        pod_id (UUID | Unset):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -105,6 +117,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         days=days,
         identity_id=identity_id,
+        pod_id=pod_id,
     )
 
     response = client.get_httpx_client().request(
@@ -119,17 +132,23 @@ def sync(
     client: AuthenticatedClient | Client,
     days: int | Unset = UNSET,
     identity_id: UUID | Unset = UNSET,
+    pod_id: UUID | Unset = UNSET,
 ) -> Error | MetricsQueryResponse200 | None:
     """What happened to the mail
 
      Counted from the event log rather than from the messages: a message row says what was sent, and
     whether it bounced is something the provider told us afterwards. `identity_id` narrows it to one
     mailbox, which is the question worth asking when you run several — reputation belongs to the address
-    that sent the mail. `delivery_rate` is null rather than zero when nothing was sent.
+    that sent the mail. `pod_id` narrows it to one pod, which is the question a platform asks: sending
+    reputation is isolated per pod, so this is the scope that isolation is claimed at, and the response
+    carries `reputation.sending` — `paused` is the provider having suspended that pod and nobody else.
+    `delivery_rate` is null rather than zero when nothing was sent. An unknown parameter is refused
+    rather than ignored.
 
     Args:
         days (int | Unset):
         identity_id (UUID | Unset):
+        pod_id (UUID | Unset):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -143,6 +162,7 @@ def sync(
         client=client,
         days=days,
         identity_id=identity_id,
+        pod_id=pod_id,
     ).parsed
 
 
@@ -151,17 +171,23 @@ async def asyncio_detailed(
     client: AuthenticatedClient | Client,
     days: int | Unset = UNSET,
     identity_id: UUID | Unset = UNSET,
+    pod_id: UUID | Unset = UNSET,
 ) -> Response[Error | MetricsQueryResponse200]:
     """What happened to the mail
 
      Counted from the event log rather than from the messages: a message row says what was sent, and
     whether it bounced is something the provider told us afterwards. `identity_id` narrows it to one
     mailbox, which is the question worth asking when you run several — reputation belongs to the address
-    that sent the mail. `delivery_rate` is null rather than zero when nothing was sent.
+    that sent the mail. `pod_id` narrows it to one pod, which is the question a platform asks: sending
+    reputation is isolated per pod, so this is the scope that isolation is claimed at, and the response
+    carries `reputation.sending` — `paused` is the provider having suspended that pod and nobody else.
+    `delivery_rate` is null rather than zero when nothing was sent. An unknown parameter is refused
+    rather than ignored.
 
     Args:
         days (int | Unset):
         identity_id (UUID | Unset):
+        pod_id (UUID | Unset):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -174,6 +200,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         days=days,
         identity_id=identity_id,
+        pod_id=pod_id,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -186,17 +213,23 @@ async def asyncio(
     client: AuthenticatedClient | Client,
     days: int | Unset = UNSET,
     identity_id: UUID | Unset = UNSET,
+    pod_id: UUID | Unset = UNSET,
 ) -> Error | MetricsQueryResponse200 | None:
     """What happened to the mail
 
      Counted from the event log rather than from the messages: a message row says what was sent, and
     whether it bounced is something the provider told us afterwards. `identity_id` narrows it to one
     mailbox, which is the question worth asking when you run several — reputation belongs to the address
-    that sent the mail. `delivery_rate` is null rather than zero when nothing was sent.
+    that sent the mail. `pod_id` narrows it to one pod, which is the question a platform asks: sending
+    reputation is isolated per pod, so this is the scope that isolation is claimed at, and the response
+    carries `reputation.sending` — `paused` is the provider having suspended that pod and nobody else.
+    `delivery_rate` is null rather than zero when nothing was sent. An unknown parameter is refused
+    rather than ignored.
 
     Args:
         days (int | Unset):
         identity_id (UUID | Unset):
+        pod_id (UUID | Unset):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -211,5 +244,6 @@ async def asyncio(
             client=client,
             days=days,
             identity_id=identity_id,
+            pod_id=pod_id,
         )
     ).parsed

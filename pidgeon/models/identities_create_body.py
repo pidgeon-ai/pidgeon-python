@@ -35,8 +35,9 @@ class IdentitiesCreateBody:
             structurally unable to start a conversation with a stranger.
         tenant_id (None | str | Unset): Your own opaque grouping — a customer id, whatever your side calls it. Never
             parsed here.
-        pod_id (None | Unset | UUID): The pod this belongs to. Your account’s default when you name none. A container,
-            not a boundary: it does not change what an address can do, and no key is scoped to one.
+        pod_id (None | Unset | UUID): The pod this belongs to — your account’s default when you name none. A pod is a
+            sending boundary: mail from it lands on its own reputation, so one of your customers cannot damage another’s
+            delivery. It does not change what an address can do, and no key is scoped to one.
     """
 
     domain_id: UUID | Unset = UNSET

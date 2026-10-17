@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from ..models.message_attachments_item import MessageAttachmentsItem
     from ..models.message_authentication import MessageAuthentication
     from ..models.message_cc_item import MessageCcItem
+    from ..models.message_extracted import MessageExtracted
     from ..models.message_from import MessageFrom
     from ..models.message_headers import MessageHeaders
     from ..models.message_invitation_type_0 import MessageInvitationType0
@@ -53,6 +54,8 @@ class Message:
         calendar_event_id (None | str): The event the calendar made of that invitation, or null. A different fact from
             `invitation`: that is what the mail said, this is what the calendar now holds — a meeting later moved still
             reports the time this message invited you to.
+        extracted (MessageExtracted): Verification codes and links found in the message, most likely first — read from
+            the new text, never the quoted history. Empty lists when nothing was found.
         created_at (str): ISO-8601, UTC.
     """
 
@@ -78,6 +81,7 @@ class Message:
     attachments: list[MessageAttachmentsItem]
     invitation: MessageInvitationType0 | None
     calendar_event_id: None | str
+    extracted: MessageExtracted
     created_at: str
 
     def to_dict(self) -> dict[str, Any]:
@@ -147,6 +151,8 @@ class Message:
         calendar_event_id: None | str
         calendar_event_id = self.calendar_event_id
 
+        extracted = self.extracted.to_dict()
+
         created_at = self.created_at
 
         field_dict: dict[str, Any] = {}
@@ -175,6 +181,7 @@ class Message:
                 "attachments": attachments,
                 "invitation": invitation,
                 "calendar_event_id": calendar_event_id,
+                "extracted": extracted,
                 "created_at": created_at,
             }
         )
@@ -186,6 +193,7 @@ class Message:
         from ..models.message_attachments_item import MessageAttachmentsItem  # noqa: PLC0415
         from ..models.message_authentication import MessageAuthentication  # noqa: PLC0415
         from ..models.message_cc_item import MessageCcItem  # noqa: PLC0415
+        from ..models.message_extracted import MessageExtracted  # noqa: PLC0415
         from ..models.message_from import MessageFrom  # noqa: PLC0415
         from ..models.message_headers import MessageHeaders  # noqa: PLC0415
         from ..models.message_invitation_type_0 import MessageInvitationType0  # noqa: PLC0415
@@ -299,6 +307,8 @@ class Message:
 
         calendar_event_id = _parse_calendar_event_id(d.pop("calendar_event_id"))
 
+        extracted = MessageExtracted.from_dict(d.pop("extracted"))
+
         created_at = d.pop("created_at")
 
         message = cls(
@@ -324,6 +334,7 @@ class Message:
             attachments=attachments,
             invitation=invitation,
             calendar_event_id=calendar_event_id,
+            extracted=extracted,
             created_at=created_at,
         )
 
