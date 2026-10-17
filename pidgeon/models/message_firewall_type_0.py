@@ -22,11 +22,15 @@ class MessageFirewallType0:
             changed.
         signals (list[MessageFirewallType0SignalsItem]): The rules that fired, most specific first. Empty when the
             verdict is `clean`.
+        clean_text (str): What an agent should read: the new text with hidden content and invisible characters removed
+            and lines posing as a chat turn marked, under a one-line note saying what changed. The new text unchanged when
+            nothing needed it. Ask for `body=clean` to get it in place of the body.
         version (int): Bumped when the rules change in a way that could change a verdict.
     """
 
     verdict: MessageFirewallType0Verdict
     signals: list[MessageFirewallType0SignalsItem]
+    clean_text: str
     version: int
 
     def to_dict(self) -> dict[str, Any]:
@@ -37,6 +41,8 @@ class MessageFirewallType0:
             signals_item = signals_item_data.to_dict()
             signals.append(signals_item)
 
+        clean_text = self.clean_text
+
         version = self.version
 
         field_dict: dict[str, Any] = {}
@@ -45,6 +51,7 @@ class MessageFirewallType0:
             {
                 "verdict": verdict,
                 "signals": signals,
+                "clean_text": clean_text,
                 "version": version,
             }
         )
@@ -65,11 +72,14 @@ class MessageFirewallType0:
 
             signals.append(signals_item)
 
+        clean_text = d.pop("clean_text")
+
         version = d.pop("version")
 
         message_firewall_type_0 = cls(
             verdict=verdict,
             signals=signals,
+            clean_text=clean_text,
             version=version,
         )
 

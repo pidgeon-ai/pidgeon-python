@@ -8,6 +8,7 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
+from ...models.messages_await_body import MessagesAwaitBody
 from ...models.messages_await_has_code import MessagesAwaitHasCode
 from ...models.messages_await_response_200 import MessagesAwaitResponse200
 from ...types import UNSET, Response, Unset
@@ -16,6 +17,7 @@ from ...types import UNSET, Response, Unset
 def _get_kwargs(
     *,
     identity_id: UUID,
+    body: MessagesAwaitBody | Unset = MessagesAwaitBody.ORIGINAL,
     from_: str | Unset = UNSET,
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
@@ -27,6 +29,12 @@ def _get_kwargs(
 
     json_identity_id = str(identity_id)
     params["identity_id"] = json_identity_id
+
+    json_body: str | Unset = UNSET
+    if not isinstance(body, Unset):
+        json_body = body.value
+
+    params["body"] = json_body
 
     params["from"] = from_
 
@@ -100,6 +108,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     identity_id: UUID,
+    body: MessagesAwaitBody | Unset = MessagesAwaitBody.ORIGINAL,
     from_: str | Unset = UNSET,
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
@@ -116,6 +125,7 @@ def sync_detailed(
 
     Args:
         identity_id (UUID):
+        body (MessagesAwaitBody | Unset):  Default: MessagesAwaitBody.ORIGINAL.
         from_ (str | Unset):
         subject_contains (str | Unset):
         has_code (MessagesAwaitHasCode | Unset):
@@ -132,6 +142,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         identity_id=identity_id,
+        body=body,
         from_=from_,
         subject_contains=subject_contains,
         has_code=has_code,
@@ -150,6 +161,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     identity_id: UUID,
+    body: MessagesAwaitBody | Unset = MessagesAwaitBody.ORIGINAL,
     from_: str | Unset = UNSET,
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
@@ -166,6 +178,7 @@ def sync(
 
     Args:
         identity_id (UUID):
+        body (MessagesAwaitBody | Unset):  Default: MessagesAwaitBody.ORIGINAL.
         from_ (str | Unset):
         subject_contains (str | Unset):
         has_code (MessagesAwaitHasCode | Unset):
@@ -183,6 +196,7 @@ def sync(
     return sync_detailed(
         client=client,
         identity_id=identity_id,
+        body=body,
         from_=from_,
         subject_contains=subject_contains,
         has_code=has_code,
@@ -195,6 +209,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     identity_id: UUID,
+    body: MessagesAwaitBody | Unset = MessagesAwaitBody.ORIGINAL,
     from_: str | Unset = UNSET,
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
@@ -211,6 +226,7 @@ async def asyncio_detailed(
 
     Args:
         identity_id (UUID):
+        body (MessagesAwaitBody | Unset):  Default: MessagesAwaitBody.ORIGINAL.
         from_ (str | Unset):
         subject_contains (str | Unset):
         has_code (MessagesAwaitHasCode | Unset):
@@ -227,6 +243,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         identity_id=identity_id,
+        body=body,
         from_=from_,
         subject_contains=subject_contains,
         has_code=has_code,
@@ -243,6 +260,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     identity_id: UUID,
+    body: MessagesAwaitBody | Unset = MessagesAwaitBody.ORIGINAL,
     from_: str | Unset = UNSET,
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
@@ -259,6 +277,7 @@ async def asyncio(
 
     Args:
         identity_id (UUID):
+        body (MessagesAwaitBody | Unset):  Default: MessagesAwaitBody.ORIGINAL.
         from_ (str | Unset):
         subject_contains (str | Unset):
         has_code (MessagesAwaitHasCode | Unset):
@@ -277,6 +296,7 @@ async def asyncio(
         await asyncio_detailed(
             client=client,
             identity_id=identity_id,
+            body=body,
             from_=from_,
             subject_contains=subject_contains,
             has_code=has_code,
