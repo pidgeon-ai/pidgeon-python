@@ -7,6 +7,7 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
+from ...models.messages_list_in_thread_body import MessagesListInThreadBody
 from ...models.messages_list_in_thread_response_200 import MessagesListInThreadResponse200
 from ...types import UNSET, Response, Unset
 
@@ -16,6 +17,7 @@ def _get_kwargs(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     thread_id: UUID,
+    body: MessagesListInThreadBody | Unset = MessagesListInThreadBody.ORIGINAL,
 ) -> dict[str, Any]:
 
     params: dict[str, Any] = {}
@@ -26,6 +28,12 @@ def _get_kwargs(
 
     json_thread_id = str(thread_id)
     params["thread_id"] = json_thread_id
+
+    json_body: str | Unset = UNSET
+    if not isinstance(body, Unset):
+        json_body = body.value
+
+    params["body"] = json_body
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -84,6 +92,7 @@ def sync_detailed(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     thread_id: UUID,
+    body: MessagesListInThreadBody | Unset = MessagesListInThreadBody.ORIGINAL,
 ) -> Response[Error | MessagesListInThreadResponse200]:
     """List messages
 
@@ -91,6 +100,7 @@ def sync_detailed(
         limit (int | Unset):  Default: 50.
         cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
         thread_id (UUID):
+        body (MessagesListInThreadBody | Unset):  Default: MessagesListInThreadBody.ORIGINAL.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -104,6 +114,7 @@ def sync_detailed(
         limit=limit,
         cursor=cursor,
         thread_id=thread_id,
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -119,6 +130,7 @@ def sync(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     thread_id: UUID,
+    body: MessagesListInThreadBody | Unset = MessagesListInThreadBody.ORIGINAL,
 ) -> Error | MessagesListInThreadResponse200 | None:
     """List messages
 
@@ -126,6 +138,7 @@ def sync(
         limit (int | Unset):  Default: 50.
         cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
         thread_id (UUID):
+        body (MessagesListInThreadBody | Unset):  Default: MessagesListInThreadBody.ORIGINAL.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -140,6 +153,7 @@ def sync(
         limit=limit,
         cursor=cursor,
         thread_id=thread_id,
+        body=body,
     ).parsed
 
 
@@ -149,6 +163,7 @@ async def asyncio_detailed(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     thread_id: UUID,
+    body: MessagesListInThreadBody | Unset = MessagesListInThreadBody.ORIGINAL,
 ) -> Response[Error | MessagesListInThreadResponse200]:
     """List messages
 
@@ -156,6 +171,7 @@ async def asyncio_detailed(
         limit (int | Unset):  Default: 50.
         cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
         thread_id (UUID):
+        body (MessagesListInThreadBody | Unset):  Default: MessagesListInThreadBody.ORIGINAL.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -169,6 +185,7 @@ async def asyncio_detailed(
         limit=limit,
         cursor=cursor,
         thread_id=thread_id,
+        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -182,6 +199,7 @@ async def asyncio(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     thread_id: UUID,
+    body: MessagesListInThreadBody | Unset = MessagesListInThreadBody.ORIGINAL,
 ) -> Error | MessagesListInThreadResponse200 | None:
     """List messages
 
@@ -189,6 +207,7 @@ async def asyncio(
         limit (int | Unset):  Default: 50.
         cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
         thread_id (UUID):
+        body (MessagesListInThreadBody | Unset):  Default: MessagesListInThreadBody.ORIGINAL.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -204,5 +223,6 @@ async def asyncio(
             limit=limit,
             cursor=cursor,
             thread_id=thread_id,
+            body=body,
         )
     ).parsed
