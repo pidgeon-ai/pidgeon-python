@@ -6,18 +6,33 @@
 # it lives here instead of in `openapi.json` — the document describes the
 # API, not who ships a client for it.
 #
-# `name`, `version` and `description` still come from the spec, so bumping
-# the API's `info.version` is what releases the client.
+# `name` and `version` still come from the spec, so bumping the API's
+# `info.version` is what releases the client. `description` does not: the
+# generator's is "A client library for accessing Pidgeon API", and PyPI's
+# search ranks on the summary.
 # `prd/one-source-of-capability.md`.
 [project]
 name = "pidgeon"
-version = "1.14.0"
-description = "A client library for accessing Pidgeon API"
+version = "1.14.1"
+description = "Email inboxes for AI agents — Python SDK for Pidgeon: create addresses, send, receive and reply."
 authors = [{ name = "Pidgeon" }]
 requires-python = ">=3.11"
 readme = "README.md"
 license = "MIT"
-keywords = ["pidgeon", "email", "webhooks", "api-client", "agents"]
+keywords = [
+    "pidgeon",
+    "email",
+    "email-api",
+    "inbox",
+    "ai-agents",
+    "agent",
+    "llm",
+    "mcp",
+    "otp",
+    "verification-code",
+    "webhooks",
+    "api-client",
+]
 classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
