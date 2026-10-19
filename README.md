@@ -70,6 +70,9 @@ your agent sign itself up: [pidgeon.ai/skill.md](https://pidgeon.ai/skill.md).
 Webhook signatures verify with `pidgeon.webhooks.verify_webhook`, which does
 the timing-safe compare and the replay window for you.
 
+[`examples/openai-agents`](examples/openai-agents) is an OpenAI Agents SDK
+agent on the hosted MCP server, which needs no package of ours.
+
 ## Contributing
 
 The client is generated from [`openapi.json`](openapi.json), the contract the
