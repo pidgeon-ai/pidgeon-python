@@ -7,7 +7,7 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.api_key import ApiKey
+    from ..models.api_key_created import ApiKeyCreated
 
 
 T = TypeVar("T", bound="KeysCreateResponse201")
@@ -17,10 +17,10 @@ T = TypeVar("T", bound="KeysCreateResponse201")
 class KeysCreateResponse201:
     """
     Attributes:
-        data (ApiKey):
+        data (ApiKeyCreated):
     """
 
-    data: ApiKey
+    data: ApiKeyCreated
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -38,10 +38,10 @@ class KeysCreateResponse201:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.api_key import ApiKey  # noqa: PLC0415
+        from ..models.api_key_created import ApiKeyCreated  # noqa: PLC0415
 
         d = dict(src_dict)
-        data = ApiKey.from_dict(d.pop("data"))
+        data = ApiKeyCreated.from_dict(d.pop("data"))
 
         keys_create_response_201 = cls(
             data=data,
