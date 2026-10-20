@@ -1,5 +1,7 @@
 # pidgeon
 
+[![M8ven Score](https://m8ven.ai/badge/mcp/pidgeon-ai-pidgeon-python-14x4fi?v=7839ce033bbaf81a694644e5d0dce78c)](https://m8ven.ai/mcp/pidgeon-ai-pidgeon-python-14x4fi?s=readme)
+
 Pidgeon is the email inbox API for AI agents. It gives agents their own inboxes
 so they can work with emails just like a human. This is its Python client.
 
