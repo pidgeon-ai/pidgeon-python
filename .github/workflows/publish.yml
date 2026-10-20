@@ -1,6 +1,8 @@
 name: Publish
 
-# Tag-driven: `python-v1.3.0` publishes `pidgeon` to PyPI.
+# Tag-driven: `python-v1.3.0` publishes `pidgeon` to PyPI. The release job in
+# the private repository (`scripts/release.ts`) cuts the tags, after the sync
+# that put this tree here succeeded.
 #
 # Here rather than in the private repository so the upload carries PEP 740
 # attestations — `gh-action-pypi-publish` generates them from the workflow's
@@ -53,3 +55,7 @@ jobs:
           # Attestations are the default and are stated anyway: they are the
           # reason this workflow is in a public repository.
           attestations: true
+          # A version PyPI already has is skipped, so a rerun of a
+          # half-finished release, or a tag on a version published by hand,
+          # succeeds rather than failing on the upload.
+          skip-existing: true

@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any, TypeVar, cast
 from attrs import define as _attrs_define
 
 if TYPE_CHECKING:
+    from ..models.awaited_message_held_back import AwaitedMessageHeldBack
     from ..models.awaited_message_message_type_0 import AwaitedMessageMessageType0
 
 
@@ -20,11 +21,14 @@ class AwaitedMessage:
             first.
         timed_out (bool):
         cursor (str): Pass as `after` on the next call, so a message arriving between two calls is not missed.
+        held_back (AwaitedMessageHeldBack): What matched and was not returned. A wait that times out with `spam` above
+            zero did not miss the message: it was filed as spam.
     """
 
     message: AwaitedMessageMessageType0 | None
     timed_out: bool
     cursor: str
+    held_back: AwaitedMessageHeldBack
 
     def to_dict(self) -> dict[str, Any]:
         from ..models.awaited_message_message_type_0 import AwaitedMessageMessageType0  # noqa: PLC0415
@@ -39,6 +43,8 @@ class AwaitedMessage:
 
         cursor = self.cursor
 
+        held_back = self.held_back.to_dict()
+
         field_dict: dict[str, Any] = {}
 
         field_dict.update(
@@ -46,6 +52,7 @@ class AwaitedMessage:
                 "message": message,
                 "timed_out": timed_out,
                 "cursor": cursor,
+                "held_back": held_back,
             }
         )
 
@@ -53,6 +60,7 @@ class AwaitedMessage:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.awaited_message_held_back import AwaitedMessageHeldBack  # noqa: PLC0415
         from ..models.awaited_message_message_type_0 import AwaitedMessageMessageType0  # noqa: PLC0415
 
         d = dict(src_dict)
@@ -76,10 +84,13 @@ class AwaitedMessage:
 
         cursor = d.pop("cursor")
 
+        held_back = AwaitedMessageHeldBack.from_dict(d.pop("held_back"))
+
         awaited_message = cls(
             message=message,
             timed_out=timed_out,
             cursor=cursor,
+            held_back=held_back,
         )
 
         return awaited_message

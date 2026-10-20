@@ -6,7 +6,10 @@ from typing import TYPE_CHECKING, Any, TypeVar, cast
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
+from ..types import UNSET, Unset
+
 if TYPE_CHECKING:
+    from ..models.mailboxes_list_folder_response_200_held_back import MailboxesListFolderResponse200HeldBack
     from ..models.message_list_item import MessageListItem
 
 
@@ -22,12 +25,15 @@ class MailboxesListFolderResponse200:
         next_cursor (None | str): Pass as `cursor` to continue. Null on the last page.
         sync_cursor (str): Hand to `GET /mailboxes/changes` as `since` to be told what has changed since this page,
             rather than fetching it again. Not a page cursor — the two are different reads and each refuses the other.
+        held_back (MailboxesListFolderResponse200HeldBack | Unset): On `inbox` only. Spam is never in the inbox, so an
+            inbox that looks empty may not be: `spam` counts the unread messages filed there.
     """
 
     data: list[MessageListItem]
     has_more: bool
     next_cursor: None | str
     sync_cursor: str
+    held_back: MailboxesListFolderResponse200HeldBack | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -43,6 +49,10 @@ class MailboxesListFolderResponse200:
 
         sync_cursor = self.sync_cursor
 
+        held_back: dict[str, Any] | Unset = UNSET
+        if not isinstance(self.held_back, Unset):
+            held_back = self.held_back.to_dict()
+
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
@@ -53,11 +63,14 @@ class MailboxesListFolderResponse200:
                 "sync_cursor": sync_cursor,
             }
         )
+        if held_back is not UNSET:
+            field_dict["held_back"] = held_back
 
         return field_dict
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.mailboxes_list_folder_response_200_held_back import MailboxesListFolderResponse200HeldBack  # noqa: PLC0415
         from ..models.message_list_item import MessageListItem  # noqa: PLC0415
 
         d = dict(src_dict)
@@ -79,11 +92,19 @@ class MailboxesListFolderResponse200:
 
         sync_cursor = d.pop("sync_cursor")
 
+        _held_back = d.pop("held_back", UNSET)
+        held_back: MailboxesListFolderResponse200HeldBack | Unset
+        if isinstance(_held_back, Unset):
+            held_back = UNSET
+        else:
+            held_back = MailboxesListFolderResponse200HeldBack.from_dict(_held_back)
+
         mailboxes_list_folder_response_200 = cls(
             data=data,
             has_more=has_more,
             next_cursor=next_cursor,
             sync_cursor=sync_cursor,
+            held_back=held_back,
         )
 
         mailboxes_list_folder_response_200.additional_properties = d

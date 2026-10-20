@@ -17,11 +17,20 @@ from .app_passwords_create_response_201 import AppPasswordsCreateResponse201
 from .app_passwords_list_response_200 import AppPasswordsListResponse200
 from .app_passwords_revoke_response_200 import AppPasswordsRevokeResponse200
 from .attachment import Attachment
+from .attachment_text import AttachmentText
+from .attachment_text_firewall_type_0 import AttachmentTextFirewallType0
+from .attachment_text_firewall_type_0_signals_item import AttachmentTextFirewallType0SignalsItem
+from .attachment_text_firewall_type_0_signals_item_kind import AttachmentTextFirewallType0SignalsItemKind
+from .attachment_text_firewall_type_0_signals_item_where import AttachmentTextFirewallType0SignalsItemWhere
+from .attachment_text_firewall_type_0_verdict import AttachmentTextFirewallType0Verdict
 from .attachment_url import AttachmentUrl
 from .attachments_download_url_response_200 import AttachmentsDownloadUrlResponse200
+from .attachments_text_body import AttachmentsTextBody
+from .attachments_text_response_200 import AttachmentsTextResponse200
 from .attachments_upload_body import AttachmentsUploadBody
 from .attachments_upload_response_201 import AttachmentsUploadResponse201
 from .awaited_message import AwaitedMessage
+from .awaited_message_held_back import AwaitedMessageHeldBack
 from .awaited_message_message_type_0 import AwaitedMessageMessageType0
 from .awaited_message_message_type_0_attachments_item import AwaitedMessageMessageType0AttachmentsItem
 from .awaited_message_message_type_0_authentication import AwaitedMessageMessageType0Authentication
@@ -195,6 +204,7 @@ from .mailbox_folder import MailboxFolder
 from .mailboxes_changes_response_200 import MailboxesChangesResponse200
 from .mailboxes_empty_trash_response_200 import MailboxesEmptyTrashResponse200
 from .mailboxes_list_folder_response_200 import MailboxesListFolderResponse200
+from .mailboxes_list_folder_response_200_held_back import MailboxesListFolderResponse200HeldBack
 from .mailboxes_list_response_200 import MailboxesListResponse200
 from .me import Me
 from .me_get_response_200 import MeGetResponse200
@@ -228,6 +238,7 @@ from .messages_act_body_action import MessagesActBodyAction
 from .messages_act_response_200 import MessagesActResponse200
 from .messages_await_body import MessagesAwaitBody
 from .messages_await_has_code import MessagesAwaitHasCode
+from .messages_await_include_spam import MessagesAwaitIncludeSpam
 from .messages_await_response_200 import MessagesAwaitResponse200
 from .messages_forward_body import MessagesForwardBody
 from .messages_forward_response_202 import MessagesForwardResponse202
@@ -360,10 +371,19 @@ __all__ = (
     "AppPasswordsRevokeResponse200",
     "Attachment",
     "AttachmentsDownloadUrlResponse200",
+    "AttachmentsTextBody",
+    "AttachmentsTextResponse200",
     "AttachmentsUploadBody",
     "AttachmentsUploadResponse201",
+    "AttachmentText",
+    "AttachmentTextFirewallType0",
+    "AttachmentTextFirewallType0SignalsItem",
+    "AttachmentTextFirewallType0SignalsItemKind",
+    "AttachmentTextFirewallType0SignalsItemWhere",
+    "AttachmentTextFirewallType0Verdict",
     "AttachmentUrl",
     "AwaitedMessage",
+    "AwaitedMessageHeldBack",
     "AwaitedMessageMessageType0",
     "AwaitedMessageMessageType0AttachmentsItem",
     "AwaitedMessageMessageType0Authentication",
@@ -528,6 +548,7 @@ __all__ = (
     "MailboxesChangesResponse200",
     "MailboxesEmptyTrashResponse200",
     "MailboxesListFolderResponse200",
+    "MailboxesListFolderResponse200HeldBack",
     "MailboxesListResponse200",
     "MailboxFolder",
     "Me",
@@ -560,6 +581,7 @@ __all__ = (
     "MessagesActResponse200",
     "MessagesAwaitBody",
     "MessagesAwaitHasCode",
+    "MessagesAwaitIncludeSpam",
     "MessagesAwaitResponse200",
     "MessagesForwardBody",
     "MessagesForwardResponse202",

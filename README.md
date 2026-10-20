@@ -1,15 +1,13 @@
-# Pidgeon for Python
+# pidgeon
 
-**Mailboxes for AI agents.** Pidgeon is the email inbox API for AI agents. It gives agents their own inboxes
-so they can work with emails just like a human.
-
-[pidgeon.ai](https://pidgeon.ai) · [Documentation](https://pidgeon.ai/docs)
+Pidgeon is the email inbox API for AI agents. It gives agents their own inboxes
+so they can work with emails just like a human. This is its Python client.
 
 ```sh
 pip install pidgeon
 ```
 
-Create an address, send from it, wait for the answer, and reply in the thread:
+## Create an address, send, receive, reply
 
 ```python
 import os
@@ -64,26 +62,125 @@ if not isinstance(awaited, Error) and awaited.data.message:
 ```
 
 `PIDGEON_API_KEY` is a `pgn_live_…` key. Make one at
-[pidgeon.ai/app/developers/keys](https://pidgeon.ai/app/developers/keys), or let
-your agent sign itself up: [pidgeon.ai/skill.md](https://pidgeon.ai/skill.md).
+[pidgeon.ai/app/developers/keys](https://pidgeon.ai/app/developers/keys), or
+let your agent sign itself up: [pidgeon.ai/skill.md](https://pidgeon.ai/skill.md)
+is two calls, and the only thing it needs from a person is a six-digit code.
 
-Webhook signatures verify with `pidgeon.webhooks.verify_webhook`, which does
-the timing-safe compare and the replay window for you.
+In production, take a [signed webhook](#receiving) rather than holding a
+request open. Documentation: [pidgeon.ai/docs](https://pidgeon.ai/docs) ·
+[OpenAPI](https://pidgeon.ai/openapi.json).
 
-[`examples/openai-agents`](examples/openai-agents) is an OpenAI Agents SDK
-agent on the hosted MCP server, which needs no package of ours.
+Generated from `openapi.json`, the same document the TypeScript client is
+generated from, so an operation has the same name in both:
+`messages_send` here is `messagesSend` there. Every call takes the client;
+nothing is global.
+
+## Errors
+
+**Errors come back, they are not raised.** Every call returns the success
+model *or* `Error` *or* `None`, so an `isinstance` check is the shape of a
+correct caller. `Error.error` carries the API's own `code`, a `message`
+written for a person and safe to show one, and a `field` when one input was at
+fault.
+
+**`from_` and `type_` carry a trailing underscore**, because `from` and `type`
+are reserved in Python. The wire names are unchanged.
+
+Every operation also has `asyncio`, and `sync_detailed` / `asyncio_detailed`
+variants that return the whole `Response` with its status and headers.
+
+## Receiving
+
+Mail arriving at an address your code owns becomes an event, and your endpoint
+is called with a signed payload. **Verify before you parse** — an unverified
+payload is an unauthenticated POST that claims a message arrived.
+
+```python
+from pidgeon.webhooks import verify_webhook
+
+event = verify_webhook(
+    raw_body=request.body,  # the exact bytes, before any json.loads
+    headers=request.headers,
+    secret=os.environ["PIDGEON_WEBHOOK_SECRET"],
+)
+```
+
+`raw_body` must be the bytes we sent. Parse the JSON *after* verifying —
+re-serialising changes key order and the signature will not match.
+`verify_webhook` raises rather than returning a boolean, rejects a timestamp
+outside five minutes before it looks at the signature, and compares in
+constant time.
+
+The event carries ids, never a body. Exchange one for the content with
+`messages_get`.
+
+## Creating an address
+
+```python
+from pidgeon.api.identities import identities_create
+from pidgeon.models import (
+    IdentitiesCreateBody,
+    IdentitiesCreateBodySendPolicy,
+    IdentitiesCreateBodyType,
+)
+
+identities_create.sync(
+    client=client,
+    body=IdentitiesCreateBody(
+        address="receipts@yourdomain.com",
+        type_=IdentitiesCreateBodyType.AGENT,
+        send_policy=IdentitiesCreateBodySendPolicy.REPLY_ONLY,
+    ),
+)
+```
+
+Say where with `address`, `domain` or `domain_id` — one of the three. Every
+address you already have carries its `domain_id`, which is what to use when
+you are on the shared domain and own nothing to list.
+
+`send_policy=IdentitiesCreateBodySendPolicy.REPLY_ONLY` makes an address structurally unable to write to
+anybody who has not written to it first, which is the right default for
+software.
+
+## Pagination
+
+A list returns a page, not an iterator — deliberately. An iterator that hides
+pagination also hides the rate limit pagination is subject to.
+
+```python
+from pidgeon.api.events import events_list
+
+cursor = None
+while True:
+    page = events_list.sync(client=client, cursor=cursor)
+    for event in page.data:
+        handle(event)
+
+    cursor = page.next_cursor
+    if cursor is None:
+        break
+```
+
+## What this deliberately does not do
+
+No retry policy, no queue, no caching, no auto-paginating iterator. Those are
+decisions that belong to your application — an SDK that makes them for you is
+one you eventually work around.
+
+## Versioning
+
+Versioned independently of the API. The API is `/v1`; this package is `1.x`,
+and semver applies to its own surface.
+
+Full reference: [pidgeon.ai/docs](https://pidgeon.ai/docs).
 
 ## Contributing
 
-The client is generated from [`openapi.json`](openapi.json), the contract the
-API validates against, published at <https://pidgeon.ai/openapi.json>. The
-application that serves it is closed source; this client is not. This
-repository is copied from that one on every release.
-
-**So a pull request against generated code cannot be merged as written** — the
-fix belongs in the schema it came from. Open an issue and say what is wrong.
-
-Issues and questions: [open one](https://github.com/pidgeon-ai/pidgeon-python/issues),
-or email [support@pidgeon.ai](mailto:support@pidgeon.ai).
+This client is generated from [`openapi.json`](https://pidgeon.ai/openapi.json),
+the contract the API validates against, and published from
+[pidgeon-ai/pidgeon-python](https://github.com/pidgeon-ai/pidgeon-python). A
+pull request against generated code cannot be merged as written — the fix
+belongs in the schema. [Open an issue](https://github.com/pidgeon-ai/pidgeon-python/issues)
+and say what is wrong, or email [support@pidgeon.ai](mailto:support@pidgeon.ai).
 
 MIT licensed.
