@@ -20,11 +20,13 @@ class ThreadsUpdateBody:
         status (ThreadsUpdateBodyStatus | Unset):
         owner_type (ThreadsUpdateBodyOwnerType | Unset):
         assignee_id (None | Unset | UUID):
+        reason (str | Unset):
     """
 
     status: ThreadsUpdateBodyStatus | Unset = UNSET
     owner_type: ThreadsUpdateBodyOwnerType | Unset = UNSET
     assignee_id: None | Unset | UUID = UNSET
+    reason: str | Unset = UNSET
 
     def to_dict(self) -> dict[str, Any]:
         status: str | Unset = UNSET
@@ -43,6 +45,8 @@ class ThreadsUpdateBody:
         else:
             assignee_id = self.assignee_id
 
+        reason = self.reason
+
         field_dict: dict[str, Any] = {}
 
         field_dict.update({})
@@ -52,6 +56,8 @@ class ThreadsUpdateBody:
             field_dict["owner_type"] = owner_type
         if assignee_id is not UNSET:
             field_dict["assignee_id"] = assignee_id
+        if reason is not UNSET:
+            field_dict["reason"] = reason
 
         return field_dict
 
@@ -89,10 +95,13 @@ class ThreadsUpdateBody:
 
         assignee_id = _parse_assignee_id(d.pop("assignee_id", UNSET))
 
+        reason = d.pop("reason", UNSET)
+
         threads_update_body = cls(
             status=status,
             owner_type=owner_type,
             assignee_id=assignee_id,
+            reason=reason,
         )
 
         return threads_update_body

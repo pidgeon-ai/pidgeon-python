@@ -82,7 +82,9 @@ def sync_detailed(
 ) -> Response[Error | ThreadsUpdateResponse200]:
     """Update a thread
 
-     Its status and who owns it — the state a conversation carries.
+     Its status and who owns it — the state a conversation carries. Handing it to a person notifies them:
+    the assignee if you name one, otherwise everybody who can answer as the address. `reason` is shown
+    in that notification.
 
     Args:
         id (str):
@@ -116,7 +118,9 @@ def sync(
 ) -> Error | ThreadsUpdateResponse200 | None:
     """Update a thread
 
-     Its status and who owns it — the state a conversation carries.
+     Its status and who owns it — the state a conversation carries. Handing it to a person notifies them:
+    the assignee if you name one, otherwise everybody who can answer as the address. `reason` is shown
+    in that notification.
 
     Args:
         id (str):
@@ -145,7 +149,9 @@ async def asyncio_detailed(
 ) -> Response[Error | ThreadsUpdateResponse200]:
     """Update a thread
 
-     Its status and who owns it — the state a conversation carries.
+     Its status and who owns it — the state a conversation carries. Handing it to a person notifies them:
+    the assignee if you name one, otherwise everybody who can answer as the address. `reason` is shown
+    in that notification.
 
     Args:
         id (str):
@@ -177,7 +183,9 @@ async def asyncio(
 ) -> Error | ThreadsUpdateResponse200 | None:
     """Update a thread
 
-     Its status and who owns it — the state a conversation carries.
+     Its status and who owns it — the state a conversation carries. Handing it to a person notifies them:
+    the assignee if you name one, otherwise everybody who can answer as the address. `reason` is shown
+    in that notification.
 
     Args:
         id (str):
