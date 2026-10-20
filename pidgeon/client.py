@@ -29,9 +29,8 @@ class Client:
 
 
     Attributes:
-        raise_on_unexpected_status: Whether or not to raise an errors.UnexpectedStatus if the API returns a
-            status code that was not documented in the source OpenAPI document. Can also be provided as a keyword
-            argument to the constructor.
+        raise_on_unexpected_status: Kept so existing code still constructs. It changes nothing: every failure
+            raises errors.PidgeonError and every other undeclared status raises errors.UnexpectedStatus.
     """
 
     raise_on_unexpected_status: bool = field(default=False, kw_only=True)
@@ -156,9 +155,8 @@ class AuthenticatedClient:
 
 
     Attributes:
-        raise_on_unexpected_status: Whether or not to raise an errors.UnexpectedStatus if the API returns a
-            status code that was not documented in the source OpenAPI document. Can also be provided as a keyword
-            argument to the constructor.
+        raise_on_unexpected_status: Kept so existing code still constructs. It changes nothing: every failure
+            raises errors.PidgeonError and every other undeclared status raises errors.UnexpectedStatus.
         token: The token to use for authentication
         prefix: The prefix to use for the Authorization header
         auth_header_name: The name of the Authorization header

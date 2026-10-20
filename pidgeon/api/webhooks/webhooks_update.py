@@ -6,7 +6,6 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.error import Error
 from ...models.webhooks_update_body import WebhooksUpdateBody
 from ...models.webhooks_update_response_200 import WebhooksUpdateResponse200
 from ...types import Response
@@ -34,38 +33,21 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(
-    *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Error | WebhooksUpdateResponse200 | None:
+def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> WebhooksUpdateResponse200:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 200:
         response_200 = WebhooksUpdateResponse200.from_dict(response.json())
 
         return response_200
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[Error | WebhooksUpdateResponse200]:
+) -> Response[WebhooksUpdateResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -79,7 +61,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: WebhooksUpdateBody,
-) -> Response[Error | WebhooksUpdateResponse200]:
+) -> Response[WebhooksUpdateResponse200]:
     """Turn an endpoint off, or back on
 
      We disable one ourselves after enough consecutive failures. Without this you would have to delete
@@ -91,11 +73,12 @@ def sync_detailed(
         body (WebhooksUpdateBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | WebhooksUpdateResponse200]
+        Response[WebhooksUpdateResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -115,7 +98,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: WebhooksUpdateBody,
-) -> Error | WebhooksUpdateResponse200 | None:
+) -> WebhooksUpdateResponse200:
     """Turn an endpoint off, or back on
 
      We disable one ourselves after enough consecutive failures. Without this you would have to delete
@@ -127,11 +110,12 @@ def sync(
         body (WebhooksUpdateBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | WebhooksUpdateResponse200
+        WebhooksUpdateResponse200
     """
 
     return sync_detailed(
@@ -146,7 +130,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: WebhooksUpdateBody,
-) -> Response[Error | WebhooksUpdateResponse200]:
+) -> Response[WebhooksUpdateResponse200]:
     """Turn an endpoint off, or back on
 
      We disable one ourselves after enough consecutive failures. Without this you would have to delete
@@ -158,11 +142,12 @@ async def asyncio_detailed(
         body (WebhooksUpdateBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | WebhooksUpdateResponse200]
+        Response[WebhooksUpdateResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -180,7 +165,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: WebhooksUpdateBody,
-) -> Error | WebhooksUpdateResponse200 | None:
+) -> WebhooksUpdateResponse200:
     """Turn an endpoint off, or back on
 
      We disable one ourselves after enough consecutive failures. Without this you would have to delete
@@ -192,11 +177,12 @@ async def asyncio(
         body (WebhooksUpdateBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | WebhooksUpdateResponse200
+        WebhooksUpdateResponse200
     """
 
     return (

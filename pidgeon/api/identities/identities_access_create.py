@@ -6,7 +6,6 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.error import Error
 from ...models.identities_access_create_body import IdentitiesAccessCreateBody
 from ...models.identities_access_create_response_200 import IdentitiesAccessCreateResponse200
 from ...types import Response
@@ -36,36 +35,21 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Error | IdentitiesAccessCreateResponse200 | None:
+) -> IdentitiesAccessCreateResponse200:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 200:
         response_200 = IdentitiesAccessCreateResponse200.from_dict(response.json())
 
         return response_200
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[Error | IdentitiesAccessCreateResponse200]:
+) -> Response[IdentitiesAccessCreateResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -79,7 +63,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: IdentitiesAccessCreateBody,
-) -> Response[Error | IdentitiesAccessCreateResponse200]:
+) -> Response[IdentitiesAccessCreateResponse200]:
     """Grant access
 
      Name exactly one of `user_id`, `api_key_id` or `everyone`. Granting **replaces** any grant that
@@ -92,11 +76,12 @@ def sync_detailed(
         body (IdentitiesAccessCreateBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | IdentitiesAccessCreateResponse200]
+        Response[IdentitiesAccessCreateResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -116,7 +101,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: IdentitiesAccessCreateBody,
-) -> Error | IdentitiesAccessCreateResponse200 | None:
+) -> IdentitiesAccessCreateResponse200:
     """Grant access
 
      Name exactly one of `user_id`, `api_key_id` or `everyone`. Granting **replaces** any grant that
@@ -129,11 +114,12 @@ def sync(
         body (IdentitiesAccessCreateBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | IdentitiesAccessCreateResponse200
+        IdentitiesAccessCreateResponse200
     """
 
     return sync_detailed(
@@ -148,7 +134,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: IdentitiesAccessCreateBody,
-) -> Response[Error | IdentitiesAccessCreateResponse200]:
+) -> Response[IdentitiesAccessCreateResponse200]:
     """Grant access
 
      Name exactly one of `user_id`, `api_key_id` or `everyone`. Granting **replaces** any grant that
@@ -161,11 +147,12 @@ async def asyncio_detailed(
         body (IdentitiesAccessCreateBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | IdentitiesAccessCreateResponse200]
+        Response[IdentitiesAccessCreateResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -183,7 +170,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: IdentitiesAccessCreateBody,
-) -> Error | IdentitiesAccessCreateResponse200 | None:
+) -> IdentitiesAccessCreateResponse200:
     """Grant access
 
      Name exactly one of `user_id`, `api_key_id` or `everyone`. Granting **replaces** any grant that
@@ -196,11 +183,12 @@ async def asyncio(
         body (IdentitiesAccessCreateBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | IdentitiesAccessCreateResponse200
+        IdentitiesAccessCreateResponse200
     """
 
     return (

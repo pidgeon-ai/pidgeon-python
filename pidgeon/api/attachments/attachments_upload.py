@@ -7,7 +7,6 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.attachments_upload_body import AttachmentsUploadBody
 from ...models.attachments_upload_response_201 import AttachmentsUploadResponse201
-from ...models.error import Error
 from ...types import Response
 
 
@@ -30,38 +29,21 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(
-    *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> AttachmentsUploadResponse201 | Error | None:
+def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> AttachmentsUploadResponse201:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 201:
         response_201 = AttachmentsUploadResponse201.from_dict(response.json())
 
         return response_201
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[AttachmentsUploadResponse201 | Error]:
+) -> Response[AttachmentsUploadResponse201]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -74,7 +56,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: AttachmentsUploadBody,
-) -> Response[AttachmentsUploadResponse201 | Error]:
+) -> Response[AttachmentsUploadResponse201]:
     """Upload a file to send
 
      Multipart, with `identity_id` and `file` parts — not base64 in JSON, because a ten-megabyte PDF is
@@ -85,11 +67,12 @@ def sync_detailed(
         body (AttachmentsUploadBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[AttachmentsUploadResponse201 | Error]
+        Response[AttachmentsUploadResponse201]
     """
 
     kwargs = _get_kwargs(
@@ -107,7 +90,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: AttachmentsUploadBody,
-) -> AttachmentsUploadResponse201 | Error | None:
+) -> AttachmentsUploadResponse201:
     """Upload a file to send
 
      Multipart, with `identity_id` and `file` parts — not base64 in JSON, because a ten-megabyte PDF is
@@ -118,11 +101,12 @@ def sync(
         body (AttachmentsUploadBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        AttachmentsUploadResponse201 | Error
+        AttachmentsUploadResponse201
     """
 
     return sync_detailed(
@@ -135,7 +119,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: AttachmentsUploadBody,
-) -> Response[AttachmentsUploadResponse201 | Error]:
+) -> Response[AttachmentsUploadResponse201]:
     """Upload a file to send
 
      Multipart, with `identity_id` and `file` parts — not base64 in JSON, because a ten-megabyte PDF is
@@ -146,11 +130,12 @@ async def asyncio_detailed(
         body (AttachmentsUploadBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[AttachmentsUploadResponse201 | Error]
+        Response[AttachmentsUploadResponse201]
     """
 
     kwargs = _get_kwargs(
@@ -166,7 +151,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: AttachmentsUploadBody,
-) -> AttachmentsUploadResponse201 | Error | None:
+) -> AttachmentsUploadResponse201:
     """Upload a file to send
 
      Multipart, with `identity_id` and `file` parts — not base64 in JSON, because a ten-megabyte PDF is
@@ -177,11 +162,12 @@ async def asyncio(
         body (AttachmentsUploadBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        AttachmentsUploadResponse201 | Error
+        AttachmentsUploadResponse201
     """
 
     return (

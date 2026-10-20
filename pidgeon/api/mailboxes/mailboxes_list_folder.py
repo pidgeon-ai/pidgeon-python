@@ -7,7 +7,6 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.error import Error
 from ...models.mailboxes_list_folder_response_200 import MailboxesListFolderResponse200
 from ...types import UNSET, Response, Unset
 
@@ -50,36 +49,21 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Error | MailboxesListFolderResponse200 | None:
+) -> MailboxesListFolderResponse200:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 200:
         response_200 = MailboxesListFolderResponse200.from_dict(response.json())
 
         return response_200
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[Error | MailboxesListFolderResponse200]:
+) -> Response[MailboxesListFolderResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -96,7 +80,7 @@ def sync_detailed(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
-) -> Response[Error | MailboxesListFolderResponse200]:
+) -> Response[MailboxesListFolderResponse200]:
     """List one folder
 
      A row is a conversation — the newest message in each thread — not a message. Paged by an opaque
@@ -111,11 +95,12 @@ def sync_detailed(
         label_id (UUID | Unset):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | MailboxesListFolderResponse200]
+        Response[MailboxesListFolderResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -141,7 +126,7 @@ def sync(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
-) -> Error | MailboxesListFolderResponse200 | None:
+) -> MailboxesListFolderResponse200:
     """List one folder
 
      A row is a conversation — the newest message in each thread — not a message. Paged by an opaque
@@ -156,11 +141,12 @@ def sync(
         label_id (UUID | Unset):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | MailboxesListFolderResponse200
+        MailboxesListFolderResponse200
     """
 
     return sync_detailed(
@@ -181,7 +167,7 @@ async def asyncio_detailed(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
-) -> Response[Error | MailboxesListFolderResponse200]:
+) -> Response[MailboxesListFolderResponse200]:
     """List one folder
 
      A row is a conversation — the newest message in each thread — not a message. Paged by an opaque
@@ -196,11 +182,12 @@ async def asyncio_detailed(
         label_id (UUID | Unset):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | MailboxesListFolderResponse200]
+        Response[MailboxesListFolderResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -224,7 +211,7 @@ async def asyncio(
     limit: int | Unset = 50,
     cursor: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
-) -> Error | MailboxesListFolderResponse200 | None:
+) -> MailboxesListFolderResponse200:
     """List one folder
 
      A row is a conversation — the newest message in each thread — not a message. Paged by an opaque
@@ -239,11 +226,12 @@ async def asyncio(
         label_id (UUID | Unset):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | MailboxesListFolderResponse200
+        MailboxesListFolderResponse200
     """
 
     return (

@@ -6,7 +6,6 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.error import Error
 from ...models.messages_search_in import MessagesSearchIn
 from ...models.messages_search_response_200 import MessagesSearchResponse200
 from ...types import UNSET, Response, Unset
@@ -69,38 +68,21 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(
-    *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Error | MessagesSearchResponse200 | None:
+def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> MessagesSearchResponse200:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 200:
         response_200 = MessagesSearchResponse200.from_dict(response.json())
 
         return response_200
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[Error | MessagesSearchResponse200]:
+) -> Response[MessagesSearchResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -122,7 +104,7 @@ def sync_detailed(
     is_starred: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
-) -> Response[Error | MessagesSearchResponse200]:
+) -> Response[MessagesSearchResponse200]:
     """Search messages
 
      Full-text, ranked by relevance, across every address this credential can reach. Name an
@@ -143,11 +125,12 @@ def sync_detailed(
         limit (int | Unset):  Default: 50.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | MessagesSearchResponse200]
+        Response[MessagesSearchResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -183,7 +166,7 @@ def sync(
     is_starred: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
-) -> Error | MessagesSearchResponse200 | None:
+) -> MessagesSearchResponse200:
     """Search messages
 
      Full-text, ranked by relevance, across every address this credential can reach. Name an
@@ -204,11 +187,12 @@ def sync(
         limit (int | Unset):  Default: 50.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | MessagesSearchResponse200
+        MessagesSearchResponse200
     """
 
     return sync_detailed(
@@ -239,7 +223,7 @@ async def asyncio_detailed(
     is_starred: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
-) -> Response[Error | MessagesSearchResponse200]:
+) -> Response[MessagesSearchResponse200]:
     """Search messages
 
      Full-text, ranked by relevance, across every address this credential can reach. Name an
@@ -260,11 +244,12 @@ async def asyncio_detailed(
         limit (int | Unset):  Default: 50.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | MessagesSearchResponse200]
+        Response[MessagesSearchResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -298,7 +283,7 @@ async def asyncio(
     is_starred: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
-) -> Error | MessagesSearchResponse200 | None:
+) -> MessagesSearchResponse200:
     """Search messages
 
      Full-text, ranked by relevance, across every address this credential can reach. Name an
@@ -319,11 +304,12 @@ async def asyncio(
         limit (int | Unset):  Default: 50.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | MessagesSearchResponse200
+        MessagesSearchResponse200
     """
 
     return (

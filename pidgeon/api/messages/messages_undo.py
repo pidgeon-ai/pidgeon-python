@@ -5,7 +5,6 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.error import Error
 from ...models.messages_undo_body import MessagesUndoBody
 from ...models.messages_undo_response_200 import MessagesUndoResponse200
 from ...types import Response
@@ -30,38 +29,21 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(
-    *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Error | MessagesUndoResponse200 | None:
+def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> MessagesUndoResponse200:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 200:
         response_200 = MessagesUndoResponse200.from_dict(response.json())
 
         return response_200
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[Error | MessagesUndoResponse200]:
+) -> Response[MessagesUndoResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -74,7 +56,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: MessagesUndoBody,
-) -> Response[Error | MessagesUndoResponse200]:
+) -> Response[MessagesUndoResponse200]:
     """Put an action back
 
      Hand back the `undo` from a `PATCH` or a batch. Unusual for an API to have, and the argument is that
@@ -84,11 +66,12 @@ def sync_detailed(
         body (MessagesUndoBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | MessagesUndoResponse200]
+        Response[MessagesUndoResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -106,7 +89,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: MessagesUndoBody,
-) -> Error | MessagesUndoResponse200 | None:
+) -> MessagesUndoResponse200:
     """Put an action back
 
      Hand back the `undo` from a `PATCH` or a batch. Unusual for an API to have, and the argument is that
@@ -116,11 +99,12 @@ def sync(
         body (MessagesUndoBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | MessagesUndoResponse200
+        MessagesUndoResponse200
     """
 
     return sync_detailed(
@@ -133,7 +117,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: MessagesUndoBody,
-) -> Response[Error | MessagesUndoResponse200]:
+) -> Response[MessagesUndoResponse200]:
     """Put an action back
 
      Hand back the `undo` from a `PATCH` or a batch. Unusual for an API to have, and the argument is that
@@ -143,11 +127,12 @@ async def asyncio_detailed(
         body (MessagesUndoBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | MessagesUndoResponse200]
+        Response[MessagesUndoResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -163,7 +148,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: MessagesUndoBody,
-) -> Error | MessagesUndoResponse200 | None:
+) -> MessagesUndoResponse200:
     """Put an action back
 
      Hand back the `undo` from a `PATCH` or a batch. Unusual for an API to have, and the argument is that
@@ -173,11 +158,12 @@ async def asyncio(
         body (MessagesUndoBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | MessagesUndoResponse200
+        MessagesUndoResponse200
     """
 
     return (

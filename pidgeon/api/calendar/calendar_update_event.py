@@ -9,7 +9,6 @@ from ...client import AuthenticatedClient, Client
 from ...models.calendar_update_event_body import CalendarUpdateEventBody
 from ...models.calendar_update_event_mode import CalendarUpdateEventMode
 from ...models.calendar_update_event_response_200 import CalendarUpdateEventResponse200
-from ...models.error import Error
 from ...types import UNSET, Response, Unset
 
 
@@ -54,36 +53,21 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> CalendarUpdateEventResponse200 | Error | None:
+) -> CalendarUpdateEventResponse200:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 200:
         response_200 = CalendarUpdateEventResponse200.from_dict(response.json())
 
         return response_200
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[CalendarUpdateEventResponse200 | Error]:
+) -> Response[CalendarUpdateEventResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -100,7 +84,7 @@ def sync_detailed(
     body: CalendarUpdateEventBody,
     mode: CalendarUpdateEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
-) -> Response[CalendarUpdateEventResponse200 | Error]:
+) -> Response[CalendarUpdateEventResponse200]:
     """Change an event
 
      An omitted field survives. `sequence` rises only when the change is one attendees see — the time,
@@ -115,11 +99,12 @@ def sync_detailed(
         body (CalendarUpdateEventBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[CalendarUpdateEventResponse200 | Error]
+        Response[CalendarUpdateEventResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -145,7 +130,7 @@ def sync(
     body: CalendarUpdateEventBody,
     mode: CalendarUpdateEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
-) -> CalendarUpdateEventResponse200 | Error | None:
+) -> CalendarUpdateEventResponse200:
     """Change an event
 
      An omitted field survives. `sequence` rises only when the change is one attendees see — the time,
@@ -160,11 +145,12 @@ def sync(
         body (CalendarUpdateEventBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        CalendarUpdateEventResponse200 | Error
+        CalendarUpdateEventResponse200
     """
 
     return sync_detailed(
@@ -185,7 +171,7 @@ async def asyncio_detailed(
     body: CalendarUpdateEventBody,
     mode: CalendarUpdateEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
-) -> Response[CalendarUpdateEventResponse200 | Error]:
+) -> Response[CalendarUpdateEventResponse200]:
     """Change an event
 
      An omitted field survives. `sequence` rises only when the change is one attendees see — the time,
@@ -200,11 +186,12 @@ async def asyncio_detailed(
         body (CalendarUpdateEventBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[CalendarUpdateEventResponse200 | Error]
+        Response[CalendarUpdateEventResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -228,7 +215,7 @@ async def asyncio(
     body: CalendarUpdateEventBody,
     mode: CalendarUpdateEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
-) -> CalendarUpdateEventResponse200 | Error | None:
+) -> CalendarUpdateEventResponse200:
     """Change an event
 
      An omitted field survives. `sequence` rises only when the change is one attendees see — the time,
@@ -243,11 +230,12 @@ async def asyncio(
         body (CalendarUpdateEventBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        CalendarUpdateEventResponse200 | Error
+        CalendarUpdateEventResponse200
     """
 
     return (

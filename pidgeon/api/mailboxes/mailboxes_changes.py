@@ -6,7 +6,6 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.error import Error
 from ...models.mailboxes_changes_response_200 import MailboxesChangesResponse200
 from ...types import UNSET, Response, Unset
 
@@ -38,38 +37,21 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(
-    *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Error | MailboxesChangesResponse200 | None:
+def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> MailboxesChangesResponse200:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 200:
         response_200 = MailboxesChangesResponse200.from_dict(response.json())
 
         return response_200
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[Error | MailboxesChangesResponse200]:
+) -> Response[MailboxesChangesResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -84,7 +66,7 @@ def sync_detailed(
     identity_id: UUID,
     since: str,
     limit: int | Unset = 100,
-) -> Response[Error | MailboxesChangesResponse200]:
+) -> Response[MailboxesChangesResponse200]:
     """What changed since you last looked
 
      Per mailbox, not per folder: a message moving from the inbox to the archive is one event, and the
@@ -100,11 +82,12 @@ def sync_detailed(
         limit (int | Unset):  Default: 100.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | MailboxesChangesResponse200]
+        Response[MailboxesChangesResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -126,7 +109,7 @@ def sync(
     identity_id: UUID,
     since: str,
     limit: int | Unset = 100,
-) -> Error | MailboxesChangesResponse200 | None:
+) -> MailboxesChangesResponse200:
     """What changed since you last looked
 
      Per mailbox, not per folder: a message moving from the inbox to the archive is one event, and the
@@ -142,11 +125,12 @@ def sync(
         limit (int | Unset):  Default: 100.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | MailboxesChangesResponse200
+        MailboxesChangesResponse200
     """
 
     return sync_detailed(
@@ -163,7 +147,7 @@ async def asyncio_detailed(
     identity_id: UUID,
     since: str,
     limit: int | Unset = 100,
-) -> Response[Error | MailboxesChangesResponse200]:
+) -> Response[MailboxesChangesResponse200]:
     """What changed since you last looked
 
      Per mailbox, not per folder: a message moving from the inbox to the archive is one event, and the
@@ -179,11 +163,12 @@ async def asyncio_detailed(
         limit (int | Unset):  Default: 100.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | MailboxesChangesResponse200]
+        Response[MailboxesChangesResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -203,7 +188,7 @@ async def asyncio(
     identity_id: UUID,
     since: str,
     limit: int | Unset = 100,
-) -> Error | MailboxesChangesResponse200 | None:
+) -> MailboxesChangesResponse200:
     """What changed since you last looked
 
      Per mailbox, not per folder: a message moving from the inbox to the archive is one event, and the
@@ -219,11 +204,12 @@ async def asyncio(
         limit (int | Unset):  Default: 100.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | MailboxesChangesResponse200
+        MailboxesChangesResponse200
     """
 
     return (

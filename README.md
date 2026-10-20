@@ -18,7 +18,6 @@ from pidgeon import AuthenticatedClient
 from pidgeon.api.identities import identities_create
 from pidgeon.api.messages import messages_await, messages_reply, messages_send
 from pidgeon.models import (
-    Error,
     IdentitiesCreateBody,
     IdentitiesCreateBodyType,
     MessagesReplyBody,
@@ -35,11 +34,9 @@ created = identities_create.sync(
     client=client,
     body=IdentitiesCreateBody(address="scout@pidgeon.email", type_=IdentitiesCreateBodyType.AGENT),
 )
-if isinstance(created, Error):
-    raise RuntimeError(created.error.message)
 address = created.data
 
-# 2. Send from it.
+# 2. Send from it. A refusal raises PidgeonError; it never comes back as a value.
 messages_send.sync(
     client=client,
     body=MessagesSendBody(
@@ -54,7 +51,7 @@ messages_send.sync(
 awaited = messages_await.sync(client=client, identity_id=address.id, timeout=60)
 
 # 4. Reply into the same conversation. Recipients and subject come off the original.
-if not isinstance(awaited, Error) and awaited.data.message:
+if awaited.data.message:
     print(awaited.data.message.extracted.codes)
     messages_reply.sync(
         awaited.data.message.id,
@@ -79,11 +76,28 @@ nothing is global.
 
 ## Errors
 
-**Errors come back, they are not raised.** Every call returns the success
-model *or* `Error` *or* `None`, so an `isinstance` check is the shape of a
-correct caller. `Error.error` carries the API's own `code`, a `message`
-written for a person and safe to show one, and a `field` when one input was at
-fault.
+**A failure raises `PidgeonError`.** Every call returns the success model or
+raises, so a refused send cannot pass for a sent one. `code` is the API's own
+and is what to branch on, `message` is written for a person and safe to show
+one, `field` names the input at fault, and `retry_after` is in seconds when a
+limit says when to come back:
+
+```python
+from pidgeon.errors import PidgeonError
+
+try:
+    messages_send.sync(client=client, body=body)
+except PidgeonError as error:
+    if error.code == "abuse_blocked":
+        ...  # nothing was sent; error.retry_after says when the allowance frees up
+    raise
+```
+
+**Since 1.19.0.** Before it, a call returned `Error` for a failure the
+OpenAPI document declared and `None` for one it did not, and a `403` on a
+send was one it did not: code that checked `isinstance(result, Error)` now
+sees the exception instead. `raise_on_unexpected_status` no longer changes
+anything; a status the client cannot read always raises.
 
 **`from_` and `type_` carry a trailing underscore**, because `from` and `type`
 are reserved in Python. The wire names are unchanged.

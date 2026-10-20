@@ -5,7 +5,6 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.error import Error
 from ...models.routing_create_body_type_0 import RoutingCreateBodyType0
 from ...models.routing_create_body_type_1 import RoutingCreateBodyType1
 from ...models.routing_create_body_type_2 import RoutingCreateBodyType2
@@ -37,38 +36,21 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(
-    *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Error | RoutingCreateResponse201 | None:
+def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> RoutingCreateResponse201:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 201:
         response_201 = RoutingCreateResponse201.from_dict(response.json())
 
         return response_201
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[Error | RoutingCreateResponse201]:
+) -> Response[RoutingCreateResponse201]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -81,7 +63,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2,
-) -> Response[Error | RoutingCreateResponse201]:
+) -> Response[RoutingCreateResponse201]:
     """Route an address somewhere
 
      An address always beats a rule, so a rule for an address that already exists is refused rather than
@@ -92,11 +74,12 @@ def sync_detailed(
         body (RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | RoutingCreateResponse201]
+        Response[RoutingCreateResponse201]
     """
 
     kwargs = _get_kwargs(
@@ -114,7 +97,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2,
-) -> Error | RoutingCreateResponse201 | None:
+) -> RoutingCreateResponse201:
     """Route an address somewhere
 
      An address always beats a rule, so a rule for an address that already exists is refused rather than
@@ -125,11 +108,12 @@ def sync(
         body (RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | RoutingCreateResponse201
+        RoutingCreateResponse201
     """
 
     return sync_detailed(
@@ -142,7 +126,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2,
-) -> Response[Error | RoutingCreateResponse201]:
+) -> Response[RoutingCreateResponse201]:
     """Route an address somewhere
 
      An address always beats a rule, so a rule for an address that already exists is refused rather than
@@ -153,11 +137,12 @@ async def asyncio_detailed(
         body (RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | RoutingCreateResponse201]
+        Response[RoutingCreateResponse201]
     """
 
     kwargs = _get_kwargs(
@@ -173,7 +158,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2,
-) -> Error | RoutingCreateResponse201 | None:
+) -> RoutingCreateResponse201:
     """Route an address somewhere
 
      An address always beats a rule, so a rule for an address that already exists is refused rather than
@@ -184,11 +169,12 @@ async def asyncio(
         body (RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | RoutingCreateResponse201
+        RoutingCreateResponse201
     """
 
     return (

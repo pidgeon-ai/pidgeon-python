@@ -8,7 +8,6 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.domains_get_setup_link_response_200 import DomainsGetSetupLinkResponse200
 from ...models.domains_get_setup_link_template import DomainsGetSetupLinkTemplate
-from ...models.error import Error
 from ...types import UNSET, Response, Unset
 
 
@@ -41,36 +40,21 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> DomainsGetSetupLinkResponse200 | Error | None:
+) -> DomainsGetSetupLinkResponse200:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 200:
         response_200 = DomainsGetSetupLinkResponse200.from_dict(response.json())
 
         return response_200
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[DomainsGetSetupLinkResponse200 | Error]:
+) -> Response[DomainsGetSetupLinkResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -84,7 +68,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     template: DomainsGetSetupLinkTemplate | Unset = DomainsGetSetupLinkTemplate.MAIL,
-) -> Response[DomainsGetSetupLinkResponse200 | Error]:
+) -> Response[DomainsGetSetupLinkResponse200]:
     """One-click DNS setup, when the provider supports it
 
      The **Domain Connect** standard: the URL returned is signed by and points at the domain’s own DNS
@@ -105,11 +89,12 @@ def sync_detailed(
             DomainsGetSetupLinkTemplate.MAIL.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[DomainsGetSetupLinkResponse200 | Error]
+        Response[DomainsGetSetupLinkResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -129,7 +114,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     template: DomainsGetSetupLinkTemplate | Unset = DomainsGetSetupLinkTemplate.MAIL,
-) -> DomainsGetSetupLinkResponse200 | Error | None:
+) -> DomainsGetSetupLinkResponse200:
     """One-click DNS setup, when the provider supports it
 
      The **Domain Connect** standard: the URL returned is signed by and points at the domain’s own DNS
@@ -150,11 +135,12 @@ def sync(
             DomainsGetSetupLinkTemplate.MAIL.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        DomainsGetSetupLinkResponse200 | Error
+        DomainsGetSetupLinkResponse200
     """
 
     return sync_detailed(
@@ -169,7 +155,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     template: DomainsGetSetupLinkTemplate | Unset = DomainsGetSetupLinkTemplate.MAIL,
-) -> Response[DomainsGetSetupLinkResponse200 | Error]:
+) -> Response[DomainsGetSetupLinkResponse200]:
     """One-click DNS setup, when the provider supports it
 
      The **Domain Connect** standard: the URL returned is signed by and points at the domain’s own DNS
@@ -190,11 +176,12 @@ async def asyncio_detailed(
             DomainsGetSetupLinkTemplate.MAIL.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[DomainsGetSetupLinkResponse200 | Error]
+        Response[DomainsGetSetupLinkResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -212,7 +199,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     template: DomainsGetSetupLinkTemplate | Unset = DomainsGetSetupLinkTemplate.MAIL,
-) -> DomainsGetSetupLinkResponse200 | Error | None:
+) -> DomainsGetSetupLinkResponse200:
     """One-click DNS setup, when the provider supports it
 
      The **Domain Connect** standard: the URL returned is signed by and points at the domain’s own DNS
@@ -233,11 +220,12 @@ async def asyncio(
             DomainsGetSetupLinkTemplate.MAIL.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        DomainsGetSetupLinkResponse200 | Error
+        DomainsGetSetupLinkResponse200
     """
 
     return (

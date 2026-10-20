@@ -8,7 +8,6 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.drafts_schedule_body import DraftsScheduleBody
 from ...models.drafts_schedule_response_200 import DraftsScheduleResponse200
-from ...models.error import Error
 from ...types import Response
 
 
@@ -34,38 +33,21 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(
-    *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> DraftsScheduleResponse200 | Error | None:
+def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> DraftsScheduleResponse200:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 200:
         response_200 = DraftsScheduleResponse200.from_dict(response.json())
 
         return response_200
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[DraftsScheduleResponse200 | Error]:
+) -> Response[DraftsScheduleResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -79,7 +61,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: DraftsScheduleBody,
-) -> Response[DraftsScheduleResponse200 | Error]:
+) -> Response[DraftsScheduleResponse200]:
     """Send it later
 
      A minute from now at the earliest, thirty days at the latest. A refused send unschedules rather than
@@ -91,11 +73,12 @@ def sync_detailed(
         body (DraftsScheduleBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[DraftsScheduleResponse200 | Error]
+        Response[DraftsScheduleResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -115,7 +98,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: DraftsScheduleBody,
-) -> DraftsScheduleResponse200 | Error | None:
+) -> DraftsScheduleResponse200:
     """Send it later
 
      A minute from now at the earliest, thirty days at the latest. A refused send unschedules rather than
@@ -127,11 +110,12 @@ def sync(
         body (DraftsScheduleBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        DraftsScheduleResponse200 | Error
+        DraftsScheduleResponse200
     """
 
     return sync_detailed(
@@ -146,7 +130,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: DraftsScheduleBody,
-) -> Response[DraftsScheduleResponse200 | Error]:
+) -> Response[DraftsScheduleResponse200]:
     """Send it later
 
      A minute from now at the earliest, thirty days at the latest. A refused send unschedules rather than
@@ -158,11 +142,12 @@ async def asyncio_detailed(
         body (DraftsScheduleBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[DraftsScheduleResponse200 | Error]
+        Response[DraftsScheduleResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -180,7 +165,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: DraftsScheduleBody,
-) -> DraftsScheduleResponse200 | Error | None:
+) -> DraftsScheduleResponse200:
     """Send it later
 
      A minute from now at the earliest, thirty days at the latest. A refused send unschedules rather than
@@ -192,11 +177,12 @@ async def asyncio(
         body (DraftsScheduleBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        DraftsScheduleResponse200 | Error
+        DraftsScheduleResponse200
     """
 
     return (

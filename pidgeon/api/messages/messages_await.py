@@ -7,7 +7,6 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.error import Error
 from ...models.messages_await_body import MessagesAwaitBody
 from ...models.messages_await_has_code import MessagesAwaitHasCode
 from ...models.messages_await_include_spam import MessagesAwaitIncludeSpam
@@ -72,38 +71,21 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(
-    *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Error | MessagesAwaitResponse200 | None:
+def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> MessagesAwaitResponse200:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 200:
         response_200 = MessagesAwaitResponse200.from_dict(response.json())
 
         return response_200
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[Error | MessagesAwaitResponse200]:
+) -> Response[MessagesAwaitResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -123,7 +105,7 @@ def sync_detailed(
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
     after: datetime.datetime | Unset = UNSET,
     timeout: int | Unset = 60,
-) -> Response[Error | MessagesAwaitResponse200]:
+) -> Response[MessagesAwaitResponse200]:
     """Wait for the next message
 
      Holds the request open until a message matching the filters arrives at the address, or `timeout`
@@ -146,11 +128,12 @@ def sync_detailed(
         timeout (int | Unset):  Default: 60.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | MessagesAwaitResponse200]
+        Response[MessagesAwaitResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -182,7 +165,7 @@ def sync(
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
     after: datetime.datetime | Unset = UNSET,
     timeout: int | Unset = 60,
-) -> Error | MessagesAwaitResponse200 | None:
+) -> MessagesAwaitResponse200:
     """Wait for the next message
 
      Holds the request open until a message matching the filters arrives at the address, or `timeout`
@@ -205,11 +188,12 @@ def sync(
         timeout (int | Unset):  Default: 60.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | MessagesAwaitResponse200
+        MessagesAwaitResponse200
     """
 
     return sync_detailed(
@@ -236,7 +220,7 @@ async def asyncio_detailed(
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
     after: datetime.datetime | Unset = UNSET,
     timeout: int | Unset = 60,
-) -> Response[Error | MessagesAwaitResponse200]:
+) -> Response[MessagesAwaitResponse200]:
     """Wait for the next message
 
      Holds the request open until a message matching the filters arrives at the address, or `timeout`
@@ -259,11 +243,12 @@ async def asyncio_detailed(
         timeout (int | Unset):  Default: 60.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | MessagesAwaitResponse200]
+        Response[MessagesAwaitResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -293,7 +278,7 @@ async def asyncio(
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
     after: datetime.datetime | Unset = UNSET,
     timeout: int | Unset = 60,
-) -> Error | MessagesAwaitResponse200 | None:
+) -> MessagesAwaitResponse200:
     """Wait for the next message
 
      Holds the request open until a message matching the filters arrives at the address, or `timeout`
@@ -316,11 +301,12 @@ async def asyncio(
         timeout (int | Unset):  Default: 60.
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | MessagesAwaitResponse200
+        MessagesAwaitResponse200
     """
 
     return (

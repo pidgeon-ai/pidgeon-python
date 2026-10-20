@@ -7,7 +7,6 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.error import Error
 from ...models.threads_labels_delete_response_200 import ThreadsLabelsDeleteResponse200
 from ...types import UNSET, Response
 
@@ -38,36 +37,21 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Error | ThreadsLabelsDeleteResponse200 | None:
+) -> ThreadsLabelsDeleteResponse200:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 200:
         response_200 = ThreadsLabelsDeleteResponse200.from_dict(response.json())
 
         return response_200
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[Error | ThreadsLabelsDeleteResponse200]:
+) -> Response[ThreadsLabelsDeleteResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -81,7 +65,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     label_id: UUID,
-) -> Response[Error | ThreadsLabelsDeleteResponse200]:
+) -> Response[ThreadsLabelsDeleteResponse200]:
     """Remove a label
 
      `label_id` in the query, because a label hangs off the conversation.
@@ -91,11 +75,12 @@ def sync_detailed(
         label_id (UUID):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | ThreadsLabelsDeleteResponse200]
+        Response[ThreadsLabelsDeleteResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -115,7 +100,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     label_id: UUID,
-) -> Error | ThreadsLabelsDeleteResponse200 | None:
+) -> ThreadsLabelsDeleteResponse200:
     """Remove a label
 
      `label_id` in the query, because a label hangs off the conversation.
@@ -125,11 +110,12 @@ def sync(
         label_id (UUID):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | ThreadsLabelsDeleteResponse200
+        ThreadsLabelsDeleteResponse200
     """
 
     return sync_detailed(
@@ -144,7 +130,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     label_id: UUID,
-) -> Response[Error | ThreadsLabelsDeleteResponse200]:
+) -> Response[ThreadsLabelsDeleteResponse200]:
     """Remove a label
 
      `label_id` in the query, because a label hangs off the conversation.
@@ -154,11 +140,12 @@ async def asyncio_detailed(
         label_id (UUID):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | ThreadsLabelsDeleteResponse200]
+        Response[ThreadsLabelsDeleteResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -176,7 +163,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     label_id: UUID,
-) -> Error | ThreadsLabelsDeleteResponse200 | None:
+) -> ThreadsLabelsDeleteResponse200:
     """Remove a label
 
      `label_id` in the query, because a label hangs off the conversation.
@@ -186,11 +173,12 @@ async def asyncio(
         label_id (UUID):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | ThreadsLabelsDeleteResponse200
+        ThreadsLabelsDeleteResponse200
     """
 
     return (

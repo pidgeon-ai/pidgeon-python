@@ -8,7 +8,6 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.calendar_create_event_body import CalendarCreateEventBody
 from ...models.calendar_create_event_response_201 import CalendarCreateEventResponse201
-from ...models.error import Error
 from ...types import Response
 
 
@@ -36,36 +35,21 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> CalendarCreateEventResponse201 | Error | None:
+) -> CalendarCreateEventResponse201:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 201:
         response_201 = CalendarCreateEventResponse201.from_dict(response.json())
 
         return response_201
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[CalendarCreateEventResponse201 | Error]:
+) -> Response[CalendarCreateEventResponse201]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -79,7 +63,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: CalendarCreateEventBody,
-) -> Response[CalendarCreateEventResponse201 | Error]:
+) -> Response[CalendarCreateEventResponse201]:
     """Put something on the calendar
 
      `start` and `end` are **local wall times with no zone on them** — `2026-10-20T14:00:00` — and
@@ -92,11 +76,12 @@ def sync_detailed(
         body (CalendarCreateEventBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[CalendarCreateEventResponse201 | Error]
+        Response[CalendarCreateEventResponse201]
     """
 
     kwargs = _get_kwargs(
@@ -116,7 +101,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: CalendarCreateEventBody,
-) -> CalendarCreateEventResponse201 | Error | None:
+) -> CalendarCreateEventResponse201:
     """Put something on the calendar
 
      `start` and `end` are **local wall times with no zone on them** — `2026-10-20T14:00:00` — and
@@ -129,11 +114,12 @@ def sync(
         body (CalendarCreateEventBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        CalendarCreateEventResponse201 | Error
+        CalendarCreateEventResponse201
     """
 
     return sync_detailed(
@@ -148,7 +134,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: CalendarCreateEventBody,
-) -> Response[CalendarCreateEventResponse201 | Error]:
+) -> Response[CalendarCreateEventResponse201]:
     """Put something on the calendar
 
      `start` and `end` are **local wall times with no zone on them** — `2026-10-20T14:00:00` — and
@@ -161,11 +147,12 @@ async def asyncio_detailed(
         body (CalendarCreateEventBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[CalendarCreateEventResponse201 | Error]
+        Response[CalendarCreateEventResponse201]
     """
 
     kwargs = _get_kwargs(
@@ -183,7 +170,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: CalendarCreateEventBody,
-) -> CalendarCreateEventResponse201 | Error | None:
+) -> CalendarCreateEventResponse201:
     """Put something on the calendar
 
      `start` and `end` are **local wall times with no zone on them** — `2026-10-20T14:00:00` — and
@@ -196,11 +183,12 @@ async def asyncio(
         body (CalendarCreateEventBody):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        CalendarCreateEventResponse201 | Error
+        CalendarCreateEventResponse201
     """
 
     return (

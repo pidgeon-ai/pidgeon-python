@@ -6,7 +6,6 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.error import Error
 from ...models.identities_access_get_response_200 import IdentitiesAccessGetResponse200
 from ...types import Response
 
@@ -27,36 +26,21 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Error | IdentitiesAccessGetResponse200 | None:
+) -> IdentitiesAccessGetResponse200:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
+
     if response.status_code == 200:
         response_200 = IdentitiesAccessGetResponse200.from_dict(response.json())
 
         return response_200
 
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
-
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    raise errors.UnexpectedStatus(response.status_code, response.content)
 
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[Error | IdentitiesAccessGetResponse200]:
+) -> Response[IdentitiesAccessGetResponse200]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -69,7 +53,7 @@ def sync_detailed(
     id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Response[Error | IdentitiesAccessGetResponse200]:
+) -> Response[IdentitiesAccessGetResponse200]:
     """Who can reach this address
 
      Reading the list requires being able to reach the address: who has access to somebody’s mailbox is
@@ -79,11 +63,12 @@ def sync_detailed(
         id (str):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | IdentitiesAccessGetResponse200]
+        Response[IdentitiesAccessGetResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -101,7 +86,7 @@ def sync(
     id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Error | IdentitiesAccessGetResponse200 | None:
+) -> IdentitiesAccessGetResponse200:
     """Who can reach this address
 
      Reading the list requires being able to reach the address: who has access to somebody’s mailbox is
@@ -111,11 +96,12 @@ def sync(
         id (str):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | IdentitiesAccessGetResponse200
+        IdentitiesAccessGetResponse200
     """
 
     return sync_detailed(
@@ -128,7 +114,7 @@ async def asyncio_detailed(
     id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Response[Error | IdentitiesAccessGetResponse200]:
+) -> Response[IdentitiesAccessGetResponse200]:
     """Who can reach this address
 
      Reading the list requires being able to reach the address: who has access to somebody’s mailbox is
@@ -138,11 +124,12 @@ async def asyncio_detailed(
         id (str):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error | IdentitiesAccessGetResponse200]
+        Response[IdentitiesAccessGetResponse200]
     """
 
     kwargs = _get_kwargs(
@@ -158,7 +145,7 @@ async def asyncio(
     id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Error | IdentitiesAccessGetResponse200 | None:
+) -> IdentitiesAccessGetResponse200:
     """Who can reach this address
 
      Reading the list requires being able to reach the address: who has access to somebody’s mailbox is
@@ -168,11 +155,12 @@ async def asyncio(
         id (str):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Error | IdentitiesAccessGetResponse200
+        IdentitiesAccessGetResponse200
     """
 
     return (

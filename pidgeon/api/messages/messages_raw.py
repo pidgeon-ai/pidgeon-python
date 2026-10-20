@@ -6,7 +6,6 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.error import Error
 from ...types import Response
 
 
@@ -24,29 +23,14 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Error | None:
-    if response.status_code == 401:
-        response_401 = Error.from_dict(response.json())
+def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Any:
+    if response.status_code >= 400:
+        raise errors.PidgeonError.from_response(response)
 
-        return response_401
-
-    if response.status_code == 404:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
-
-    if response.status_code == 429:
-        response_429 = Error.from_dict(response.json())
-
-        return response_429
-
-    if client.raise_on_unexpected_status:
-        raise errors.UnexpectedStatus(response.status_code, response.content)
-    else:
-        return None
+    return None
 
 
-def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Response[Error]:
+def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Response[Any]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -59,7 +43,7 @@ def sync_detailed(
     id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Response[Error]:
+) -> Response[Any]:
     """The message as it arrived
 
      `message/rfc822`, not JSON — the point is bytes nobody re-encoded. It 404s when the original has
@@ -69,11 +53,12 @@ def sync_detailed(
         id (str):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error]
+        Response[Any]
     """
 
     kwargs = _get_kwargs(
@@ -87,38 +72,11 @@ def sync_detailed(
     return _build_response(client=client, response=response)
 
 
-def sync(
-    id: str,
-    *,
-    client: AuthenticatedClient | Client,
-) -> Error | None:
-    """The message as it arrived
-
-     `message/rfc822`, not JSON — the point is bytes nobody re-encoded. It 404s when the original has
-    aged out of storage, which leaves a normal parsed message.
-
-    Args:
-        id (str):
-
-    Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
-        httpx.TimeoutException: If the request takes longer than Client.timeout.
-
-    Returns:
-        Error
-    """
-
-    return sync_detailed(
-        id=id,
-        client=client,
-    ).parsed
-
-
 async def asyncio_detailed(
     id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Response[Error]:
+) -> Response[Any]:
     """The message as it arrived
 
      `message/rfc822`, not JSON — the point is bytes nobody re-encoded. It 404s when the original has
@@ -128,11 +86,12 @@ async def asyncio_detailed(
         id (str):
 
     Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
+        errors.UnexpectedStatus: If the API answers with any other status this operation does not declare.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Error]
+        Response[Any]
     """
 
     kwargs = _get_kwargs(
@@ -142,32 +101,3 @@ async def asyncio_detailed(
     response = await client.get_async_httpx_client().request(**kwargs)
 
     return _build_response(client=client, response=response)
-
-
-async def asyncio(
-    id: str,
-    *,
-    client: AuthenticatedClient | Client,
-) -> Error | None:
-    """The message as it arrived
-
-     `message/rfc822`, not JSON — the point is bytes nobody re-encoded. It 404s when the original has
-    aged out of storage, which leaves a normal parsed message.
-
-    Args:
-        id (str):
-
-    Raises:
-        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
-        httpx.TimeoutException: If the request takes longer than Client.timeout.
-
-    Returns:
-        Error
-    """
-
-    return (
-        await asyncio_detailed(
-            id=id,
-            client=client,
-        )
-    ).parsed
