@@ -1,0 +1,29 @@
+name: pidgeon
+label: Pidgeon
+kind: platform
+version: 0.1.0
+requires_hermes: '>=0.22.2'
+description: >
+  Email for Hermes Agent through Pidgeon. Mail to your agent's own address
+  starts a conversation, one per email thread, and the agent's reply goes back
+  in the thread. The agent reads Pidgeon Firewall's clean text, and mail the
+  Firewall flags as prompt injection is held before it reaches the agent.
+author: Pidgeon
+requires_env:
+  - name: PIDGEON_API_KEY
+    description: 'A Pidgeon API key that reads and sends (pidgeon.ai/app/developers/keys)'
+    prompt: 'Pidgeon API key'
+    password: true
+optional_env:
+  - name: PIDGEON_ALLOWED_USERS
+    description: 'Comma-separated senders allowed to start a conversation'
+    prompt: 'Allowed senders (comma-separated)'
+    password: false
+  - name: PIDGEON_ADDRESSES
+    description: 'Which of your Pidgeon addresses to answer (default: every address the key reaches)'
+    prompt: 'Addresses to answer (comma-separated, blank for all)'
+    password: false
+  - name: PIDGEON_SUSPICIOUS
+    description: 'hold (default) keeps Firewall-flagged mail from the agent; deliver passes it with a warning'
+    prompt: 'Flagged mail: hold or deliver'
+    password: false
