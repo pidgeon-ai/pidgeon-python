@@ -46,8 +46,10 @@ def sync_detailed(
 ) -> Response[Any]:
     """The message as it arrived
 
-     `message/rfc822`, not JSON — the point is bytes nobody re-encoded. It 404s when the original has
-    aged out of storage, which leaves a normal parsed message.
+     `message/rfc822`, not JSON — the point is bytes nobody re-encoded. Received mail is the archived
+    original while it is kept; sent mail, and received mail past its retention, is rebuilt from the
+    stored message. `X-Pidgeon-Reconstructed` says which: a rebuild is not the signed bytes and cannot
+    verify DKIM.
 
     Args:
         id (str):
@@ -79,8 +81,10 @@ async def asyncio_detailed(
 ) -> Response[Any]:
     """The message as it arrived
 
-     `message/rfc822`, not JSON — the point is bytes nobody re-encoded. It 404s when the original has
-    aged out of storage, which leaves a normal parsed message.
+     `message/rfc822`, not JSON — the point is bytes nobody re-encoded. Received mail is the archived
+    original while it is kept; sent mail, and received mail past its retention, is rebuilt from the
+    stored message. `X-Pidgeon-Reconstructed` says which: a rebuild is not the signed bytes and cannot
+    verify DKIM.
 
     Args:
         id (str):
