@@ -165,7 +165,7 @@ class PidgeonAdapter(BasePlatformAdapter):
                 reason = (
                     "Pidgeon refused the key; check PIDGEON_API_KEY."
                     if isinstance(error, PidgeonError) and error.status == 401
-                    else str(error)
+                    else str(error).rstrip(".") + "."
                 )
                 if reason != self._last_error:
                     logger.warning("[Pidgeon] %s Retrying.", reason)

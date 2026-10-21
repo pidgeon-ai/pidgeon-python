@@ -32,6 +32,10 @@ class AdapterTest(unittest.TestCase):
     def setUp(self):
         self.home = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         os.environ["HERMES_HOME"] = self.home.name
+        # The plugin reads its settings from the environment, so a developer's
+        # own PIDGEON_ADDRESSES would filter out every test message.
+        for name in [n for n in os.environ if n.startswith("PIDGEON_")]:
+            self.addCleanup(os.environ.__setitem__, name, os.environ.pop(name))
         os.environ["PIDGEON_API_KEY"] = "pgn_test"
         # Hermes's key locks are per OS user; keep these out of the real ones.
         os.environ["HERMES_GATEWAY_LOCK_DIR"] = os.path.join(self.home.name, "locks")
