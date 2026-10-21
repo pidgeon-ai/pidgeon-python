@@ -23,7 +23,7 @@ def _get_kwargs(
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
     after: datetime.datetime | Unset = UNSET,
-    timeout: int | Unset = 60,
+    timeout: int | Unset = 50,
 ) -> dict[str, Any]:
 
     params: dict[str, Any] = {}
@@ -104,7 +104,7 @@ def sync_detailed(
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
     after: datetime.datetime | Unset = UNSET,
-    timeout: int | Unset = 60,
+    timeout: int | Unset = 50,
 ) -> Response[MessagesAwaitResponse200]:
     """Wait for the next message
 
@@ -125,7 +125,7 @@ def sync_detailed(
         include_spam (MessagesAwaitIncludeSpam | Unset): Also return a matching message filed as
             spam. Without it, one is counted in `held_back` instead, with its id.
         after (datetime.datetime | Unset):
-        timeout (int | Unset):  Default: 60.
+        timeout (int | Unset):  Default: 50.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -164,7 +164,7 @@ def sync(
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
     after: datetime.datetime | Unset = UNSET,
-    timeout: int | Unset = 60,
+    timeout: int | Unset = 50,
 ) -> MessagesAwaitResponse200:
     """Wait for the next message
 
@@ -185,7 +185,7 @@ def sync(
         include_spam (MessagesAwaitIncludeSpam | Unset): Also return a matching message filed as
             spam. Without it, one is counted in `held_back` instead, with its id.
         after (datetime.datetime | Unset):
-        timeout (int | Unset):  Default: 60.
+        timeout (int | Unset):  Default: 50.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -219,7 +219,7 @@ async def asyncio_detailed(
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
     after: datetime.datetime | Unset = UNSET,
-    timeout: int | Unset = 60,
+    timeout: int | Unset = 50,
 ) -> Response[MessagesAwaitResponse200]:
     """Wait for the next message
 
@@ -240,7 +240,7 @@ async def asyncio_detailed(
         include_spam (MessagesAwaitIncludeSpam | Unset): Also return a matching message filed as
             spam. Without it, one is counted in `held_back` instead, with its id.
         after (datetime.datetime | Unset):
-        timeout (int | Unset):  Default: 60.
+        timeout (int | Unset):  Default: 50.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -277,7 +277,7 @@ async def asyncio(
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
     after: datetime.datetime | Unset = UNSET,
-    timeout: int | Unset = 60,
+    timeout: int | Unset = 50,
 ) -> MessagesAwaitResponse200:
     """Wait for the next message
 
@@ -298,7 +298,7 @@ async def asyncio(
         include_spam (MessagesAwaitIncludeSpam | Unset): Also return a matching message filed as
             spam. Without it, one is counted in `held_back` instead, with its id.
         after (datetime.datetime | Unset):
-        timeout (int | Unset):  Default: 60.
+        timeout (int | Unset):  Default: 50.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.

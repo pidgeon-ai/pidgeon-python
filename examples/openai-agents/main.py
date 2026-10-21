@@ -21,7 +21,7 @@ from agents.mcp import MCPServerStreamableHttp
 
 PIDGEON_MCP_URL = os.environ.get("PIDGEON_MCP_URL", "https://pidgeon.ai/api/mcp")
 
-# `await_message` holds one request open until mail arrives, 60 seconds by
+# `await_message` holds one request open until mail arrives, 50 seconds by
 # default and at most 280. The SDK's own default is 5 seconds for both of
 # these, which would cut every wait short.
 WAIT_SECONDS = 300
