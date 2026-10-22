@@ -17,10 +17,14 @@ def _get_kwargs(
     *,
     mode: CalendarDeleteEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
     if not isinstance(if_match, Unset):
         headers["If-Match"] = if_match
+
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     params: dict[str, Any] = {}
 
@@ -77,6 +81,7 @@ def sync_detailed(
     client: AuthenticatedClient | Client,
     mode: CalendarDeleteEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[CalendarDeleteEventResponse200]:
     """Take it off the calendar
 
@@ -89,6 +94,7 @@ def sync_detailed(
         event_id (str):
         mode (CalendarDeleteEventMode | Unset):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -104,6 +110,7 @@ def sync_detailed(
         event_id=event_id,
         mode=mode,
         if_match=if_match,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -120,6 +127,7 @@ def sync(
     client: AuthenticatedClient | Client,
     mode: CalendarDeleteEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> CalendarDeleteEventResponse200:
     """Take it off the calendar
 
@@ -132,6 +140,7 @@ def sync(
         event_id (str):
         mode (CalendarDeleteEventMode | Unset):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -148,6 +157,7 @@ def sync(
         client=client,
         mode=mode,
         if_match=if_match,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -158,6 +168,7 @@ async def asyncio_detailed(
     client: AuthenticatedClient | Client,
     mode: CalendarDeleteEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[CalendarDeleteEventResponse200]:
     """Take it off the calendar
 
@@ -170,6 +181,7 @@ async def asyncio_detailed(
         event_id (str):
         mode (CalendarDeleteEventMode | Unset):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -185,6 +197,7 @@ async def asyncio_detailed(
         event_id=event_id,
         mode=mode,
         if_match=if_match,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -199,6 +212,7 @@ async def asyncio(
     client: AuthenticatedClient | Client,
     mode: CalendarDeleteEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> CalendarDeleteEventResponse200:
     """Take it off the calendar
 
@@ -211,6 +225,7 @@ async def asyncio(
         event_id (str):
         mode (CalendarDeleteEventMode | Unset):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -228,5 +243,6 @@ async def asyncio(
             client=client,
             mode=mode,
             if_match=if_match,
+            idempotency_key=idempotency_key,
         )
     ).parsed

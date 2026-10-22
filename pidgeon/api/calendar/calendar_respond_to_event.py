@@ -17,10 +17,14 @@ def _get_kwargs(
     *,
     body: CalendarRespondToEventBody,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
     if not isinstance(if_match, Unset):
         headers["If-Match"] = if_match
+
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     _kwargs: dict[str, Any] = {
         "method": "post",
@@ -70,6 +74,7 @@ def sync_detailed(
     client: AuthenticatedClient | Client,
     body: CalendarRespondToEventBody,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[CalendarRespondToEventResponse200]:
     """Answer a meeting from the calendar
 
@@ -84,6 +89,7 @@ def sync_detailed(
         id (str):
         event_id (str):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
         body (CalendarRespondToEventBody):
 
     Raises:
@@ -100,6 +106,7 @@ def sync_detailed(
         event_id=event_id,
         body=body,
         if_match=if_match,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -116,6 +123,7 @@ def sync(
     client: AuthenticatedClient | Client,
     body: CalendarRespondToEventBody,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> CalendarRespondToEventResponse200:
     """Answer a meeting from the calendar
 
@@ -130,6 +138,7 @@ def sync(
         id (str):
         event_id (str):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
         body (CalendarRespondToEventBody):
 
     Raises:
@@ -147,6 +156,7 @@ def sync(
         client=client,
         body=body,
         if_match=if_match,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -157,6 +167,7 @@ async def asyncio_detailed(
     client: AuthenticatedClient | Client,
     body: CalendarRespondToEventBody,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[CalendarRespondToEventResponse200]:
     """Answer a meeting from the calendar
 
@@ -171,6 +182,7 @@ async def asyncio_detailed(
         id (str):
         event_id (str):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
         body (CalendarRespondToEventBody):
 
     Raises:
@@ -187,6 +199,7 @@ async def asyncio_detailed(
         event_id=event_id,
         body=body,
         if_match=if_match,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -201,6 +214,7 @@ async def asyncio(
     client: AuthenticatedClient | Client,
     body: CalendarRespondToEventBody,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> CalendarRespondToEventResponse200:
     """Answer a meeting from the calendar
 
@@ -215,6 +229,7 @@ async def asyncio(
         id (str):
         event_id (str):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
         body (CalendarRespondToEventBody):
 
     Raises:
@@ -233,5 +248,6 @@ async def asyncio(
             client=client,
             body=body,
             if_match=if_match,
+            idempotency_key=idempotency_key,
         )
     ).parsed

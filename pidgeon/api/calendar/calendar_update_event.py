@@ -19,10 +19,14 @@ def _get_kwargs(
     body: CalendarUpdateEventBody,
     mode: CalendarUpdateEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
     if not isinstance(if_match, Unset):
         headers["If-Match"] = if_match
+
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     params: dict[str, Any] = {}
 
@@ -84,6 +88,7 @@ def sync_detailed(
     body: CalendarUpdateEventBody,
     mode: CalendarUpdateEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[CalendarUpdateEventResponse200]:
     """Change an event
 
@@ -96,6 +101,7 @@ def sync_detailed(
         event_id (str):
         mode (CalendarUpdateEventMode | Unset):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
         body (CalendarUpdateEventBody):
 
     Raises:
@@ -113,6 +119,7 @@ def sync_detailed(
         body=body,
         mode=mode,
         if_match=if_match,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -130,6 +137,7 @@ def sync(
     body: CalendarUpdateEventBody,
     mode: CalendarUpdateEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> CalendarUpdateEventResponse200:
     """Change an event
 
@@ -142,6 +150,7 @@ def sync(
         event_id (str):
         mode (CalendarUpdateEventMode | Unset):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
         body (CalendarUpdateEventBody):
 
     Raises:
@@ -160,6 +169,7 @@ def sync(
         body=body,
         mode=mode,
         if_match=if_match,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -171,6 +181,7 @@ async def asyncio_detailed(
     body: CalendarUpdateEventBody,
     mode: CalendarUpdateEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[CalendarUpdateEventResponse200]:
     """Change an event
 
@@ -183,6 +194,7 @@ async def asyncio_detailed(
         event_id (str):
         mode (CalendarUpdateEventMode | Unset):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
         body (CalendarUpdateEventBody):
 
     Raises:
@@ -200,6 +212,7 @@ async def asyncio_detailed(
         body=body,
         mode=mode,
         if_match=if_match,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -215,6 +228,7 @@ async def asyncio(
     body: CalendarUpdateEventBody,
     mode: CalendarUpdateEventMode | Unset = UNSET,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> CalendarUpdateEventResponse200:
     """Change an event
 
@@ -227,6 +241,7 @@ async def asyncio(
         event_id (str):
         mode (CalendarUpdateEventMode | Unset):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
         body (CalendarUpdateEventBody):
 
     Raises:
@@ -246,5 +261,6 @@ async def asyncio(
             body=body,
             mode=mode,
             if_match=if_match,
+            idempotency_key=idempotency_key,
         )
     ).parsed

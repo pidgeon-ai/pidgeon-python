@@ -7,14 +7,17 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.identities_create_body import IdentitiesCreateBody
 from ...models.identities_create_response_201 import IdentitiesCreateResponse201
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
     body: IdentitiesCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     _kwargs: dict[str, Any] = {
         "method": "post",
@@ -56,6 +59,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: IdentitiesCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[IdentitiesCreateResponse201]:
     """Create an address
 
@@ -63,6 +67,7 @@ def sync_detailed(
     creating a second address.
 
     Args:
+        idempotency_key (str | Unset):
         body (IdentitiesCreateBody):
 
     Raises:
@@ -76,6 +81,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -89,6 +95,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: IdentitiesCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> IdentitiesCreateResponse201:
     """Create an address
 
@@ -96,6 +103,7 @@ def sync(
     creating a second address.
 
     Args:
+        idempotency_key (str | Unset):
         body (IdentitiesCreateBody):
 
     Raises:
@@ -110,6 +118,7 @@ def sync(
     return sync_detailed(
         client=client,
         body=body,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -117,6 +126,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: IdentitiesCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[IdentitiesCreateResponse201]:
     """Create an address
 
@@ -124,6 +134,7 @@ async def asyncio_detailed(
     creating a second address.
 
     Args:
+        idempotency_key (str | Unset):
         body (IdentitiesCreateBody):
 
     Raises:
@@ -137,6 +148,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -148,6 +160,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: IdentitiesCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> IdentitiesCreateResponse201:
     """Create an address
 
@@ -155,6 +168,7 @@ async def asyncio(
     creating a second address.
 
     Args:
+        idempotency_key (str | Unset):
         body (IdentitiesCreateBody):
 
     Raises:
@@ -170,5 +184,6 @@ async def asyncio(
         await asyncio_detailed(
             client=client,
             body=body,
+            idempotency_key=idempotency_key,
         )
     ).parsed

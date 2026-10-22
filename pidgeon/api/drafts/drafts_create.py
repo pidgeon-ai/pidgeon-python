@@ -7,14 +7,17 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.drafts_create_body import DraftsCreateBody
 from ...models.drafts_create_response_201 import DraftsCreateResponse201
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
     body: DraftsCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     _kwargs: dict[str, Any] = {
         "method": "post",
@@ -56,6 +59,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: DraftsCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[DraftsCreateResponse201]:
     """Write one without sending it
 
@@ -64,6 +68,7 @@ def sync_detailed(
     with `Idempotency-Key`.
 
     Args:
+        idempotency_key (str | Unset):
         body (DraftsCreateBody):
 
     Raises:
@@ -77,6 +82,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -90,6 +96,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: DraftsCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> DraftsCreateResponse201:
     """Write one without sending it
 
@@ -98,6 +105,7 @@ def sync(
     with `Idempotency-Key`.
 
     Args:
+        idempotency_key (str | Unset):
         body (DraftsCreateBody):
 
     Raises:
@@ -112,6 +120,7 @@ def sync(
     return sync_detailed(
         client=client,
         body=body,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -119,6 +128,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: DraftsCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[DraftsCreateResponse201]:
     """Write one without sending it
 
@@ -127,6 +137,7 @@ async def asyncio_detailed(
     with `Idempotency-Key`.
 
     Args:
+        idempotency_key (str | Unset):
         body (DraftsCreateBody):
 
     Raises:
@@ -140,6 +151,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -151,6 +163,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: DraftsCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> DraftsCreateResponse201:
     """Write one without sending it
 
@@ -159,6 +172,7 @@ async def asyncio(
     with `Idempotency-Key`.
 
     Args:
+        idempotency_key (str | Unset):
         body (DraftsCreateBody):
 
     Raises:
@@ -174,5 +188,6 @@ async def asyncio(
         await asyncio_detailed(
             client=client,
             body=body,
+            idempotency_key=idempotency_key,
         )
     ).parsed

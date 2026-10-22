@@ -9,14 +9,17 @@ from ...models.routing_create_body_type_0 import RoutingCreateBodyType0
 from ...models.routing_create_body_type_1 import RoutingCreateBodyType1
 from ...models.routing_create_body_type_2 import RoutingCreateBodyType2
 from ...models.routing_create_response_201 import RoutingCreateResponse201
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
     body: RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     _kwargs: dict[str, Any] = {
         "method": "post",
@@ -63,6 +66,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[RoutingCreateResponse201]:
     """Route an address somewhere
 
@@ -71,6 +75,7 @@ def sync_detailed(
     — a webhook destination has no inbox, so the message is handed to the endpoint and then gone.
 
     Args:
+        idempotency_key (str | Unset):
         body (RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2):
 
     Raises:
@@ -84,6 +89,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -97,6 +103,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2,
+    idempotency_key: str | Unset = UNSET,
 ) -> RoutingCreateResponse201:
     """Route an address somewhere
 
@@ -105,6 +112,7 @@ def sync(
     — a webhook destination has no inbox, so the message is handed to the endpoint and then gone.
 
     Args:
+        idempotency_key (str | Unset):
         body (RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2):
 
     Raises:
@@ -119,6 +127,7 @@ def sync(
     return sync_detailed(
         client=client,
         body=body,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -126,6 +135,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[RoutingCreateResponse201]:
     """Route an address somewhere
 
@@ -134,6 +144,7 @@ async def asyncio_detailed(
     — a webhook destination has no inbox, so the message is handed to the endpoint and then gone.
 
     Args:
+        idempotency_key (str | Unset):
         body (RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2):
 
     Raises:
@@ -147,6 +158,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -158,6 +170,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2,
+    idempotency_key: str | Unset = UNSET,
 ) -> RoutingCreateResponse201:
     """Route an address somewhere
 
@@ -166,6 +179,7 @@ async def asyncio(
     — a webhook destination has no inbox, so the message is handed to the endpoint and then gone.
 
     Args:
+        idempotency_key (str | Unset):
         body (RoutingCreateBodyType0 | RoutingCreateBodyType1 | RoutingCreateBodyType2):
 
     Raises:
@@ -181,5 +195,6 @@ async def asyncio(
         await asyncio_detailed(
             client=client,
             body=body,
+            idempotency_key=idempotency_key,
         )
     ).parsed

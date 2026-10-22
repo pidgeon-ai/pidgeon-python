@@ -1,6 +1,6 @@
 import datetime
 from http import HTTPStatus
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 import httpx
@@ -22,7 +22,7 @@ def _get_kwargs(
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
-    after: datetime.datetime | Unset = UNSET,
+    after: datetime.datetime | Literal["now"] | Unset = UNSET,
     timeout: int | Unset = 50,
 ) -> dict[str, Any]:
 
@@ -53,9 +53,13 @@ def _get_kwargs(
 
     params["include_spam"] = json_include_spam
 
-    json_after: str | Unset = UNSET
-    if not isinstance(after, Unset):
+    json_after: Literal["now"] | str | Unset
+    if isinstance(after, Unset):
+        json_after = UNSET
+    elif isinstance(after, datetime.datetime):
         json_after = after.isoformat()
+    else:
+        json_after = after
     params["after"] = json_after
 
     params["timeout"] = timeout
@@ -103,18 +107,21 @@ def sync_detailed(
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
-    after: datetime.datetime | Unset = UNSET,
+    after: datetime.datetime | Literal["now"] | Unset = UNSET,
     timeout: int | Unset = 50,
 ) -> Response[MessagesAwaitResponse200]:
     """Wait for the next message
 
      Holds the request open until a message matching the filters arrives at the address, or `timeout`
     seconds pass — one call where you would otherwise poll. The message carries `extracted`:
-    verification codes and links, most likely first. Pass the returned `cursor` as `after` on the next
-    call so nothing arriving between calls is missed. Answers 200 with `message: null` and `timed_out:
-    true` when nothing came. A matching message filed as spam is not returned unless you pass
-    `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail that
-    arrived.
+    verification codes and links, most likely first. Without `after`, it first looks back 2 minutes and
+    returns the newest matching message from then, because a code often lands before the call is made;
+    narrow it with `from`, `subject_contains` or `has_code` so an earlier email is not taken for the one
+    you want, or pass `after=now` to wait only for new mail. Pass the returned `cursor` as `after` on
+    the next call so nothing arriving between calls is missed. Answers 200 with `message: null` and
+    `timed_out: true` when nothing came. A matching message filed as spam is not returned unless you
+    pass `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail
+    that arrived.
 
     Args:
         identity_id (UUID):
@@ -124,7 +131,10 @@ def sync_detailed(
         has_code (MessagesAwaitHasCode | Unset):
         include_spam (MessagesAwaitIncludeSpam | Unset): Also return a matching message filed as
             spam. Without it, one is counted in `held_back` instead, with its id.
-        after (datetime.datetime | Unset):
+        after (datetime.datetime | Literal['now'] | Unset): Only messages that arrived after this:
+            the `cursor` a previous call returned, or `now`. Without it, the wait first looks back 2
+            minutes and returns the newest matching message from then, so a code that beat you to the
+            call is not missed.
         timeout (int | Unset):  Default: 50.
 
     Raises:
@@ -163,18 +173,21 @@ def sync(
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
-    after: datetime.datetime | Unset = UNSET,
+    after: datetime.datetime | Literal["now"] | Unset = UNSET,
     timeout: int | Unset = 50,
 ) -> MessagesAwaitResponse200:
     """Wait for the next message
 
      Holds the request open until a message matching the filters arrives at the address, or `timeout`
     seconds pass — one call where you would otherwise poll. The message carries `extracted`:
-    verification codes and links, most likely first. Pass the returned `cursor` as `after` on the next
-    call so nothing arriving between calls is missed. Answers 200 with `message: null` and `timed_out:
-    true` when nothing came. A matching message filed as spam is not returned unless you pass
-    `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail that
-    arrived.
+    verification codes and links, most likely first. Without `after`, it first looks back 2 minutes and
+    returns the newest matching message from then, because a code often lands before the call is made;
+    narrow it with `from`, `subject_contains` or `has_code` so an earlier email is not taken for the one
+    you want, or pass `after=now` to wait only for new mail. Pass the returned `cursor` as `after` on
+    the next call so nothing arriving between calls is missed. Answers 200 with `message: null` and
+    `timed_out: true` when nothing came. A matching message filed as spam is not returned unless you
+    pass `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail
+    that arrived.
 
     Args:
         identity_id (UUID):
@@ -184,7 +197,10 @@ def sync(
         has_code (MessagesAwaitHasCode | Unset):
         include_spam (MessagesAwaitIncludeSpam | Unset): Also return a matching message filed as
             spam. Without it, one is counted in `held_back` instead, with its id.
-        after (datetime.datetime | Unset):
+        after (datetime.datetime | Literal['now'] | Unset): Only messages that arrived after this:
+            the `cursor` a previous call returned, or `now`. Without it, the wait first looks back 2
+            minutes and returns the newest matching message from then, so a code that beat you to the
+            call is not missed.
         timeout (int | Unset):  Default: 50.
 
     Raises:
@@ -218,18 +234,21 @@ async def asyncio_detailed(
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
-    after: datetime.datetime | Unset = UNSET,
+    after: datetime.datetime | Literal["now"] | Unset = UNSET,
     timeout: int | Unset = 50,
 ) -> Response[MessagesAwaitResponse200]:
     """Wait for the next message
 
      Holds the request open until a message matching the filters arrives at the address, or `timeout`
     seconds pass — one call where you would otherwise poll. The message carries `extracted`:
-    verification codes and links, most likely first. Pass the returned `cursor` as `after` on the next
-    call so nothing arriving between calls is missed. Answers 200 with `message: null` and `timed_out:
-    true` when nothing came. A matching message filed as spam is not returned unless you pass
-    `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail that
-    arrived.
+    verification codes and links, most likely first. Without `after`, it first looks back 2 minutes and
+    returns the newest matching message from then, because a code often lands before the call is made;
+    narrow it with `from`, `subject_contains` or `has_code` so an earlier email is not taken for the one
+    you want, or pass `after=now` to wait only for new mail. Pass the returned `cursor` as `after` on
+    the next call so nothing arriving between calls is missed. Answers 200 with `message: null` and
+    `timed_out: true` when nothing came. A matching message filed as spam is not returned unless you
+    pass `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail
+    that arrived.
 
     Args:
         identity_id (UUID):
@@ -239,7 +258,10 @@ async def asyncio_detailed(
         has_code (MessagesAwaitHasCode | Unset):
         include_spam (MessagesAwaitIncludeSpam | Unset): Also return a matching message filed as
             spam. Without it, one is counted in `held_back` instead, with its id.
-        after (datetime.datetime | Unset):
+        after (datetime.datetime | Literal['now'] | Unset): Only messages that arrived after this:
+            the `cursor` a previous call returned, or `now`. Without it, the wait first looks back 2
+            minutes and returns the newest matching message from then, so a code that beat you to the
+            call is not missed.
         timeout (int | Unset):  Default: 50.
 
     Raises:
@@ -276,18 +298,21 @@ async def asyncio(
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
-    after: datetime.datetime | Unset = UNSET,
+    after: datetime.datetime | Literal["now"] | Unset = UNSET,
     timeout: int | Unset = 50,
 ) -> MessagesAwaitResponse200:
     """Wait for the next message
 
      Holds the request open until a message matching the filters arrives at the address, or `timeout`
     seconds pass — one call where you would otherwise poll. The message carries `extracted`:
-    verification codes and links, most likely first. Pass the returned `cursor` as `after` on the next
-    call so nothing arriving between calls is missed. Answers 200 with `message: null` and `timed_out:
-    true` when nothing came. A matching message filed as spam is not returned unless you pass
-    `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail that
-    arrived.
+    verification codes and links, most likely first. Without `after`, it first looks back 2 minutes and
+    returns the newest matching message from then, because a code often lands before the call is made;
+    narrow it with `from`, `subject_contains` or `has_code` so an earlier email is not taken for the one
+    you want, or pass `after=now` to wait only for new mail. Pass the returned `cursor` as `after` on
+    the next call so nothing arriving between calls is missed. Answers 200 with `message: null` and
+    `timed_out: true` when nothing came. A matching message filed as spam is not returned unless you
+    pass `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail
+    that arrived.
 
     Args:
         identity_id (UUID):
@@ -297,7 +322,10 @@ async def asyncio(
         has_code (MessagesAwaitHasCode | Unset):
         include_spam (MessagesAwaitIncludeSpam | Unset): Also return a matching message filed as
             spam. Without it, one is counted in `held_back` instead, with its id.
-        after (datetime.datetime | Unset):
+        after (datetime.datetime | Literal['now'] | Unset): Only messages that arrived after this:
+            the `cursor` a previous call returned, or `now`. Without it, the wait first looks back 2
+            minutes and returns the newest matching message from then, so a code that beat you to the
+            call is not missed.
         timeout (int | Unset):  Default: 50.
 
     Raises:

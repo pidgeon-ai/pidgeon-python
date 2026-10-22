@@ -9,15 +9,18 @@ from ...client import AuthenticatedClient, Client
 from ...models.messages_respond_to_invitation_body import MessagesRespondToInvitationBody
 from ...models.messages_respond_to_invitation_response_200 import MessagesRespondToInvitationResponse200
 from ...models.messages_respond_to_invitation_response_202 import MessagesRespondToInvitationResponse202
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     id: str,
     *,
     body: MessagesRespondToInvitationBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     _kwargs: dict[str, Any] = {
         "method": "post",
@@ -69,6 +72,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: MessagesRespondToInvitationBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[MessagesRespondToInvitationResponse200 | MessagesRespondToInvitationResponse202]:
     """Accept, decline or tentatively accept a meeting
 
@@ -80,6 +84,7 @@ def sync_detailed(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (MessagesRespondToInvitationBody):
 
     Raises:
@@ -94,6 +99,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         id=id,
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -108,6 +114,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: MessagesRespondToInvitationBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> MessagesRespondToInvitationResponse200 | MessagesRespondToInvitationResponse202:
     """Accept, decline or tentatively accept a meeting
 
@@ -119,6 +126,7 @@ def sync(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (MessagesRespondToInvitationBody):
 
     Raises:
@@ -134,6 +142,7 @@ def sync(
         id=id,
         client=client,
         body=body,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -142,6 +151,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: MessagesRespondToInvitationBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[MessagesRespondToInvitationResponse200 | MessagesRespondToInvitationResponse202]:
     """Accept, decline or tentatively accept a meeting
 
@@ -153,6 +163,7 @@ async def asyncio_detailed(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (MessagesRespondToInvitationBody):
 
     Raises:
@@ -167,6 +178,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         id=id,
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -179,6 +191,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: MessagesRespondToInvitationBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> MessagesRespondToInvitationResponse200 | MessagesRespondToInvitationResponse202:
     """Accept, decline or tentatively accept a meeting
 
@@ -190,6 +203,7 @@ async def asyncio(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (MessagesRespondToInvitationBody):
 
     Raises:
@@ -206,5 +220,6 @@ async def asyncio(
             id=id,
             client=client,
             body=body,
+            idempotency_key=idempotency_key,
         )
     ).parsed

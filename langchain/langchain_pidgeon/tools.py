@@ -393,7 +393,10 @@ class AwaitMessageInput(BaseModel):
     )
     after: datetime | None = Field(
         default=None,
-        description="The `cursor` from the last wait, so nothing in between is missed.",
+        description=(
+            "The `cursor` from the last wait, so nothing in between is missed. "
+            "Without it, the last 2 minutes are included."
+        ),
     )
     timeout: int = Field(default=50, ge=1, le=280, description="Seconds to wait.")
     body: Body = Field(default="clean", description=BODY_DESCRIPTION)
@@ -412,10 +415,10 @@ class AwaitMessage(PidgeonTool):
         "verification codes and confirm links, most likely first. Narrow it with "
         "`from_`, `subject_contains` or `has_code`. Answers `timed_out: true` after "
         "`timeout` seconds (default 50, at most 280); pass the returned `cursor` as "
-        "`after` to keep waiting. **Mail that arrived before the call is not "
-        "returned**, and a fast sender can beat you to it: before you submit the "
-        "form, call this with `timeout: 1` and pass the `cursor` it returns as "
-        "`after` on the real wait. A matching message filed as spam is counted in "
+        "`after` to keep waiting. Without `after` it first looks back 2 minutes and "
+        "returns the newest match from then, so a code that arrived before you "
+        "called is not missed; narrow it so an earlier email is not taken for the "
+        "one you want. A matching message filed as spam is counted in "
         "`held_back` rather than returned, so check there before deciding nothing came.",
     )
     args_schema: type[BaseModel] = AwaitMessageInput
