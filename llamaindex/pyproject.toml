@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "llama-index-tools-pidgeon"
+version = "0.1.0"
+description = "Email inboxes for LlamaIndex agents: send, read, search, wait for verification codes and reply, with Pidgeon."
+authors = [{ name = "Pidgeon", email = "support@pidgeon.ai" }]
+requires-python = ">=3.11,<4.0"
+readme = "README.md"
+license = "MIT"
+keywords = ["llama-index", "email", "inbox", "agents", "pidgeon"]
+dependencies = [
+    "pidgeon>=1.19.0,<2",
+    "llama-index-core>=0.13.0,<0.15",
+]
+
+[project.urls]
+Homepage = "https://pidgeon.ai"
+Documentation = "https://pidgeon.ai/docs"
+Source = "https://github.com/pidgeon-ai/pidgeon-python/tree/main/llamaindex"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.hatch.build.targets.sdist]
+include = ["llama_index/"]
+
+[tool.hatch.build.targets.wheel]
+include = ["llama_index/"]
+
+# What the LlamaIndex monorepo reads from an in-tree package. It takes no new
+# ones since 25 March 2026 (run-llama/llama_index#21139), so this is
+# published from our own repository; the table is kept in case that changes.
+[tool.llamahub]
+contains_example = false
+import_path = "llama_index.tools.pidgeon"
+
+[tool.llamahub.class_authors]
+PidgeonToolSpec = "pidgeon-ai"

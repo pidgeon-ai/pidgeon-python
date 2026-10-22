@@ -1,10 +1,12 @@
 name: Publish
 
-# Tag-driven: `python-v1.3.0` publishes `pidgeon` to PyPI from the root, and
-# `langchain-v0.1.0` publishes `langchain-pidgeon` from `langchain/`. The
+# Tag-driven: `python-v1.3.0` publishes `pidgeon` to PyPI from the root,
+# `langchain-v0.1.0` publishes `langchain-pidgeon` from `langchain/`, and
+# `llamaindex-v0.1.0` publishes `llama-index-tools-pidgeon` from
+# `llamaindex/`. The
 # release job in the private repository (`scripts/release.ts`) cuts the tags,
 # after the sync that put this tree here succeeded. Each PyPI project has its
-# own trusted publisher, and both name this workflow and environment.
+# own trusted publisher, and each names this workflow and environment.
 #
 # Here rather than in the private repository so the upload carries PEP 740
 # attestations — `gh-action-pypi-publish` generates them from the workflow's
@@ -13,13 +15,13 @@ name: Publish
 # to be.
 on:
   push:
-    tags: ['python-v*', 'langchain-v*']
+    tags: ['python-v*', 'langchain-v*', 'llamaindex-v*']
   workflow_dispatch:
     inputs:
       package:
         description: Which project to publish
         type: choice
-        options: [python, langchain]
+        options: [python, langchain, llamaindex]
         default: python
 
 permissions:
@@ -52,6 +54,7 @@ jobs:
           case "$key" in
             python) dir=. ;;
             langchain) dir=langchain ;;
+            llamaindex) dir=llamaindex ;;
             *) echo "No project for $key." >&2; exit 1 ;;
           esac
           echo "key=$key" >> "$GITHUB_OUTPUT"
