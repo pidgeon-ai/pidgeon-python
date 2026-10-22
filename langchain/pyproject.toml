@@ -1,0 +1,67 @@
+# `langchain-pidgeon`: Pidgeon's tools in LangChain's own idiom.
+#
+# Thin over the `pidgeon` SDK, which is thin over the API: every tool is one
+# SDK call, and the tool set is the hosted MCP server's, by name
+# (`packages/mcp/src/tools.ts`). Released from the `pidgeon-python` mirror's
+# `langchain/` directory on a `langchain-v*` tag (`scripts/release.ts`).
+[project]
+name = "langchain-pidgeon"
+version = "0.1.0"
+description = "Email inboxes for LangChain agents: Pidgeon tools to create an address, read, wait for a code, send and reply."
+authors = [{ name = "Pidgeon" }]
+requires-python = ">=3.11"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = [
+    "langchain",
+    "langgraph",
+    "pidgeon",
+    "email",
+    "inbox",
+    "ai-agents",
+    "tools",
+    "verification-code",
+]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Topic :: Communications :: Email",
+    "Typing :: Typed",
+]
+dependencies = [
+    "langchain-core>=1.0.0,<2.0.0",
+    "pidgeon>=1.19.0,<2.0.0",
+]
+
+[project.urls]
+Homepage = "https://pidgeon.ai"
+Documentation = "https://pidgeon.ai/docs/langchain"
+Repository = "https://github.com/pidgeon-ai/pidgeon-python/tree/main/langchain"
+
+[dependency-groups]
+test = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "langchain-tests>=1.0.0,<2.0.0",
+]
+
+[tool.uv]
+default-groups = ["test"]
+
+[tool.uv.build-backend]
+module-name = "langchain_pidgeon"
+module-root = ""
+
+[build-system]
+requires = ["uv_build>=0.12.0,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["F", "I", "UP"]

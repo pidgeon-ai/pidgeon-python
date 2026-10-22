@@ -1,8 +1,10 @@
 name: Publish
 
-# Tag-driven: `python-v1.3.0` publishes `pidgeon` to PyPI. The release job in
-# the private repository (`scripts/release.ts`) cuts the tags, after the sync
-# that put this tree here succeeded.
+# Tag-driven: `python-v1.3.0` publishes `pidgeon` to PyPI from the root, and
+# `langchain-v0.1.0` publishes `langchain-pidgeon` from `langchain/`. The
+# release job in the private repository (`scripts/release.ts`) cuts the tags,
+# after the sync that put this tree here succeeded. Each PyPI project has its
+# own trusted publisher, and both name this workflow and environment.
 #
 # Here rather than in the private repository so the upload carries PEP 740
 # attestations — `gh-action-pypi-publish` generates them from the workflow's
@@ -11,8 +13,14 @@ name: Publish
 # to be.
 on:
   push:
-    tags: ['python-v*']
+    tags: ['python-v*', 'langchain-v*']
   workflow_dispatch:
+    inputs:
+      package:
+        description: Which project to publish
+        type: choice
+        options: [python, langchain]
+        default: python
 
 permissions:
   contents: read
@@ -35,19 +43,36 @@ jobs:
 
       - uses: astral-sh/setup-uv@v7
 
+      - name: Which project
+        id: project
+        env:
+          PACKAGE: ${{ inputs.package }}
+        run: |
+          key="${PACKAGE:-${GITHUB_REF_NAME%%-v*}}"
+          case "$key" in
+            python) dir=. ;;
+            langchain) dir=langchain ;;
+            *) echo "No project for $key." >&2; exit 1 ;;
+          esac
+          echo "key=$key" >> "$GITHUB_OUTPUT"
+          echo "dir=$dir" >> "$GITHUB_OUTPUT"
+
       - name: The tag matches the version
         if: github.event_name == 'push'
+        env:
+          KEY: ${{ steps.project.outputs.key }}
+          DIR: ${{ steps.project.outputs.dir }}
         run: |
-          declared=$(grep -m1 '^version = ' pyproject.toml | cut -d'"' -f2)
-          tagged="${GITHUB_REF_NAME#python-v}"
+          declared=$(grep -m1 '^version = ' "$DIR/pyproject.toml" | cut -d'"' -f2)
+          tagged="${GITHUB_REF_NAME#"$KEY"-v}"
 
           if [ "$declared" != "$tagged" ]; then
-            echo "Tag says $tagged; pyproject.toml says $declared." >&2
+            echo "Tag says $tagged; $DIR/pyproject.toml says $declared." >&2
             exit 1
           fi
 
       - name: Build
-        run: uv build
+        run: uv build --directory "${{ steps.project.outputs.dir }}" --out-dir "$GITHUB_WORKSPACE/dist"
 
       - name: Publish
         uses: pypa/gh-action-pypi-publish@release/v1
