@@ -188,6 +188,8 @@ from .keys_create_response_201 import KeysCreateResponse201
 from .keys_get_response_200 import KeysGetResponse200
 from .keys_list_response_200 import KeysListResponse200
 from .keys_revoke_response_200 import KeysRevokeResponse200
+from .keys_rotate_body import KeysRotateBody
+from .keys_rotate_response_200 import KeysRotateResponse200
 from .keys_update_body import KeysUpdateBody
 from .keys_update_response_200 import KeysUpdateResponse200
 from .label import Label
@@ -548,6 +550,8 @@ __all__ = (
     "KeysGetResponse200",
     "KeysListResponse200",
     "KeysRevokeResponse200",
+    "KeysRotateBody",
+    "KeysRotateResponse200",
     "KeysUpdateBody",
     "KeysUpdateResponse200",
     "Label",

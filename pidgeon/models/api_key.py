@@ -25,6 +25,9 @@ class ApiKey:
         last_used_at (None | str):
         revoked_at (None | str):
         created_at (str): ISO-8601, UTC.
+        rotated_at (None | str): When the key was last given a new secret by `POST /api-keys/{id}/rotate`, or null.
+        previous_token_expires_at (None | str): While the secret it had before its last rotation still works, when that
+            stops. Null when it has stopped or there was no grace period.
     """
 
     id: str
@@ -37,6 +40,8 @@ class ApiKey:
     last_used_at: None | str
     revoked_at: None | str
     created_at: str
+    rotated_at: None | str
+    previous_token_expires_at: None | str
 
     def to_dict(self) -> dict[str, Any]:
         id = self.id
@@ -63,6 +68,12 @@ class ApiKey:
 
         created_at = self.created_at
 
+        rotated_at: None | str
+        rotated_at = self.rotated_at
+
+        previous_token_expires_at: None | str
+        previous_token_expires_at = self.previous_token_expires_at
+
         field_dict: dict[str, Any] = {}
 
         field_dict.update(
@@ -77,6 +88,8 @@ class ApiKey:
                 "last_used_at": last_used_at,
                 "revoked_at": revoked_at,
                 "created_at": created_at,
+                "rotated_at": rotated_at,
+                "previous_token_expires_at": previous_token_expires_at,
             }
         )
 
@@ -125,6 +138,20 @@ class ApiKey:
 
         created_at = d.pop("created_at")
 
+        def _parse_rotated_at(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        rotated_at = _parse_rotated_at(d.pop("rotated_at"))
+
+        def _parse_previous_token_expires_at(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        previous_token_expires_at = _parse_previous_token_expires_at(d.pop("previous_token_expires_at"))
+
         api_key = cls(
             id=id,
             name=name,
@@ -136,6 +163,8 @@ class ApiKey:
             last_used_at=last_used_at,
             revoked_at=revoked_at,
             created_at=created_at,
+            rotated_at=rotated_at,
+            previous_token_expires_at=previous_token_expires_at,
         )
 
         return api_key

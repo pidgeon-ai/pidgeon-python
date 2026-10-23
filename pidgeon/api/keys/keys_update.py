@@ -64,9 +64,10 @@ def sync_detailed(
 ) -> Response[KeysUpdateResponse200]:
     """Rename a key
 
-     The only thing about a key that can change. Not its scope — a key's reach is what somebody granted
-    when they made it, and widening that in place would let a credential already in circulation reach
-    further than whoever issued it agreed to.
+     Its name and its secret (`POST /api-keys/{id}/rotate`) are the only things about a key that can
+    change. Not its scope — a key's reach is what somebody granted when they made it, and widening that
+    in place would let a credential already in circulation reach further than whoever issued it agreed
+    to.
 
     Args:
         id (str):
@@ -101,9 +102,10 @@ def sync(
 ) -> KeysUpdateResponse200:
     """Rename a key
 
-     The only thing about a key that can change. Not its scope — a key's reach is what somebody granted
-    when they made it, and widening that in place would let a credential already in circulation reach
-    further than whoever issued it agreed to.
+     Its name and its secret (`POST /api-keys/{id}/rotate`) are the only things about a key that can
+    change. Not its scope — a key's reach is what somebody granted when they made it, and widening that
+    in place would let a credential already in circulation reach further than whoever issued it agreed
+    to.
 
     Args:
         id (str):
@@ -133,9 +135,10 @@ async def asyncio_detailed(
 ) -> Response[KeysUpdateResponse200]:
     """Rename a key
 
-     The only thing about a key that can change. Not its scope — a key's reach is what somebody granted
-    when they made it, and widening that in place would let a credential already in circulation reach
-    further than whoever issued it agreed to.
+     Its name and its secret (`POST /api-keys/{id}/rotate`) are the only things about a key that can
+    change. Not its scope — a key's reach is what somebody granted when they made it, and widening that
+    in place would let a credential already in circulation reach further than whoever issued it agreed
+    to.
 
     Args:
         id (str):
@@ -168,9 +171,10 @@ async def asyncio(
 ) -> KeysUpdateResponse200:
     """Rename a key
 
-     The only thing about a key that can change. Not its scope — a key's reach is what somebody granted
-    when they made it, and widening that in place would let a credential already in circulation reach
-    further than whoever issued it agreed to.
+     Its name and its secret (`POST /api-keys/{id}/rotate`) are the only things about a key that can
+    change. Not its scope — a key's reach is what somebody granted when they made it, and widening that
+    in place would let a credential already in circulation reach further than whoever issued it agreed
+    to.
 
     Args:
         id (str):
