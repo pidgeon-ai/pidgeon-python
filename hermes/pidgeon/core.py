@@ -1,7 +1,7 @@
 """The parts of the Pidgeon channel that do not need Hermes.
 
 A client for the five calls it makes, the gate that decides whether a
-message becomes an agent turn, the text the agent reads, and the state that
+message becomes an agent turn (spam, a forged From, the Firewall), the text the agent reads, and the state that
 makes delivery survive a restart. Standard library only: a Hermes plugin is
 loaded into Hermes's own interpreter, and nothing here earns a dependency.
 
@@ -33,7 +33,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable, Optional
 
-USER_AGENT = "pidgeon-hermes/0.1.0"
+USER_AGENT = "pidgeon-hermes/0.1.1"
 DEFAULT_BASE_URL = "https://pidgeon.ai"
 OVERLAP = timedelta(seconds=30)
 PAGE = 100
@@ -132,6 +132,8 @@ class Settings:
     addresses: list[str] = field(default_factory=list)
     suspicious: str = "hold"
     poll_seconds: int = 5
+    # Give the agent mail whose From did not pass DMARC. Off: a From is forgeable.
+    allow_unauthenticated: bool = False
 
     @classmethod
     def from_values(cls, get: Callable[[str], str]) -> "Settings":
@@ -147,19 +149,46 @@ class Settings:
             addresses=[a.strip().lower() for a in (get("PIDGEON_ADDRESSES") or "").split(",") if a.strip()],
             suspicious=suspicious if suspicious in ("hold", "deliver") else "hold",
             poll_seconds=min(300, max(2, poll)),
+            allow_unauthenticated=(get("PIDGEON_ALLOW_UNAUTHENTICATED") or "").strip().lower()
+            in ("true", "1", "yes"),
         )
 
 
 # ---------------------------------------------------------------- gate
 
 
+def authenticated(message: dict) -> bool:
+    """Whether the From address is the sending domain's own word.
+
+    DMARC `pass` is the one verdict that says so: SPF and DKIM pass for
+    whatever domain sent, and only DMARC checks that it is the From's. The API
+    does not say whether an SPF or DKIM pass was aligned, so without DMARC an
+    unknown counts as not passing.
+
+    Mail Pidgeon delivered between two of its own addresses, without going out
+    through SES, has no transport verdict at all: a declared `sender.kind` with
+    no `authentication` is that, because Pidgeon sets `kind` only on a row it
+    wrote and every SMTP arrival carries the transport's verdicts. Through SES,
+    as in production, Pidgeon-to-Pidgeon mail passes DMARC like any other.
+    """
+    verdicts = message.get("authentication") or {}
+    if verdicts.get("dmarc") == "pass":
+        return True
+    unreported = not (verdicts.get("spf") or verdicts.get("dkim") or verdicts.get("dmarc"))
+    declared = bool((message.get("sender") or {}).get("kind"))
+    return unreported and declared and message.get("origin") != "smtp"
+
+
 def decide(settings: Settings, message: dict) -> Optional[str]:
     """`None` to give the message to the agent, or the reason it is not.
 
     Who may write to the agent is Hermes's to decide (`PIDGEON_ALLOWED_USERS`,
-    pairing); this is what Pidgeon knows that Hermes cannot: spam, and the
-    Firewall's verdict. A stranger's email becoming a prompt is the abuse
-    surface of the whole plugin, so these defaults are the product.
+    pairing); this is what Pidgeon knows that Hermes cannot: spam, the
+    Firewall's verdict, and whether the From is forged. Hermes's allowlist and
+    pairing both trust the sender's address, so mail that did not pass DMARC
+    never reaches them unless `PIDGEON_ALLOW_UNAUTHENTICATED` says so. A
+    stranger's email becoming a prompt is the abuse surface of the whole
+    plugin, so these defaults are the product.
     """
     if message.get("direction") != "inbound":
         return "not inbound"
@@ -173,6 +202,8 @@ def decide(settings: Settings, message: dict) -> Optional[str]:
         return "sent by the address itself"
     if message.get("is_spam"):
         return "filed as spam"
+    if not settings.allow_unauthenticated and not authenticated(message):
+        return f"from {sender}, but it did not pass DMARC, so the From may be forged"
     firewall = message.get("firewall") or {}
     if firewall.get("verdict") == "suspicious" and settings.suspicious == "hold":
         kinds = ", ".join(signal.get("kind", "?") for signal in firewall.get("signals") or [])

@@ -42,6 +42,7 @@ _EXTRA_KEYS = {
     "PIDGEON_ADDRESSES": "addresses",
     "PIDGEON_SUSPICIOUS": "suspicious",
     "PIDGEON_POLL_SECONDS": "poll_seconds",
+    "PIDGEON_ALLOW_UNAUTHENTICATED": "allow_unauthenticated",
 }
 MAX_BACKOFF = 60
 # What Hermes would otherwise say back to an email's sender, who is anyone with

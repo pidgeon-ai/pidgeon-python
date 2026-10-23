@@ -1,13 +1,14 @@
 name: pidgeon
 label: Pidgeon
 kind: platform
-version: 0.1.0
+version: 0.1.1
 requires_hermes: '>=0.22.2'
 description: >
   Email for Hermes Agent through Pidgeon. Mail to your agent's own address
   starts a conversation, one per email thread, and the agent's reply goes back
-  in the thread. The agent reads Pidgeon Firewall's clean text, and mail the
-  Firewall flags as prompt injection is held before it reaches the agent.
+  in the thread. The agent reads Pidgeon Firewall's clean text, mail the
+  Firewall flags as prompt injection is held before it reaches the agent, and
+  mail whose From fails DMARC never reaches it.
 author: Pidgeon
 requires_env:
   - name: PIDGEON_API_KEY
@@ -26,4 +27,8 @@ optional_env:
   - name: PIDGEON_SUSPICIOUS
     description: 'hold (default) keeps Firewall-flagged mail from the agent; deliver passes it with a warning'
     prompt: 'Flagged mail: hold or deliver'
+    password: false
+  - name: PIDGEON_ALLOW_UNAUTHENTICATED
+    description: 'false (default) drops mail whose From did not pass DMARC, since a From is forgeable; true trusts the From alone'
+    prompt: 'Trust senders that fail DMARC: false or true'
     password: false

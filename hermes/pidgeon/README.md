@@ -28,6 +28,12 @@ message: never the raw HTML. Mail filed as spam never becomes a turn, and mail
 the Firewall marks `suspicious` is held unless `PIDGEON_SUSPICIOUS=deliver`.
 A sender not in `PIDGEON_ALLOWED_USERS` is ignored, not sent a pairing code.
 
+Mail whose From did not pass DMARC never reaches Hermes, because Hermes's
+allowlist and pairing trust the sender's address and anyone can forge one.
+Mail between two Pidgeon addresses passes. `PIDGEON_ALLOW_UNAUTHENTICATED=true`
+trusts the From alone; with it, anyone who knows an allowed address can
+instruct your agent.
+
 The agent can only reply in the thread. Hermes's setup notices and mid-turn
 status messages go to the gateway log, never to the person who wrote.
 

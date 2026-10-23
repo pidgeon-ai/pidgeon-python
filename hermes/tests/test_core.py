@@ -20,6 +20,7 @@ from pidgeon.core import (  # noqa: E402
     State,
     StateFile,
     answered,
+    authenticated,
     body_for_agent,
     decide,
     idempotency_key,
@@ -161,6 +162,42 @@ class GateTest(unittest.TestCase):
         only = settings(PIDGEON_ADDRESSES="Agent@Pidgeon.email, x@y.z")
         self.assertIsNone(decide(only, self.message()))
         self.assertIsNotNone(decide(only, self.message(identity="other@pidgeon.email")))
+
+    # Teknium's review, 23 October: Hermes's allowlist and pairing trust the
+    # From, so mail forging an allowed sender became a turn on a machine with
+    # a terminal. The adversary is a stranger who knows one allowed address.
+    def verdicts(self, dmarc, spf="pass", dkim=None):
+        return {"authentication": {"spf": spf, "dkim": dkim if dkim is not None else spf, "dmarc": dmarc}}
+
+    def test_a_from_that_fails_dmarc_or_is_unreported_is_refused(self):
+        forged = self.message(sender="owner@example.com", **self.verdicts("fail"))
+        self.assertEqual(
+            decide(settings(), forged),
+            "from owner@example.com, but it did not pass DMARC, so the From may be forged",
+        )
+        self.assertIsNotNone(decide(settings(), self.message(**self.verdicts(None, None))))
+        self.assertIsNotNone(decide(settings(), self.message(authentication=None)))
+
+    def test_an_spf_or_dkim_pass_alone_is_not_enough(self):
+        # Either may pass for the attacker's own domain; only DMARC ties it to the From.
+        self.assertIsNotNone(decide(settings(), self.message(**self.verdicts(None, "pass"))))
+        self.assertIsNotNone(decide(settings(), self.message(**self.verdicts("none", "pass"))))
+
+    def test_the_same_from_passing_dmarc_is_delivered(self):
+        self.assertIsNone(decide(settings(), self.message(sender="owner@example.com", **self.verdicts("pass"))))
+
+    def test_pidgeon_mail_delivered_without_ses_is_delivered(self):
+        local = self.message(sender="peer@pidgeon.email", origin=None, **self.verdicts(None, None))
+        local["sender"] = {"address": "peer@pidgeon.email", "kind": "agent"}
+        self.assertTrue(authenticated(local))
+        self.assertIsNone(decide(settings(), local))
+        self.assertFalse(authenticated({**local, "origin": "smtp"}))
+
+    def test_allow_unauthenticated_restores_the_from_alone(self):
+        trusting = settings(PIDGEON_ALLOW_UNAUTHENTICATED="true")
+        self.assertTrue(trusting.allow_unauthenticated)
+        self.assertIsNone(decide(trusting, self.message(**self.verdicts("fail"))))
+        self.assertFalse(settings(PIDGEON_ALLOW_UNAUTHENTICATED="maybe").allow_unauthenticated)
 
     def test_settings_fall_back_to_safe_values(self):
         loose = settings(PIDGEON_SUSPICIOUS="yes please", PIDGEON_POLL_SECONDS="0")
