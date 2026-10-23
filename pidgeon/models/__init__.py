@@ -37,6 +37,7 @@ from .awaited_message_message_type_0 import AwaitedMessageMessageType0
 from .awaited_message_message_type_0_attachments_item import AwaitedMessageMessageType0AttachmentsItem
 from .awaited_message_message_type_0_authentication import AwaitedMessageMessageType0Authentication
 from .awaited_message_message_type_0_cc_item import AwaitedMessageMessageType0CcItem
+from .awaited_message_message_type_0_data_type_0 import AwaitedMessageMessageType0DataType0
 from .awaited_message_message_type_0_extracted import AwaitedMessageMessageType0Extracted
 from .awaited_message_message_type_0_extracted_codes_item import AwaitedMessageMessageType0ExtractedCodesItem
 from .awaited_message_message_type_0_extracted_codes_item_kind import AwaitedMessageMessageType0ExtractedCodesItemKind
@@ -59,6 +60,8 @@ from .awaited_message_message_type_0_invitation_type_0 import AwaitedMessageMess
 from .awaited_message_message_type_0_invitation_type_0_attendees_item import (
     AwaitedMessageMessageType0InvitationType0AttendeesItem,
 )
+from .awaited_message_message_type_0_sender import AwaitedMessageMessageType0Sender
+from .awaited_message_message_type_0_sender_kind_type_0 import AwaitedMessageMessageType0SenderKindType0
 from .awaited_message_message_type_0_to_item import AwaitedMessageMessageType0ToItem
 from .calendar import Calendar
 from .calendar_create_event_body import CalendarCreateEventBody
@@ -114,8 +117,10 @@ from .domains_update_response_200 import DomainsUpdateResponse200
 from .domains_verify_response_200 import DomainsVerifyResponse200
 from .draft import Draft
 from .draft_attachments_item import DraftAttachmentsItem
+from .draft_data_type_0 import DraftDataType0
 from .drafts_cancel_schedule_response_200 import DraftsCancelScheduleResponse200
 from .drafts_create_body import DraftsCreateBody
+from .drafts_create_body_data_type_0 import DraftsCreateBodyDataType0
 from .drafts_create_response_201 import DraftsCreateResponse201
 from .drafts_delete_response_200 import DraftsDeleteResponse200
 from .drafts_get_response_200 import DraftsGetResponse200
@@ -125,6 +130,7 @@ from .drafts_schedule_body import DraftsScheduleBody
 from .drafts_schedule_response_200 import DraftsScheduleResponse200
 from .drafts_send_response_202 import DraftsSendResponse202
 from .drafts_update_body import DraftsUpdateBody
+from .drafts_update_body_data_type_0 import DraftsUpdateBodyDataType0
 from .drafts_update_response_200 import DraftsUpdateResponse200
 from .emptied import Emptied
 from .error import Error
@@ -219,6 +225,7 @@ from .message import Message
 from .message_attachments_item import MessageAttachmentsItem
 from .message_authentication import MessageAuthentication
 from .message_cc_item import MessageCcItem
+from .message_data_type_0 import MessageDataType0
 from .message_extracted import MessageExtracted
 from .message_extracted_codes_item import MessageExtractedCodesItem
 from .message_extracted_codes_item_kind import MessageExtractedCodesItemKind
@@ -234,6 +241,8 @@ from .message_headers import MessageHeaders
 from .message_invitation_type_0 import MessageInvitationType0
 from .message_invitation_type_0_attendees_item import MessageInvitationType0AttendeesItem
 from .message_list_item import MessageListItem
+from .message_sender import MessageSender
+from .message_sender_kind_type_0 import MessageSenderKindType0
 from .message_to_item import MessageToItem
 from .messages_act_body import MessagesActBody
 from .messages_act_body_action import MessagesActBodyAction
@@ -243,14 +252,17 @@ from .messages_await_has_code import MessagesAwaitHasCode
 from .messages_await_include_spam import MessagesAwaitIncludeSpam
 from .messages_await_response_200 import MessagesAwaitResponse200
 from .messages_forward_body import MessagesForwardBody
+from .messages_forward_body_data import MessagesForwardBodyData
 from .messages_forward_response_202 import MessagesForwardResponse202
 from .messages_get_body import MessagesGetBody
 from .messages_get_response_200 import MessagesGetResponse200
 from .messages_list_in_thread_body import MessagesListInThreadBody
 from .messages_list_in_thread_response_200 import MessagesListInThreadResponse200
 from .messages_reply_all_body import MessagesReplyAllBody
+from .messages_reply_all_body_data import MessagesReplyAllBodyData
 from .messages_reply_all_response_202 import MessagesReplyAllResponse202
 from .messages_reply_body import MessagesReplyBody
+from .messages_reply_body_data import MessagesReplyBodyData
 from .messages_reply_response_202 import MessagesReplyResponse202
 from .messages_respond_to_invitation_body import MessagesRespondToInvitationBody
 from .messages_respond_to_invitation_body_status import MessagesRespondToInvitationBodyStatus
@@ -259,6 +271,7 @@ from .messages_respond_to_invitation_response_202 import MessagesRespondToInvita
 from .messages_search_in import MessagesSearchIn
 from .messages_search_response_200 import MessagesSearchResponse200
 from .messages_send_body import MessagesSendBody
+from .messages_send_body_data import MessagesSendBodyData
 from .messages_send_response_202 import MessagesSendResponse202
 from .messages_undo_body import MessagesUndoBody
 from .messages_undo_response_200 import MessagesUndoResponse200
@@ -392,6 +405,7 @@ __all__ = (
     "AwaitedMessageMessageType0AttachmentsItem",
     "AwaitedMessageMessageType0Authentication",
     "AwaitedMessageMessageType0CcItem",
+    "AwaitedMessageMessageType0DataType0",
     "AwaitedMessageMessageType0Extracted",
     "AwaitedMessageMessageType0ExtractedCodesItem",
     "AwaitedMessageMessageType0ExtractedCodesItemKind",
@@ -406,6 +420,8 @@ __all__ = (
     "AwaitedMessageMessageType0Headers",
     "AwaitedMessageMessageType0InvitationType0",
     "AwaitedMessageMessageType0InvitationType0AttendeesItem",
+    "AwaitedMessageMessageType0Sender",
+    "AwaitedMessageMessageType0SenderKindType0",
     "AwaitedMessageMessageType0ToItem",
     "Calendar",
     "CalendarCreateEventBody",
@@ -461,8 +477,10 @@ __all__ = (
     "DomainsVerifyResponse200",
     "Draft",
     "DraftAttachmentsItem",
+    "DraftDataType0",
     "DraftsCancelScheduleResponse200",
     "DraftsCreateBody",
+    "DraftsCreateBodyDataType0",
     "DraftsCreateResponse201",
     "DraftsDeleteResponse200",
     "DraftsGetResponse200",
@@ -472,6 +490,7 @@ __all__ = (
     "DraftsScheduleResponse200",
     "DraftsSendResponse202",
     "DraftsUpdateBody",
+    "DraftsUpdateBodyDataType0",
     "DraftsUpdateResponse200",
     "Emptied",
     "Error",
@@ -565,6 +584,7 @@ __all__ = (
     "MessageAttachmentsItem",
     "MessageAuthentication",
     "MessageCcItem",
+    "MessageDataType0",
     "MessageExtracted",
     "MessageExtractedCodesItem",
     "MessageExtractedCodesItemKind",
@@ -587,15 +607,20 @@ __all__ = (
     "MessagesAwaitHasCode",
     "MessagesAwaitIncludeSpam",
     "MessagesAwaitResponse200",
+    "MessageSender",
+    "MessageSenderKindType0",
     "MessagesForwardBody",
+    "MessagesForwardBodyData",
     "MessagesForwardResponse202",
     "MessagesGetBody",
     "MessagesGetResponse200",
     "MessagesListInThreadBody",
     "MessagesListInThreadResponse200",
     "MessagesReplyAllBody",
+    "MessagesReplyAllBodyData",
     "MessagesReplyAllResponse202",
     "MessagesReplyBody",
+    "MessagesReplyBodyData",
     "MessagesReplyResponse202",
     "MessagesRespondToInvitationBody",
     "MessagesRespondToInvitationBodyStatus",
@@ -604,6 +629,7 @@ __all__ = (
     "MessagesSearchIn",
     "MessagesSearchResponse200",
     "MessagesSendBody",
+    "MessagesSendBodyData",
     "MessagesSendResponse202",
     "MessagesUndoBody",
     "MessagesUndoResponse200",

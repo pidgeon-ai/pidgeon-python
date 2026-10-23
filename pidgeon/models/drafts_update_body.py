@@ -1,13 +1,17 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any, TypeVar, cast
+from typing import TYPE_CHECKING, Any, TypeVar, cast
 from uuid import UUID
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
+
+if TYPE_CHECKING:
+    from ..models.drafts_update_body_data_type_0 import DraftsUpdateBodyDataType0
+
 
 T = TypeVar("T", bound="DraftsUpdateBody")
 
@@ -22,6 +26,8 @@ class DraftsUpdateBody:
         bcc (list[str] | Unset): Copied, and visible to nobody else.
         subject (None | str | Unset): Left off a reply, where the thread already has one.
         text (None | str | Unset): The plain-text body. Send this even when you send `html` — some clients only read it.
+        data (DraftsUpdateBodyDataType0 | None | Unset): Typed data: `{ schema, body }`, where `schema` is a URL naming
+            what `body` is and `body` is up to 64 KB of JSON. Sent as its own part beside the text, never mixed into it.
         attachment_ids (list[UUID] | Unset): Ids from `POST /attachments`, uploaded before the message that carries
             them. Up to 20.
     """
@@ -32,10 +38,13 @@ class DraftsUpdateBody:
     bcc: list[str] | Unset = UNSET
     subject: None | str | Unset = UNSET
     text: None | str | Unset = UNSET
+    data: DraftsUpdateBodyDataType0 | None | Unset = UNSET
     attachment_ids: list[UUID] | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        from ..models.drafts_update_body_data_type_0 import DraftsUpdateBodyDataType0  # noqa: PLC0415
+
         from_ = self.from_
 
         to: list[str] | Unset = UNSET
@@ -62,6 +71,14 @@ class DraftsUpdateBody:
         else:
             text = self.text
 
+        data: dict[str, Any] | None | Unset
+        if isinstance(self.data, Unset):
+            data = UNSET
+        elif isinstance(self.data, DraftsUpdateBodyDataType0):
+            data = self.data.to_dict()
+        else:
+            data = self.data
+
         attachment_ids: list[str] | Unset = UNSET
         if not isinstance(self.attachment_ids, Unset):
             attachment_ids = []
@@ -84,6 +101,8 @@ class DraftsUpdateBody:
             field_dict["subject"] = subject
         if text is not UNSET:
             field_dict["text"] = text
+        if data is not UNSET:
+            field_dict["data"] = data
         if attachment_ids is not UNSET:
             field_dict["attachment_ids"] = attachment_ids
 
@@ -91,6 +110,8 @@ class DraftsUpdateBody:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.drafts_update_body_data_type_0 import DraftsUpdateBodyDataType0  # noqa: PLC0415
+
         d = dict(src_dict)
         from_ = d.pop("from", UNSET)
 
@@ -118,6 +139,23 @@ class DraftsUpdateBody:
 
         text = _parse_text(d.pop("text", UNSET))
 
+        def _parse_data(data: object) -> DraftsUpdateBodyDataType0 | None | Unset:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                data_type_0 = DraftsUpdateBodyDataType0.from_dict(data)
+
+                return data_type_0
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(DraftsUpdateBodyDataType0 | None | Unset, data)
+
+        data = _parse_data(d.pop("data", UNSET))
+
         _attachment_ids = d.pop("attachment_ids", UNSET)
         attachment_ids: list[UUID] | Unset = UNSET
         if _attachment_ids is not UNSET:
@@ -134,6 +172,7 @@ class DraftsUpdateBody:
             bcc=bcc,
             subject=subject,
             text=text,
+            data=data,
             attachment_ids=attachment_ids,
         )
 

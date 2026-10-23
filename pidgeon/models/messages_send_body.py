@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any, TypeVar, cast
+from typing import TYPE_CHECKING, Any, TypeVar, cast
 from uuid import UUID
 
 from attrs import define as _attrs_define
 
 from ..types import UNSET, Unset
+
+if TYPE_CHECKING:
+    from ..models.messages_send_body_data import MessagesSendBodyData
+
 
 T = TypeVar("T", bound="MessagesSendBody")
 
@@ -23,6 +27,8 @@ class MessagesSendBody:
         text (str | Unset): The plain-text body. Send this even when you send `html` — some clients only read it.
             Default: ''.
         html (str | Unset): The rich body. Sanitised on the way in; scripts and remote content are removed.
+        data (MessagesSendBodyData | Unset): Typed data: structured JSON sent beside the text, for software at the other
+            end to read as fields. Travels as its own part; it is never mixed into the text.
         attachment_ids (list[UUID] | Unset): Ids from `POST /attachments`, uploaded before the message that carries
             them. Up to 20.
         in_reply_to (None | Unset | UUID): The message being answered. Keeps the conversation together in the
@@ -38,6 +44,7 @@ class MessagesSendBody:
     subject: str | Unset = ""
     text: str | Unset = ""
     html: str | Unset = UNSET
+    data: MessagesSendBodyData | Unset = UNSET
     attachment_ids: list[UUID] | Unset = UNSET
     in_reply_to: None | Unset | UUID = UNSET
     in_reply_to_message_id: None | Unset | UUID = UNSET
@@ -75,6 +82,10 @@ class MessagesSendBody:
         text = self.text
 
         html = self.html
+
+        data: dict[str, Any] | Unset = UNSET
+        if not isinstance(self.data, Unset):
+            data = self.data.to_dict()
 
         attachment_ids: list[str] | Unset = UNSET
         if not isinstance(self.attachment_ids, Unset):
@@ -117,6 +128,8 @@ class MessagesSendBody:
             field_dict["text"] = text
         if html is not UNSET:
             field_dict["html"] = html
+        if data is not UNSET:
+            field_dict["data"] = data
         if attachment_ids is not UNSET:
             field_dict["attachment_ids"] = attachment_ids
         if in_reply_to is not UNSET:
@@ -128,6 +141,8 @@ class MessagesSendBody:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.messages_send_body_data import MessagesSendBodyData  # noqa: PLC0415
+
         d = dict(src_dict)
         from_ = d.pop("from")
 
@@ -180,6 +195,13 @@ class MessagesSendBody:
 
         html = d.pop("html", UNSET)
 
+        _data = d.pop("data", UNSET)
+        data: MessagesSendBodyData | Unset
+        if isinstance(_data, Unset):
+            data = UNSET
+        else:
+            data = MessagesSendBodyData.from_dict(_data)
+
         _attachment_ids = d.pop("attachment_ids", UNSET)
         attachment_ids: list[UUID] | Unset = UNSET
         if _attachment_ids is not UNSET:
@@ -231,6 +253,7 @@ class MessagesSendBody:
             subject=subject,
             text=text,
             html=html,
+            data=data,
             attachment_ids=attachment_ids,
             in_reply_to=in_reply_to,
             in_reply_to_message_id=in_reply_to_message_id,

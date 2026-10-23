@@ -1,13 +1,17 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any, TypeVar, cast
+from typing import TYPE_CHECKING, Any, TypeVar, cast
 from uuid import UUID
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
+
+if TYPE_CHECKING:
+    from ..models.messages_reply_all_body_data import MessagesReplyAllBodyData
+
 
 T = TypeVar("T", bound="MessagesReplyAllBody")
 
@@ -19,6 +23,8 @@ class MessagesReplyAllBody:
         text (str | Unset): The plain-text body. Send this even when you send `html` — some clients only read it.
             Default: ''.
         html (str | Unset): The rich body. Sanitised on the way in; scripts and remote content are removed.
+        data (MessagesReplyAllBodyData | Unset): Typed data: structured JSON sent beside the text, for software at the
+            other end to read as fields. Travels as its own part; it is never mixed into the text.
         to (list[str] | Unset): One address or several. A string is accepted for the single case.
         cc (list[str] | Unset): Copied, and visible to everybody who receives the message.
         bcc (list[str] | Unset): Copied, and visible to nobody else.
@@ -28,6 +34,7 @@ class MessagesReplyAllBody:
 
     text: str | Unset = ""
     html: str | Unset = UNSET
+    data: MessagesReplyAllBodyData | Unset = UNSET
     to: list[str] | Unset = UNSET
     cc: list[str] | Unset = UNSET
     bcc: list[str] | Unset = UNSET
@@ -38,6 +45,10 @@ class MessagesReplyAllBody:
         text = self.text
 
         html = self.html
+
+        data: dict[str, Any] | Unset = UNSET
+        if not isinstance(self.data, Unset):
+            data = self.data.to_dict()
 
         to: list[str] | Unset = UNSET
         if not isinstance(self.to, Unset):
@@ -65,6 +76,8 @@ class MessagesReplyAllBody:
             field_dict["text"] = text
         if html is not UNSET:
             field_dict["html"] = html
+        if data is not UNSET:
+            field_dict["data"] = data
         if to is not UNSET:
             field_dict["to"] = to
         if cc is not UNSET:
@@ -78,10 +91,19 @@ class MessagesReplyAllBody:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.messages_reply_all_body_data import MessagesReplyAllBodyData  # noqa: PLC0415
+
         d = dict(src_dict)
         text = d.pop("text", UNSET)
 
         html = d.pop("html", UNSET)
+
+        _data = d.pop("data", UNSET)
+        data: MessagesReplyAllBodyData | Unset
+        if isinstance(_data, Unset):
+            data = UNSET
+        else:
+            data = MessagesReplyAllBodyData.from_dict(_data)
 
         to = cast(list[str], d.pop("to", UNSET))
 
@@ -101,6 +123,7 @@ class MessagesReplyAllBody:
         messages_reply_all_body = cls(
             text=text,
             html=html,
+            data=data,
             to=to,
             cc=cc,
             bcc=bcc,

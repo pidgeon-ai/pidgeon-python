@@ -7,6 +7,7 @@ from attrs import define as _attrs_define
 
 if TYPE_CHECKING:
     from ..models.draft_attachments_item import DraftAttachmentsItem
+    from ..models.draft_data_type_0 import DraftDataType0
 
 
 T = TypeVar("T", bound="Draft")
@@ -25,6 +26,7 @@ class Draft:
         bcc (list[str]):
         subject (None | str):
         text (None | str):
+        data (DraftDataType0 | None): Typed data, sent with the draft when it goes. Null when there is none.
         thread_id (None | str):
         send_at (None | str):
         failed_reason (None | str):
@@ -42,6 +44,7 @@ class Draft:
     bcc: list[str]
     subject: None | str
     text: None | str
+    data: DraftDataType0 | None
     thread_id: None | str
     send_at: None | str
     failed_reason: None | str
@@ -50,6 +53,8 @@ class Draft:
     attachments: list[DraftAttachmentsItem]
 
     def to_dict(self) -> dict[str, Any]:
+        from ..models.draft_data_type_0 import DraftDataType0  # noqa: PLC0415
+
         id = self.id
 
         identity: None | str
@@ -70,6 +75,12 @@ class Draft:
 
         text: None | str
         text = self.text
+
+        data: dict[str, Any] | None
+        if isinstance(self.data, DraftDataType0):
+            data = self.data.to_dict()
+        else:
+            data = self.data
 
         thread_id: None | str
         thread_id = self.thread_id
@@ -103,6 +114,7 @@ class Draft:
                 "bcc": bcc,
                 "subject": subject,
                 "text": text,
+                "data": data,
                 "thread_id": thread_id,
                 "send_at": send_at,
                 "failed_reason": failed_reason,
@@ -117,6 +129,7 @@ class Draft:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         from ..models.draft_attachments_item import DraftAttachmentsItem  # noqa: PLC0415
+        from ..models.draft_data_type_0 import DraftDataType0  # noqa: PLC0415
 
         d = dict(src_dict)
         id = d.pop("id")
@@ -151,6 +164,21 @@ class Draft:
             return cast(None | str, data)
 
         text = _parse_text(d.pop("text"))
+
+        def _parse_data(data: object) -> DraftDataType0 | None:
+            if data is None:
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                data_type_0 = DraftDataType0.from_dict(data)
+
+                return data_type_0
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(DraftDataType0 | None, data)
+
+        data = _parse_data(d.pop("data"))
 
         def _parse_thread_id(data: object) -> None | str:
             if data is None:
@@ -199,6 +227,7 @@ class Draft:
             bcc=bcc,
             subject=subject,
             text=text,
+            data=data,
             thread_id=thread_id,
             send_at=send_at,
             failed_reason=failed_reason,

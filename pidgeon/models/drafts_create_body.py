@@ -1,13 +1,17 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any, TypeVar, cast
+from typing import TYPE_CHECKING, Any, TypeVar, cast
 from uuid import UUID
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
+
+if TYPE_CHECKING:
+    from ..models.drafts_create_body_data_type_0 import DraftsCreateBodyDataType0
+
 
 T = TypeVar("T", bound="DraftsCreateBody")
 
@@ -23,6 +27,8 @@ class DraftsCreateBody:
         bcc (list[str] | Unset): Copied, and visible to nobody else.
         subject (None | str | Unset): Left off a reply, where the thread already has one.
         text (None | str | Unset): The plain-text body. Send this even when you send `html` — some clients only read it.
+        data (DraftsCreateBodyDataType0 | None | Unset): Typed data: `{ schema, body }`, where `schema` is a URL naming
+            what `body` is and `body` is up to 64 KB of JSON. Sent as its own part beside the text, never mixed into it.
         in_reply_to_message_id (None | Unset | UUID): The same field as `in_reply_to`, under the name this endpoint has
             always used. Both names work on both endpoints; reach for `in_reply_to`.
         in_reply_to (None | Unset | UUID): The message being answered. Keeps the conversation together in the
@@ -38,12 +44,15 @@ class DraftsCreateBody:
     bcc: list[str] | Unset = UNSET
     subject: None | str | Unset = UNSET
     text: None | str | Unset = UNSET
+    data: DraftsCreateBodyDataType0 | None | Unset = UNSET
     in_reply_to_message_id: None | Unset | UUID = UNSET
     in_reply_to: None | Unset | UUID = UNSET
     attachment_ids: list[UUID] | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
+        from ..models.drafts_create_body_data_type_0 import DraftsCreateBodyDataType0  # noqa: PLC0415
+
         identity_id = str(self.identity_id)
 
         from_ = self.from_
@@ -71,6 +80,14 @@ class DraftsCreateBody:
             text = UNSET
         else:
             text = self.text
+
+        data: dict[str, Any] | None | Unset
+        if isinstance(self.data, Unset):
+            data = UNSET
+        elif isinstance(self.data, DraftsCreateBodyDataType0):
+            data = self.data.to_dict()
+        else:
+            data = self.data
 
         in_reply_to_message_id: None | str | Unset
         if isinstance(self.in_reply_to_message_id, Unset):
@@ -114,6 +131,8 @@ class DraftsCreateBody:
             field_dict["subject"] = subject
         if text is not UNSET:
             field_dict["text"] = text
+        if data is not UNSET:
+            field_dict["data"] = data
         if in_reply_to_message_id is not UNSET:
             field_dict["in_reply_to_message_id"] = in_reply_to_message_id
         if in_reply_to is not UNSET:
@@ -125,6 +144,8 @@ class DraftsCreateBody:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.drafts_create_body_data_type_0 import DraftsCreateBodyDataType0  # noqa: PLC0415
+
         d = dict(src_dict)
         identity_id = UUID(d.pop("identity_id"))
 
@@ -153,6 +174,23 @@ class DraftsCreateBody:
             return cast(None | str | Unset, data)
 
         text = _parse_text(d.pop("text", UNSET))
+
+        def _parse_data(data: object) -> DraftsCreateBodyDataType0 | None | Unset:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                data_type_0 = DraftsCreateBodyDataType0.from_dict(data)
+
+                return data_type_0
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(DraftsCreateBodyDataType0 | None | Unset, data)
+
+        data = _parse_data(d.pop("data", UNSET))
 
         def _parse_in_reply_to_message_id(data: object) -> None | Unset | UUID:
             if data is None:
@@ -205,6 +243,7 @@ class DraftsCreateBody:
             bcc=bcc,
             subject=subject,
             text=text,
+            data=data,
             in_reply_to_message_id=in_reply_to_message_id,
             in_reply_to=in_reply_to,
             attachment_ids=attachment_ids,
