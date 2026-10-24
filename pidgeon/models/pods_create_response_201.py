@@ -7,7 +7,7 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.pod import Pod
+    from ..models.pod_created import PodCreated
 
 
 T = TypeVar("T", bound="PodsCreateResponse201")
@@ -17,10 +17,10 @@ T = TypeVar("T", bound="PodsCreateResponse201")
 class PodsCreateResponse201:
     """
     Attributes:
-        data (Pod):
+        data (PodCreated):
     """
 
-    data: Pod
+    data: PodCreated
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -38,10 +38,10 @@ class PodsCreateResponse201:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.pod import Pod  # noqa: PLC0415
+        from ..models.pod_created import PodCreated  # noqa: PLC0415
 
         d = dict(src_dict)
-        data = Pod.from_dict(d.pop("data"))
+        data = PodCreated.from_dict(d.pop("data"))
 
         pods_create_response_201 = cls(
             data=data,

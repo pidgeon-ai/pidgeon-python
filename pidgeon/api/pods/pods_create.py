@@ -67,6 +67,15 @@ def sync_detailed(
     carried and never parsed, and has to be unique within the account so that looking one up by it has
     an answer.
 
+    **Provisioning in one call.** Pass `address` to create an address in the new pod (the same fields as
+    `POST /identities`) and `key` to mint a pod key: a key that reaches the pod’s addresses, now and
+    later, and nothing else. All of it is made or none of it is. Needs a live key over the whole
+    account; a test key gets 403, and `key.test` mints a test key for the pod instead.
+
+    **The token is shown once.** Send an `Idempotency-Key`: a retry with it returns the same pod,
+    address and key, with `token: null`, because the secret is never stored. If the first answer was
+    lost, rotate the key (`POST /api-keys/{id}/rotate`) for a new secret.
+
     Args:
         idempotency_key (str | Unset):
         body (PodsCreateBody):
@@ -104,6 +113,15 @@ def sync(
     carried and never parsed, and has to be unique within the account so that looking one up by it has
     an answer.
 
+    **Provisioning in one call.** Pass `address` to create an address in the new pod (the same fields as
+    `POST /identities`) and `key` to mint a pod key: a key that reaches the pod’s addresses, now and
+    later, and nothing else. All of it is made or none of it is. Needs a live key over the whole
+    account; a test key gets 403, and `key.test` mints a test key for the pod instead.
+
+    **The token is shown once.** Send an `Idempotency-Key`: a retry with it returns the same pod,
+    address and key, with `token: null`, because the secret is never stored. If the first answer was
+    lost, rotate the key (`POST /api-keys/{id}/rotate`) for a new secret.
+
     Args:
         idempotency_key (str | Unset):
         body (PodsCreateBody):
@@ -135,6 +153,15 @@ async def asyncio_detailed(
      Name it after whatever it holds — a customer, an environment. `client_id` is your own id for it,
     carried and never parsed, and has to be unique within the account so that looking one up by it has
     an answer.
+
+    **Provisioning in one call.** Pass `address` to create an address in the new pod (the same fields as
+    `POST /identities`) and `key` to mint a pod key: a key that reaches the pod’s addresses, now and
+    later, and nothing else. All of it is made or none of it is. Needs a live key over the whole
+    account; a test key gets 403, and `key.test` mints a test key for the pod instead.
+
+    **The token is shown once.** Send an `Idempotency-Key`: a retry with it returns the same pod,
+    address and key, with `token: null`, because the secret is never stored. If the first answer was
+    lost, rotate the key (`POST /api-keys/{id}/rotate`) for a new secret.
 
     Args:
         idempotency_key (str | Unset):
@@ -170,6 +197,15 @@ async def asyncio(
      Name it after whatever it holds — a customer, an environment. `client_id` is your own id for it,
     carried and never parsed, and has to be unique within the account so that looking one up by it has
     an answer.
+
+    **Provisioning in one call.** Pass `address` to create an address in the new pod (the same fields as
+    `POST /identities`) and `key` to mint a pod key: a key that reaches the pod’s addresses, now and
+    later, and nothing else. All of it is made or none of it is. Needs a live key over the whole
+    account; a test key gets 403, and `key.test` mints a test key for the pod instead.
+
+    **The token is shown once.** Send an `Idempotency-Key`: a retry with it returns the same pod,
+    address and key, with `token: null`, because the secret is never stored. If the first answer was
+    lost, rotate the key (`POST /api-keys/{id}/rotate`) for a new secret.
 
     Args:
         idempotency_key (str | Unset):

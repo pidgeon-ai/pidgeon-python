@@ -64,10 +64,6 @@ def sync_detailed(
 ) -> Response[PodsUpdateResponse200]:
     """Rename a pod, or change its client id
 
-     There is no delete. A container holding mailboxes is not a thing to remove with one call, and
-    nothing yet moves addresses between pods — so the verb would either refuse every non-empty pod or
-    destroy mail. Suspend the addresses instead.
-
     Args:
         id (str):
         body (PodsUpdateBody):
@@ -101,10 +97,6 @@ def sync(
 ) -> PodsUpdateResponse200:
     """Rename a pod, or change its client id
 
-     There is no delete. A container holding mailboxes is not a thing to remove with one call, and
-    nothing yet moves addresses between pods — so the verb would either refuse every non-empty pod or
-    destroy mail. Suspend the addresses instead.
-
     Args:
         id (str):
         body (PodsUpdateBody):
@@ -132,10 +124,6 @@ async def asyncio_detailed(
     body: PodsUpdateBody,
 ) -> Response[PodsUpdateResponse200]:
     """Rename a pod, or change its client id
-
-     There is no delete. A container holding mailboxes is not a thing to remove with one call, and
-    nothing yet moves addresses between pods — so the verb would either refuse every non-empty pod or
-    destroy mail. Suspend the addresses instead.
 
     Args:
         id (str):
@@ -167,10 +155,6 @@ async def asyncio(
     body: PodsUpdateBody,
 ) -> PodsUpdateResponse200:
     """Rename a pod, or change its client id
-
-     There is no delete. A container holding mailboxes is not a thing to remove with one call, and
-    nothing yet moves addresses between pods — so the verb would either refuse every non-empty pod or
-    destroy mail. Suspend the addresses instead.
 
     Args:
         id (str):

@@ -50,8 +50,8 @@ def sync_detailed(
     yours, a client, or just test apart from production.
 
     **Each pod has its own sending reputation**, so bounces from one customer cannot degrade delivery
-    for another — mail sends under the pod its address is in, whichever domain it is on. A key is still
-    a list of address ids rather than something scoped to a pod.
+    for another — mail sends under the pod its address is in, whichever domain it is on. A pod key
+    (`pod_id` on `POST /api-keys`) reaches one pod and nothing else.
 
     Not paged: this is a menu somebody switches with, and a product where that menu needs a cursor is
     one where the menu was the wrong shape.
@@ -84,8 +84,8 @@ def sync(
     yours, a client, or just test apart from production.
 
     **Each pod has its own sending reputation**, so bounces from one customer cannot degrade delivery
-    for another — mail sends under the pod its address is in, whichever domain it is on. A key is still
-    a list of address ids rather than something scoped to a pod.
+    for another — mail sends under the pod its address is in, whichever domain it is on. A pod key
+    (`pod_id` on `POST /api-keys`) reaches one pod and nothing else.
 
     Not paged: this is a menu somebody switches with, and a product where that menu needs a cursor is
     one where the menu was the wrong shape.
@@ -114,8 +114,8 @@ async def asyncio_detailed(
     yours, a client, or just test apart from production.
 
     **Each pod has its own sending reputation**, so bounces from one customer cannot degrade delivery
-    for another — mail sends under the pod its address is in, whichever domain it is on. A key is still
-    a list of address ids rather than something scoped to a pod.
+    for another — mail sends under the pod its address is in, whichever domain it is on. A pod key
+    (`pod_id` on `POST /api-keys`) reaches one pod and nothing else.
 
     Not paged: this is a menu somebody switches with, and a product where that menu needs a cursor is
     one where the menu was the wrong shape.
@@ -146,8 +146,8 @@ async def asyncio(
     yours, a client, or just test apart from production.
 
     **Each pod has its own sending reputation**, so bounces from one customer cannot degrade delivery
-    for another — mail sends under the pod its address is in, whichever domain it is on. A key is still
-    a list of address ids rather than something scoped to a pod.
+    for another — mail sends under the pod its address is in, whichever domain it is on. A pod key
+    (`pod_id` on `POST /api-keys`) reaches one pod and nothing else.
 
     Not paged: this is a menu somebody switches with, and a product where that menu needs a cursor is
     one where the menu was the wrong shape.

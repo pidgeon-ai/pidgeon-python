@@ -1,19 +1,33 @@
 from http import HTTPStatus
 from typing import Any
+from uuid import UUID
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.keys_list_response_200 import KeysListResponse200
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
-def _get_kwargs() -> dict[str, Any]:
+def _get_kwargs(
+    *,
+    pod_id: UUID | Unset = UNSET,
+) -> dict[str, Any]:
+
+    params: dict[str, Any] = {}
+
+    json_pod_id: str | Unset = UNSET
+    if not isinstance(pod_id, Unset):
+        json_pod_id = str(pod_id)
+    params["pod_id"] = json_pod_id
+
+    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
     _kwargs: dict[str, Any] = {
         "method": "get",
         "url": "/api-keys",
+        "params": params,
     }
 
     return _kwargs
@@ -43,11 +57,15 @@ def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Res
 def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
+    pod_id: UUID | Unset = UNSET,
 ) -> Response[KeysListResponse200]:
     """List the keys in this workspace
 
      Names, prefixes, what each reaches and when it was last used — never a secret. The list is what you
-    read before revoking something.
+    read before revoking something. `pod_id` narrows it to one pod’s keys, revoked ones included.
+
+    Args:
+        pod_id (UUID | Unset): Only the keys of this pod.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -58,7 +76,9 @@ def sync_detailed(
         Response[KeysListResponse200]
     """
 
-    kwargs = _get_kwargs()
+    kwargs = _get_kwargs(
+        pod_id=pod_id,
+    )
 
     response = client.get_httpx_client().request(
         **kwargs,
@@ -70,11 +90,15 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient | Client,
+    pod_id: UUID | Unset = UNSET,
 ) -> KeysListResponse200:
     """List the keys in this workspace
 
      Names, prefixes, what each reaches and when it was last used — never a secret. The list is what you
-    read before revoking something.
+    read before revoking something. `pod_id` narrows it to one pod’s keys, revoked ones included.
+
+    Args:
+        pod_id (UUID | Unset): Only the keys of this pod.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -87,17 +111,22 @@ def sync(
 
     return sync_detailed(
         client=client,
+        pod_id=pod_id,
     ).parsed
 
 
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
+    pod_id: UUID | Unset = UNSET,
 ) -> Response[KeysListResponse200]:
     """List the keys in this workspace
 
      Names, prefixes, what each reaches and when it was last used — never a secret. The list is what you
-    read before revoking something.
+    read before revoking something. `pod_id` narrows it to one pod’s keys, revoked ones included.
+
+    Args:
+        pod_id (UUID | Unset): Only the keys of this pod.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -108,7 +137,9 @@ async def asyncio_detailed(
         Response[KeysListResponse200]
     """
 
-    kwargs = _get_kwargs()
+    kwargs = _get_kwargs(
+        pod_id=pod_id,
+    )
 
     response = await client.get_async_httpx_client().request(**kwargs)
 
@@ -118,11 +149,15 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient | Client,
+    pod_id: UUID | Unset = UNSET,
 ) -> KeysListResponse200:
     """List the keys in this workspace
 
      Names, prefixes, what each reaches and when it was last used — never a secret. The list is what you
-    read before revoking something.
+    read before revoking something. `pod_id` narrows it to one pod’s keys, revoked ones included.
+
+    Args:
+        pod_id (UUID | Unset): Only the keys of this pod.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -136,5 +171,6 @@ async def asyncio(
     return (
         await asyncio_detailed(
             client=client,
+            pod_id=pod_id,
         )
     ).parsed
