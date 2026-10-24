@@ -100,10 +100,12 @@ from .calendar_update_response_200 import CalendarUpdateResponse200
 from .deleted import Deleted
 from .delivery import Delivery
 from .dns_record import DnsRecord
+from .dns_record_state_type_0 import DnsRecordStateType0
 from .dns_record_status import DnsRecordStatus
 from .domain import Domain
 from .domain_detail import DomainDetail
 from .domain_detail_dns_records_item import DomainDetailDnsRecordsItem
+from .domain_detail_dns_records_item_state_type_0 import DomainDetailDnsRecordsItemStateType0
 from .domain_detail_dns_records_item_status import DomainDetailDnsRecordsItemStatus
 from .domains_create_body import DomainsCreateBody
 from .domains_create_response_201 import DomainsCreateResponse201
@@ -365,6 +367,7 @@ from .undo import Undo
 from .uploaded_attachment import UploadedAttachment
 from .verification import Verification
 from .verification_dns_records_item import VerificationDnsRecordsItem
+from .verification_dns_records_item_state_type_0 import VerificationDnsRecordsItemStateType0
 from .verification_dns_records_item_status import VerificationDnsRecordsItemStatus
 from .webhook import Webhook
 from .webhook_created import WebhookCreated
@@ -482,10 +485,12 @@ __all__ = (
     "Deleted",
     "Delivery",
     "DnsRecord",
+    "DnsRecordStateType0",
     "DnsRecordStatus",
     "Domain",
     "DomainDetail",
     "DomainDetailDnsRecordsItem",
+    "DomainDetailDnsRecordsItemStateType0",
     "DomainDetailDnsRecordsItemStatus",
     "DomainsCreateBody",
     "DomainsCreateResponse201",
@@ -747,6 +752,7 @@ __all__ = (
     "UploadedAttachment",
     "Verification",
     "VerificationDnsRecordsItem",
+    "VerificationDnsRecordsItemStateType0",
     "VerificationDnsRecordsItemStatus",
     "Webhook",
     "WebhookCreated",

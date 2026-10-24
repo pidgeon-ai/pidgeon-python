@@ -5,6 +5,7 @@ from typing import Any, TypeVar, cast
 
 from attrs import define as _attrs_define
 
+from ..models.verification_dns_records_item_state_type_0 import VerificationDnsRecordsItemStateType0
 from ..models.verification_dns_records_item_status import VerificationDnsRecordsItemStatus
 
 T = TypeVar("T", bound="VerificationDnsRecordsItem")
@@ -16,11 +17,20 @@ class VerificationDnsRecordsItem:
     Attributes:
         type_ (str):
         record_type (str):
-        name (str):
+        name (str): Relative to the domain: `@` is the domain itself. Kept as it was; see `host_relative`.
+        zone (str): The registrable domain the record is published in, from the Public Suffix List: `example.com` for
+            `agents.example.com`.
+        fqdn (str): The full name, no trailing dot: `_dmarc.agents.example.com`.
+        host_relative (str): The name relative to `zone`, which is what most DNS panels ask for: `_dmarc.agents`, or `@`
+            for the zone itself.
         value (str):
         priority (int | None):
         status (VerificationDnsRecordsItemStatus):
+        state (None | VerificationDnsRecordsItemStateType0): Why `status` is what it is. `published`: correct in public
+            DNS, waiting on the mail provider to confirm (DKIM; usually under an hour). `wrong_name`: our value is at
+            `found_at` instead, often the zone typed twice. Null before the first check.
         found (None | str):
+        found_at (None | str): Where `found` was read, when that was not `fqdn`.
         description (str):
         checked_at (None | str):
     """
@@ -28,10 +38,15 @@ class VerificationDnsRecordsItem:
     type_: str
     record_type: str
     name: str
+    zone: str
+    fqdn: str
+    host_relative: str
     value: str
     priority: int | None
     status: VerificationDnsRecordsItemStatus
+    state: None | VerificationDnsRecordsItemStateType0
     found: None | str
+    found_at: None | str
     description: str
     checked_at: None | str
 
@@ -42,6 +57,12 @@ class VerificationDnsRecordsItem:
 
         name = self.name
 
+        zone = self.zone
+
+        fqdn = self.fqdn
+
+        host_relative = self.host_relative
+
         value = self.value
 
         priority: int | None
@@ -49,8 +70,17 @@ class VerificationDnsRecordsItem:
 
         status = self.status.value
 
+        state: None | str
+        if isinstance(self.state, VerificationDnsRecordsItemStateType0):
+            state = self.state.value
+        else:
+            state = self.state
+
         found: None | str
         found = self.found
+
+        found_at: None | str
+        found_at = self.found_at
 
         description = self.description
 
@@ -64,10 +94,15 @@ class VerificationDnsRecordsItem:
                 "type": type_,
                 "record_type": record_type,
                 "name": name,
+                "zone": zone,
+                "fqdn": fqdn,
+                "host_relative": host_relative,
                 "value": value,
                 "priority": priority,
                 "status": status,
+                "state": state,
                 "found": found,
+                "found_at": found_at,
                 "description": description,
                 "checked_at": checked_at,
             }
@@ -84,6 +119,12 @@ class VerificationDnsRecordsItem:
 
         name = d.pop("name")
 
+        zone = d.pop("zone")
+
+        fqdn = d.pop("fqdn")
+
+        host_relative = d.pop("host_relative")
+
         value = d.pop("value")
 
         def _parse_priority(data: object) -> int | None:
@@ -95,12 +136,34 @@ class VerificationDnsRecordsItem:
 
         status = VerificationDnsRecordsItemStatus(d.pop("status"))
 
+        def _parse_state(data: object) -> None | VerificationDnsRecordsItemStateType0:
+            if data is None:
+                return data
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                state_type_0 = VerificationDnsRecordsItemStateType0(data)
+
+                return state_type_0
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(None | VerificationDnsRecordsItemStateType0, data)
+
+        state = _parse_state(d.pop("state"))
+
         def _parse_found(data: object) -> None | str:
             if data is None:
                 return data
             return cast(None | str, data)
 
         found = _parse_found(d.pop("found"))
+
+        def _parse_found_at(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        found_at = _parse_found_at(d.pop("found_at"))
 
         description = d.pop("description")
 
@@ -115,10 +178,15 @@ class VerificationDnsRecordsItem:
             type_=type_,
             record_type=record_type,
             name=name,
+            zone=zone,
+            fqdn=fqdn,
+            host_relative=host_relative,
             value=value,
             priority=priority,
             status=status,
+            state=state,
             found=found,
+            found_at=found_at,
             description=description,
             checked_at=checked_at,
         )
