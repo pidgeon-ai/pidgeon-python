@@ -19,11 +19,14 @@ class Sent:
         id (str):
         thread_id (str):
         rejected (list[SentRejectedItem]):
+        test (bool): True when this was a test-mode send: nothing was handed to the mail provider, and only this
+            account’s own addresses received it.
     """
 
     id: str
     thread_id: str
     rejected: list[SentRejectedItem]
+    test: bool
 
     def to_dict(self) -> dict[str, Any]:
         id = self.id
@@ -35,6 +38,8 @@ class Sent:
             rejected_item = rejected_item_data.to_dict()
             rejected.append(rejected_item)
 
+        test = self.test
+
         field_dict: dict[str, Any] = {}
 
         field_dict.update(
@@ -42,6 +47,7 @@ class Sent:
                 "id": id,
                 "thread_id": thread_id,
                 "rejected": rejected,
+                "test": test,
             }
         )
 
@@ -63,10 +69,13 @@ class Sent:
 
             rejected.append(rejected_item)
 
+        test = d.pop("test")
+
         sent = cls(
             id=id,
             thread_id=thread_id,
             rejected=rejected,
+            test=test,
         )
 
         return sent

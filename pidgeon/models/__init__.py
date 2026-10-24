@@ -325,6 +325,11 @@ from .sent_rejected_item import SentRejectedItem
 from .setup_link import SetupLink
 from .setup_link_reason_type_0 import SetupLinkReasonType0
 from .tenant_suspended import TenantSuspended
+from .test_inbound_body import TestInboundBody
+from .test_inbound_body_data import TestInboundBodyData
+from .test_inbound_delivered import TestInboundDelivered
+from .test_inbound_delivered_status import TestInboundDeliveredStatus
+from .test_inbound_response_201 import TestInboundResponse201
 from .thread import Thread
 from .thread_folder_type_0 import ThreadFolderType0
 from .thread_owner_type import ThreadOwnerType
@@ -687,6 +692,11 @@ __all__ = (
     "SetupLink",
     "SetupLinkReasonType0",
     "TenantSuspended",
+    "TestInboundBody",
+    "TestInboundBodyData",
+    "TestInboundDelivered",
+    "TestInboundDeliveredStatus",
+    "TestInboundResponse201",
     "Thread",
     "ThreadFolderType0",
     "ThreadOwnerType",

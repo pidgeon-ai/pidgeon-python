@@ -25,6 +25,8 @@ class KeysCreateBody:
         access (KeysCreateBodyAccess | Unset): What a key may do. Give an agent the narrowest one that works.
         expires_at (datetime.datetime | None | Unset): When it stops accepting mail. Expiry suspends; it never deletes,
             so the correspondence survives.
+        test (bool | Unset): A test-mode key (`pgn_test_`): everything works, nothing is sent outside Pidgeon, and
+            nothing counts against the plan. A test key mints only test keys.
     """
 
     name: str
@@ -32,6 +34,7 @@ class KeysCreateBody:
     pod_id: UUID | Unset = UNSET
     access: KeysCreateBodyAccess | Unset = UNSET
     expires_at: datetime.datetime | None | Unset = UNSET
+    test: bool | Unset = UNSET
 
     def to_dict(self) -> dict[str, Any]:
         name = self.name
@@ -59,6 +62,8 @@ class KeysCreateBody:
         else:
             expires_at = self.expires_at
 
+        test = self.test
+
         field_dict: dict[str, Any] = {}
 
         field_dict.update(
@@ -74,6 +79,8 @@ class KeysCreateBody:
             field_dict["access"] = access
         if expires_at is not UNSET:
             field_dict["expires_at"] = expires_at
+        if test is not UNSET:
+            field_dict["test"] = test
 
         return field_dict
 
@@ -122,12 +129,15 @@ class KeysCreateBody:
 
         expires_at = _parse_expires_at(d.pop("expires_at", UNSET))
 
+        test = d.pop("test", UNSET)
+
         keys_create_body = cls(
             name=name,
             identity_ids=identity_ids,
             pod_id=pod_id,
             access=access,
             expires_at=expires_at,
+            test=test,
         )
 
         return keys_create_body

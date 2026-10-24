@@ -53,6 +53,8 @@ class AwaitedMessageMessageType0:
             difference between unknown and forged.
         sender (AwaitedMessageMessageType0Sender): Who this message says it is from. A Pidgeon sender declares it on
             every message it sends; mail from ordinary email has only the address.
+        test (bool): Written in test mode: by a test key, as a reply to or forward of a test message, or by `POST
+            /test/inbound`. It never left Pidgeon and counted against nothing.
         origin (None | str): `smtp` when the message arrived as ordinary email, so its sender declared nothing and
             `authentication` is what is known about it. Null on mail sent from Pidgeon.
         data (AwaitedMessageMessageType0DataType0 | None): Typed data: structured JSON the sender put beside the text,
@@ -91,6 +93,7 @@ class AwaitedMessageMessageType0:
     headers: AwaitedMessageMessageType0Headers
     authentication: AwaitedMessageMessageType0Authentication
     sender: AwaitedMessageMessageType0Sender
+    test: bool
     origin: None | str
     data: AwaitedMessageMessageType0DataType0 | None
     attachments: list[AwaitedMessageMessageType0AttachmentsItem]
@@ -157,6 +160,8 @@ class AwaitedMessageMessageType0:
 
         sender = self.sender.to_dict()
 
+        test = self.test
+
         origin: None | str
         origin = self.origin
 
@@ -214,6 +219,7 @@ class AwaitedMessageMessageType0:
                 "headers": headers,
                 "authentication": authentication,
                 "sender": sender,
+                "test": test,
                 "origin": origin,
                 "data": data,
                 "attachments": attachments,
@@ -322,6 +328,8 @@ class AwaitedMessageMessageType0:
 
         sender = AwaitedMessageMessageType0Sender.from_dict(d.pop("sender"))
 
+        test = d.pop("test")
+
         def _parse_origin(data: object) -> None | str:
             if data is None:
                 return data
@@ -413,6 +421,7 @@ class AwaitedMessageMessageType0:
             headers=headers,
             authentication=authentication,
             sender=sender,
+            test=test,
             origin=origin,
             data=data,
             attachments=attachments,

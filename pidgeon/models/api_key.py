@@ -26,6 +26,7 @@ class ApiKey:
         revoked_at (None | str):
         created_at (str): ISO-8601, UTC.
         rotated_at (None | str): When the key was last given a new secret by `POST /api-keys/{id}/rotate`, or null.
+        test (bool): A test-mode key: its mail never leaves Pidgeon and counts against nothing.
         previous_token_expires_at (None | str): While the secret it had before its last rotation still works, when that
             stops. Null when it has stopped or there was no grace period.
     """
@@ -41,6 +42,7 @@ class ApiKey:
     revoked_at: None | str
     created_at: str
     rotated_at: None | str
+    test: bool
     previous_token_expires_at: None | str
 
     def to_dict(self) -> dict[str, Any]:
@@ -71,6 +73,8 @@ class ApiKey:
         rotated_at: None | str
         rotated_at = self.rotated_at
 
+        test = self.test
+
         previous_token_expires_at: None | str
         previous_token_expires_at = self.previous_token_expires_at
 
@@ -89,6 +93,7 @@ class ApiKey:
                 "revoked_at": revoked_at,
                 "created_at": created_at,
                 "rotated_at": rotated_at,
+                "test": test,
                 "previous_token_expires_at": previous_token_expires_at,
             }
         )
@@ -145,6 +150,8 @@ class ApiKey:
 
         rotated_at = _parse_rotated_at(d.pop("rotated_at"))
 
+        test = d.pop("test")
+
         def _parse_previous_token_expires_at(data: object) -> None | str:
             if data is None:
                 return data
@@ -164,6 +171,7 @@ class ApiKey:
             revoked_at=revoked_at,
             created_at=created_at,
             rotated_at=rotated_at,
+            test=test,
             previous_token_expires_at=previous_token_expires_at,
         )
 
