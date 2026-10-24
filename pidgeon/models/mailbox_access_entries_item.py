@@ -19,7 +19,8 @@ class MailboxAccessEntriesItem:
         kind (MailboxAccessEntriesItemKind):
         principal_id (None | str): The person or key. Null for `everyone`, which names nobody.
         label (str): For showing a person. A renamed key changes it; never match on it.
-        access (MailboxAccessEntriesItemAccess):
+        access (MailboxAccessEntriesItemAccess): What this principal can do here. A key shows the lower of its ceiling
+            and the grant.
     """
 
     id: str

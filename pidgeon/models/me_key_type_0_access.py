@@ -3,6 +3,7 @@ from enum import StrEnum
 
 class MeKeyType0Access(StrEnum):
     ADMIN = "admin"
+    DRAFT = "draft"
     READ = "read"
     SEND = "send"
 

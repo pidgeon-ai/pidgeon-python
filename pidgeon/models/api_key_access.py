@@ -3,6 +3,7 @@ from enum import StrEnum
 
 class ApiKeyAccess(StrEnum):
     ADMIN = "admin"
+    DRAFT = "draft"
     READ = "read"
     SEND = "send"
 
