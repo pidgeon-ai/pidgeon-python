@@ -27,10 +27,13 @@ class VerificationDnsRecordsItem:
         priority (int | None):
         status (VerificationDnsRecordsItemStatus):
         state (None | VerificationDnsRecordsItemStateType0): Why `status` is what it is. `published`: correct in public
-            DNS, waiting on the mail provider to confirm (DKIM; usually under an hour). `wrong_name`: our value is at
-            `found_at` instead, often the zone typed twice. Null before the first check.
+            DNS, waiting on the mail provider to confirm (DKIM; usually under an hour), or on its certificate
+            (`signing_host`; usually ten minutes). `wrong_name`: our value is at `found_at` instead, often the zone typed
+            twice. Null before the first check.
         found (None | str):
         found_at (None | str): Where `found` was read, when that was not `fqdn`.
+        optional (bool): Not needed for mail: `signing` and `signing_host`, which let receivers check a signed sender
+            from this domain. Its own `status`; never counted towards whether the domain is configured.
         description (str):
         checked_at (None | str):
     """
@@ -47,6 +50,7 @@ class VerificationDnsRecordsItem:
     state: None | VerificationDnsRecordsItemStateType0
     found: None | str
     found_at: None | str
+    optional: bool
     description: str
     checked_at: None | str
 
@@ -82,6 +86,8 @@ class VerificationDnsRecordsItem:
         found_at: None | str
         found_at = self.found_at
 
+        optional = self.optional
+
         description = self.description
 
         checked_at: None | str
@@ -103,6 +109,7 @@ class VerificationDnsRecordsItem:
                 "state": state,
                 "found": found,
                 "found_at": found_at,
+                "optional": optional,
                 "description": description,
                 "checked_at": checked_at,
             }
@@ -165,6 +172,8 @@ class VerificationDnsRecordsItem:
 
         found_at = _parse_found_at(d.pop("found_at"))
 
+        optional = d.pop("optional")
+
         description = d.pop("description")
 
         def _parse_checked_at(data: object) -> None | str:
@@ -187,6 +196,7 @@ class VerificationDnsRecordsItem:
             state=state,
             found=found,
             found_at=found_at,
+            optional=optional,
             description=description,
             checked_at=checked_at,
         )
