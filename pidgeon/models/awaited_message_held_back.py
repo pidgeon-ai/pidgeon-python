@@ -10,21 +10,25 @@ T = TypeVar("T", bound="AwaitedMessageHeldBack")
 
 @_attrs_define
 class AwaitedMessageHeldBack:
-    """What matched and was not returned. A wait that times out with `spam` above zero did not miss the message: it was
-    filed as spam.
+    """What matched and was not returned. A wait that times out with `spam` or `unauthenticated` above zero did not miss
+    the message: it was held back.
 
         Attributes:
             spam (int): Matching messages that arrived and were filed as spam.
-            message_ids (list[str]): Their ids, for `GET /messages/{id}`.
+            unauthenticated (int): Messages that matched `from` but did not pass DMARC, so their From may be forged.
+            message_ids (list[str]): Their ids, spam first, for `GET /messages/{id}`.
             how_to_include (None | str): What to do about them, in a sentence. Null when nothing was held back.
     """
 
     spam: int
+    unauthenticated: int
     message_ids: list[str]
     how_to_include: None | str
 
     def to_dict(self) -> dict[str, Any]:
         spam = self.spam
+
+        unauthenticated = self.unauthenticated
 
         message_ids = self.message_ids
 
@@ -36,6 +40,7 @@ class AwaitedMessageHeldBack:
         field_dict.update(
             {
                 "spam": spam,
+                "unauthenticated": unauthenticated,
                 "message_ids": message_ids,
                 "how_to_include": how_to_include,
             }
@@ -48,6 +53,8 @@ class AwaitedMessageHeldBack:
         d = dict(src_dict)
         spam = d.pop("spam")
 
+        unauthenticated = d.pop("unauthenticated")
+
         message_ids = cast(list[str], d.pop("message_ids"))
 
         def _parse_how_to_include(data: object) -> None | str:
@@ -59,6 +66,7 @@ class AwaitedMessageHeldBack:
 
         awaited_message_held_back = cls(
             spam=spam,
+            unauthenticated=unauthenticated,
             message_ids=message_ids,
             how_to_include=how_to_include,
         )

@@ -16,7 +16,7 @@ class ReceiveRulesRulesItem:
     Attributes:
         id (str):
         action (str): reject refuses before the message is stored. spam, trash and archive file it. inbox means never
-            classify this sender as spam.
+            file this sender as spam, for mail that passes DMARC.
         match_type (ReceiveRulesRulesItemMatchType):
         match_value (str):
         created_at (str): ISO-8601, UTC.

@@ -21,8 +21,8 @@ class AwaitedMessage:
             first.
         timed_out (bool):
         cursor (str): Pass as `after` on the next call, so a message arriving between two calls is not missed.
-        held_back (AwaitedMessageHeldBack): What matched and was not returned. A wait that times out with `spam` above
-            zero did not miss the message: it was filed as spam.
+        held_back (AwaitedMessageHeldBack): What matched and was not returned. A wait that times out with `spam` or
+            `unauthenticated` above zero did not miss the message: it was held back.
     """
 
     message: AwaitedMessageMessageType0 | None

@@ -43,7 +43,12 @@ TIMED_OUT = {
         "message": None,
         "timed_out": True,
         "cursor": "2026-10-22T10:00:00.000Z",
-        "held_back": {"spam": 0, "message_ids": [], "how_to_include": None},
+        "held_back": {
+            "spam": 0,
+            "unauthenticated": 0,
+            "message_ids": [],
+            "how_to_include": None,
+        },
     }
 }
 

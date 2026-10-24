@@ -10,6 +10,7 @@ from ...client import AuthenticatedClient, Client
 from ...models.messages_await_body import MessagesAwaitBody
 from ...models.messages_await_has_code import MessagesAwaitHasCode
 from ...models.messages_await_include_spam import MessagesAwaitIncludeSpam
+from ...models.messages_await_include_unauthenticated import MessagesAwaitIncludeUnauthenticated
 from ...models.messages_await_response_200 import MessagesAwaitResponse200
 from ...types import UNSET, Response, Unset
 
@@ -22,6 +23,7 @@ def _get_kwargs(
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
+    include_unauthenticated: MessagesAwaitIncludeUnauthenticated | Unset = UNSET,
     after: datetime.datetime | Literal["now"] | Unset = UNSET,
     timeout: int | Unset = 50,
 ) -> dict[str, Any]:
@@ -52,6 +54,12 @@ def _get_kwargs(
         json_include_spam = include_spam.value
 
     params["include_spam"] = json_include_spam
+
+    json_include_unauthenticated: str | Unset = UNSET
+    if not isinstance(include_unauthenticated, Unset):
+        json_include_unauthenticated = include_unauthenticated.value
+
+    params["include_unauthenticated"] = json_include_unauthenticated
 
     json_after: Literal["now"] | str | Unset
     if isinstance(after, Unset):
@@ -107,6 +115,7 @@ def sync_detailed(
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
+    include_unauthenticated: MessagesAwaitIncludeUnauthenticated | Unset = UNSET,
     after: datetime.datetime | Literal["now"] | Unset = UNSET,
     timeout: int | Unset = 50,
 ) -> Response[MessagesAwaitResponse200]:
@@ -121,7 +130,9 @@ def sync_detailed(
     the next call so nothing arriving between calls is missed. Answers 200 with `message: null` and
     `timed_out: true` when nothing came. A matching message filed as spam is not returned unless you
     pass `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail
-    that arrived.
+    that arrived. A message matches `from` only when it passed DMARC, because anybody can write a
+    `From:`; one that did not is counted in `held_back.unauthenticated`, and
+    `include_unauthenticated=true` returns it.
 
     Args:
         identity_id (UUID):
@@ -131,6 +142,9 @@ def sync_detailed(
         has_code (MessagesAwaitHasCode | Unset):
         include_spam (MessagesAwaitIncludeSpam | Unset): Also return a matching message filed as
             spam. Without it, one is counted in `held_back` instead, with its id.
+        include_unauthenticated (MessagesAwaitIncludeUnauthenticated | Unset): With `from`, also
+            return a match that did not pass DMARC, whose From may be forged. Without it, one is
+            counted in `held_back.unauthenticated` instead, with its id.
         after (datetime.datetime | Literal['now'] | Unset): Only messages that arrived after this:
             the `cursor` a previous call returned, or `now`. Without it, the wait first looks back 2
             minutes and returns the newest matching message from then, so a code that beat you to the
@@ -153,6 +167,7 @@ def sync_detailed(
         subject_contains=subject_contains,
         has_code=has_code,
         include_spam=include_spam,
+        include_unauthenticated=include_unauthenticated,
         after=after,
         timeout=timeout,
     )
@@ -173,6 +188,7 @@ def sync(
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
+    include_unauthenticated: MessagesAwaitIncludeUnauthenticated | Unset = UNSET,
     after: datetime.datetime | Literal["now"] | Unset = UNSET,
     timeout: int | Unset = 50,
 ) -> MessagesAwaitResponse200:
@@ -187,7 +203,9 @@ def sync(
     the next call so nothing arriving between calls is missed. Answers 200 with `message: null` and
     `timed_out: true` when nothing came. A matching message filed as spam is not returned unless you
     pass `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail
-    that arrived.
+    that arrived. A message matches `from` only when it passed DMARC, because anybody can write a
+    `From:`; one that did not is counted in `held_back.unauthenticated`, and
+    `include_unauthenticated=true` returns it.
 
     Args:
         identity_id (UUID):
@@ -197,6 +215,9 @@ def sync(
         has_code (MessagesAwaitHasCode | Unset):
         include_spam (MessagesAwaitIncludeSpam | Unset): Also return a matching message filed as
             spam. Without it, one is counted in `held_back` instead, with its id.
+        include_unauthenticated (MessagesAwaitIncludeUnauthenticated | Unset): With `from`, also
+            return a match that did not pass DMARC, whose From may be forged. Without it, one is
+            counted in `held_back.unauthenticated` instead, with its id.
         after (datetime.datetime | Literal['now'] | Unset): Only messages that arrived after this:
             the `cursor` a previous call returned, or `now`. Without it, the wait first looks back 2
             minutes and returns the newest matching message from then, so a code that beat you to the
@@ -220,6 +241,7 @@ def sync(
         subject_contains=subject_contains,
         has_code=has_code,
         include_spam=include_spam,
+        include_unauthenticated=include_unauthenticated,
         after=after,
         timeout=timeout,
     ).parsed
@@ -234,6 +256,7 @@ async def asyncio_detailed(
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
+    include_unauthenticated: MessagesAwaitIncludeUnauthenticated | Unset = UNSET,
     after: datetime.datetime | Literal["now"] | Unset = UNSET,
     timeout: int | Unset = 50,
 ) -> Response[MessagesAwaitResponse200]:
@@ -248,7 +271,9 @@ async def asyncio_detailed(
     the next call so nothing arriving between calls is missed. Answers 200 with `message: null` and
     `timed_out: true` when nothing came. A matching message filed as spam is not returned unless you
     pass `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail
-    that arrived.
+    that arrived. A message matches `from` only when it passed DMARC, because anybody can write a
+    `From:`; one that did not is counted in `held_back.unauthenticated`, and
+    `include_unauthenticated=true` returns it.
 
     Args:
         identity_id (UUID):
@@ -258,6 +283,9 @@ async def asyncio_detailed(
         has_code (MessagesAwaitHasCode | Unset):
         include_spam (MessagesAwaitIncludeSpam | Unset): Also return a matching message filed as
             spam. Without it, one is counted in `held_back` instead, with its id.
+        include_unauthenticated (MessagesAwaitIncludeUnauthenticated | Unset): With `from`, also
+            return a match that did not pass DMARC, whose From may be forged. Without it, one is
+            counted in `held_back.unauthenticated` instead, with its id.
         after (datetime.datetime | Literal['now'] | Unset): Only messages that arrived after this:
             the `cursor` a previous call returned, or `now`. Without it, the wait first looks back 2
             minutes and returns the newest matching message from then, so a code that beat you to the
@@ -280,6 +308,7 @@ async def asyncio_detailed(
         subject_contains=subject_contains,
         has_code=has_code,
         include_spam=include_spam,
+        include_unauthenticated=include_unauthenticated,
         after=after,
         timeout=timeout,
     )
@@ -298,6 +327,7 @@ async def asyncio(
     subject_contains: str | Unset = UNSET,
     has_code: MessagesAwaitHasCode | Unset = UNSET,
     include_spam: MessagesAwaitIncludeSpam | Unset = UNSET,
+    include_unauthenticated: MessagesAwaitIncludeUnauthenticated | Unset = UNSET,
     after: datetime.datetime | Literal["now"] | Unset = UNSET,
     timeout: int | Unset = 50,
 ) -> MessagesAwaitResponse200:
@@ -312,7 +342,9 @@ async def asyncio(
     the next call so nothing arriving between calls is missed. Answers 200 with `message: null` and
     `timed_out: true` when nothing came. A matching message filed as spam is not returned unless you
     pass `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail
-    that arrived.
+    that arrived. A message matches `from` only when it passed DMARC, because anybody can write a
+    `From:`; one that did not is counted in `held_back.unauthenticated`, and
+    `include_unauthenticated=true` returns it.
 
     Args:
         identity_id (UUID):
@@ -322,6 +354,9 @@ async def asyncio(
         has_code (MessagesAwaitHasCode | Unset):
         include_spam (MessagesAwaitIncludeSpam | Unset): Also return a matching message filed as
             spam. Without it, one is counted in `held_back` instead, with its id.
+        include_unauthenticated (MessagesAwaitIncludeUnauthenticated | Unset): With `from`, also
+            return a match that did not pass DMARC, whose From may be forged. Without it, one is
+            counted in `held_back.unauthenticated` instead, with its id.
         after (datetime.datetime | Literal['now'] | Unset): Only messages that arrived after this:
             the `cursor` a previous call returned, or `now`. Without it, the wait first looks back 2
             minutes and returns the newest matching message from then, so a code that beat you to the
@@ -346,6 +381,7 @@ async def asyncio(
             subject_contains=subject_contains,
             has_code=has_code,
             include_spam=include_spam,
+            include_unauthenticated=include_unauthenticated,
             after=after,
             timeout=timeout,
         )

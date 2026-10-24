@@ -72,8 +72,9 @@ def sync_detailed(
 
     `action` is `reject`, `spam`, `trash`, `archive` or `inbox`. **`reject` refuses before the message
     is stored** — no row, no thread, no storage charged and no webhook — which is what an address nobody
-    will ever open wants. The other four file it, and `inbox` means *never classify this sender as
-    spam*.
+    will ever open wants. The other four file it, and `inbox` means *never file this sender as spam*. A
+    rule takes a message out of spam only when it passed DMARC, because the rule matches a `From:`
+    anybody can write.
 
     **It is not a security control.** The `From:` header is written by the sender, and anybody blocked
     can change it for the price of a new address. What this buys is not paying for mail from senders who
@@ -118,8 +119,9 @@ def sync(
 
     `action` is `reject`, `spam`, `trash`, `archive` or `inbox`. **`reject` refuses before the message
     is stored** — no row, no thread, no storage charged and no webhook — which is what an address nobody
-    will ever open wants. The other four file it, and `inbox` means *never classify this sender as
-    spam*.
+    will ever open wants. The other four file it, and `inbox` means *never file this sender as spam*. A
+    rule takes a message out of spam only when it passed DMARC, because the rule matches a `From:`
+    anybody can write.
 
     **It is not a security control.** The `From:` header is written by the sender, and anybody blocked
     can change it for the price of a new address. What this buys is not paying for mail from senders who
@@ -159,8 +161,9 @@ async def asyncio_detailed(
 
     `action` is `reject`, `spam`, `trash`, `archive` or `inbox`. **`reject` refuses before the message
     is stored** — no row, no thread, no storage charged and no webhook — which is what an address nobody
-    will ever open wants. The other four file it, and `inbox` means *never classify this sender as
-    spam*.
+    will ever open wants. The other four file it, and `inbox` means *never file this sender as spam*. A
+    rule takes a message out of spam only when it passed DMARC, because the rule matches a `From:`
+    anybody can write.
 
     **It is not a security control.** The `From:` header is written by the sender, and anybody blocked
     can change it for the price of a new address. What this buys is not paying for mail from senders who
@@ -203,8 +206,9 @@ async def asyncio(
 
     `action` is `reject`, `spam`, `trash`, `archive` or `inbox`. **`reject` refuses before the message
     is stored** — no row, no thread, no storage charged and no webhook — which is what an address nobody
-    will ever open wants. The other four file it, and `inbox` means *never classify this sender as
-    spam*.
+    will ever open wants. The other four file it, and `inbox` means *never file this sender as spam*. A
+    rule takes a message out of spam only when it passed DMARC, because the rule matches a `From:`
+    anybody can write.
 
     **It is not a security control.** The `From:` header is written by the sender, and anybody blocked
     can change it for the price of a new address. What this buys is not paying for mail from senders who

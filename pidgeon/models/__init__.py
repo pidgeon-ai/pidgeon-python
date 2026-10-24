@@ -252,6 +252,7 @@ from .messages_act_response_200 import MessagesActResponse200
 from .messages_await_body import MessagesAwaitBody
 from .messages_await_has_code import MessagesAwaitHasCode
 from .messages_await_include_spam import MessagesAwaitIncludeSpam
+from .messages_await_include_unauthenticated import MessagesAwaitIncludeUnauthenticated
 from .messages_await_response_200 import MessagesAwaitResponse200
 from .messages_forward_body import MessagesForwardBody
 from .messages_forward_body_data import MessagesForwardBodyData
@@ -615,6 +616,7 @@ __all__ = (
     "MessagesAwaitBody",
     "MessagesAwaitHasCode",
     "MessagesAwaitIncludeSpam",
+    "MessagesAwaitIncludeUnauthenticated",
     "MessagesAwaitResponse200",
     "MessageSender",
     "MessageSenderKindType0",
