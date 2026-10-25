@@ -29,7 +29,9 @@ class ApiKeyCreated:
         test (bool): A test-mode key: its mail never leaves Pidgeon and counts against nothing.
         previous_token_expires_at (None | str): While the secret it had before its last rotation still works, when that
             stops. Null when it has stopped or there was no grace period.
-        token (str): The secret. Shown once, here, and never again.
+        token (None | str): The secret. Shown once, here, and never again. Null on an `Idempotency-Key` replay of a mint
+            (`Idempotent-Replay: true`): the secret is never stored, so rotate the key (`POST /api-keys/{id}/rotate`), or
+            revoke it and mint again.
     """
 
     id: str
@@ -45,7 +47,7 @@ class ApiKeyCreated:
     rotated_at: None | str
     test: bool
     previous_token_expires_at: None | str
-    token: str
+    token: None | str
 
     def to_dict(self) -> dict[str, Any]:
         id = self.id
@@ -80,6 +82,7 @@ class ApiKeyCreated:
         previous_token_expires_at: None | str
         previous_token_expires_at = self.previous_token_expires_at
 
+        token: None | str
         token = self.token
 
         field_dict: dict[str, Any] = {}
@@ -164,7 +167,12 @@ class ApiKeyCreated:
 
         previous_token_expires_at = _parse_previous_token_expires_at(d.pop("previous_token_expires_at"))
 
-        token = d.pop("token")
+        def _parse_token(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        token = _parse_token(d.pop("token"))
 
         api_key_created = cls(
             id=id,

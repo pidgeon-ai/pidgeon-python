@@ -23,6 +23,11 @@ class MeKeyType0:
             after it. False when it reaches a fixed list.
         expires_at (None | str): When it stops authenticating, or null.
         created_at (str): ISO-8601, UTC.
+        test (bool): A test-mode key (`pgn_test_`): its mail never leaves Pidgeon and counts against nothing. Read this
+            rather than the token’s prefix.
+        rotated_at (None | str): When the key was last given a new secret by `POST /api-keys/{id}/rotate`, or null.
+        previous_token_expires_at (None | str): While the secret it had before its last rotation still works, when that
+            stops. Null when it has stopped or there was no grace period.
     """
 
     id: str
@@ -32,6 +37,9 @@ class MeKeyType0:
     reaches_all_addresses: bool
     expires_at: None | str
     created_at: str
+    test: bool
+    rotated_at: None | str
+    previous_token_expires_at: None | str
 
     def to_dict(self) -> dict[str, Any]:
         id = self.id
@@ -49,6 +57,14 @@ class MeKeyType0:
 
         created_at = self.created_at
 
+        test = self.test
+
+        rotated_at: None | str
+        rotated_at = self.rotated_at
+
+        previous_token_expires_at: None | str
+        previous_token_expires_at = self.previous_token_expires_at
+
         field_dict: dict[str, Any] = {}
 
         field_dict.update(
@@ -60,6 +76,9 @@ class MeKeyType0:
                 "reaches_all_addresses": reaches_all_addresses,
                 "expires_at": expires_at,
                 "created_at": created_at,
+                "test": test,
+                "rotated_at": rotated_at,
+                "previous_token_expires_at": previous_token_expires_at,
             }
         )
 
@@ -87,6 +106,22 @@ class MeKeyType0:
 
         created_at = d.pop("created_at")
 
+        test = d.pop("test")
+
+        def _parse_rotated_at(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        rotated_at = _parse_rotated_at(d.pop("rotated_at"))
+
+        def _parse_previous_token_expires_at(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        previous_token_expires_at = _parse_previous_token_expires_at(d.pop("previous_token_expires_at"))
+
         me_key_type_0 = cls(
             id=id,
             name=name,
@@ -95,6 +130,9 @@ class MeKeyType0:
             reaches_all_addresses=reaches_all_addresses,
             expires_at=expires_at,
             created_at=created_at,
+            test=test,
+            rotated_at=rotated_at,
+            previous_token_expires_at=previous_token_expires_at,
         )
 
         return me_key_type_0
