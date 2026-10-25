@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "llama-index-tools-pidgeon"
-version = "0.1.0"
+version = "0.1.1"
 description = "Email inboxes for LlamaIndex agents: send, read, search, wait for verification codes and reply, with Pidgeon."
 authors = [{ name = "Pidgeon", email = "support@pidgeon.ai" }]
 requires-python = ">=3.11,<4.0"

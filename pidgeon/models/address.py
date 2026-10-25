@@ -12,7 +12,7 @@ T = TypeVar("T", bound="Address")
 
 @_attrs_define
 class Address:
-    """A mailbox, with the display name when one was given.
+    """An address, with the display name when one was given.
 
     Attributes:
         email (str):

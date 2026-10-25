@@ -8,7 +8,7 @@ LangChain and LangGraph agents.
 pip install langchain-pidgeon
 ```
 
-## Give an agent a mailbox
+## Give an agent an inbox
 
 ```python
 from langchain.agents import create_agent

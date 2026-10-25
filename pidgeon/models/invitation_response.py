@@ -13,7 +13,7 @@ class InvitationResponse:
     """
     Attributes:
         status (str):
-        attendee (str): Which of the mailbox’s addresses answered.
+        attendee (str): Which of the inbox’s addresses answered.
         already_sent (bool): True when this answer had already gone out. Not an error — a retry.
         message_id (None | str):
         thread_id (None | str):

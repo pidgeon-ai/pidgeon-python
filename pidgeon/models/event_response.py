@@ -17,7 +17,7 @@ class EventResponse:
     """
     Attributes:
         event (EventResponseEvent):
-        attendee (str): Which of the mailbox’s addresses answered.
+        attendee (str): Which of the inbox’s addresses answered.
         status (str):
         reply_sent (bool): Whether an iCalendar REPLY actually went to an organiser. False when the meeting has none to
             tell, when `send_reply` was false, and when this answer had already gone out.

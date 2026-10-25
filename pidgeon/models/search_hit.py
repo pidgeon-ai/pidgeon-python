@@ -36,7 +36,7 @@ class SearchHit:
         assignee_id (None | str):
         timestamp (str): ISO-8601, UTC.
         folder (SearchHitFolder): The folder the hit was found in.
-        identity (None | str): The mailbox it was found in, as the address. `identity_id` is the same row.
+        identity (None | str): The inbox it was found in, as the address. `identity_id` is the same row.
     """
 
     id: str

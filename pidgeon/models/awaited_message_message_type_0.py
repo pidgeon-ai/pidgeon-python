@@ -28,11 +28,11 @@ class AwaitedMessageMessageType0:
     Attributes:
         id (str):
         thread_id (str):
-        identity_id (None | str): The mailbox this message is in, as an id. What `POST /attachments` and the other
-            endpoints that take a mailbox expect — `identity` below is the same address as text.
+        identity_id (None | str): The address this message is in, as an id. What `POST /attachments` and the other
+            endpoints that take an `identity_id` expect — `identity` below is the same address as text.
         identity (None | str):
         direction (str):
-        from_ (AwaitedMessageMessageType0From): A mailbox, with the display name when one was given.
+        from_ (AwaitedMessageMessageType0From): An address, with the display name when one was given.
         to (list[AwaitedMessageMessageType0ToItem]):
         cc (list[AwaitedMessageMessageType0CcItem]):
         subject (None | str):

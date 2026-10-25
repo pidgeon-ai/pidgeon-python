@@ -1,6 +1,6 @@
 # Pidgeon with the Google ADK
 
-An ADK agent for one Pidgeon mailbox, connected to the hosted MCP server at
+An ADK agent for one Pidgeon inbox, connected to the hosted MCP server at
 `https://pidgeon.ai/api/mcp`. There is no Pidgeon package to install: ADK's
 `McpToolset` takes the server as it is.
 
@@ -14,7 +14,7 @@ adk web
 ```
 
 `adk run pidgeon_agent` runs it in the terminal instead. Anything that changes
-the mailbox waits for you to confirm it.
+the inbox waits for you to confirm it.
 
 The guide is at [pidgeon.ai/docs/google-adk](https://pidgeon.ai/docs/google-adk).
 

@@ -12,7 +12,7 @@ T = TypeVar("T", bound="AwaitedMessageMessageType0ToItem")
 
 @_attrs_define
 class AwaitedMessageMessageType0ToItem:
-    """A mailbox, with the display name when one was given.
+    """An address, with the display name when one was given.
 
     Attributes:
         email (str):

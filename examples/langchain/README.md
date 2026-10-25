@@ -1,6 +1,6 @@
 # Pidgeon with LangChain
 
-A command-line agent for one Pidgeon mailbox, built with LangChain's
+A command-line agent for one Pidgeon inbox, built with LangChain's
 `create_agent` and the tools from
 [`langchain-pidgeon`](https://pypi.org/project/langchain-pidgeon/).
 

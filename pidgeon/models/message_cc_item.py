@@ -12,7 +12,7 @@ T = TypeVar("T", bound="MessageCcItem")
 
 @_attrs_define
 class MessageCcItem:
-    """A mailbox, with the display name when one was given.
+    """An address, with the display name when one was given.
 
     Attributes:
         email (str):
