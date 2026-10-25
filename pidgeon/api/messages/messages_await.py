@@ -123,15 +123,17 @@ def sync_detailed(
 
      Holds the request open until a message matching the filters arrives at the address, or `timeout`
     seconds pass — one call where you would otherwise poll. The message carries `extracted`:
-    verification codes and links, most likely first. Without `after`, it first looks back 2 minutes and
-    returns the newest matching message from then, because a code often lands before the call is made;
-    narrow it with `from`, `subject_contains` or `has_code` so an earlier email is not taken for the one
-    you want, or pass `after=now` to wait only for new mail. Pass the returned `cursor` as `after` on
-    the next call so nothing arriving between calls is missed. Answers 200 with `message: null` and
-    `timed_out: true` when nothing came. A matching message filed as spam is not returned unless you
-    pass `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail
-    that arrived. A message matches `from` only when it passed DMARC, because anybody can write a
-    `From:`; one that did not is counted in `held_back.unauthenticated`, and
+    verification codes and links, most likely first. To wait for mail you are about to cause, take a
+    cursor first: call with `after=now&timeout=1`, keep the `cursor`, submit the form or send, then wait
+    with that cursor as `after`, so the mail cannot arrive before the wait starts. Without `after`, it
+    first looks back 2 minutes and returns the newest matching message from then, because a code often
+    lands before the call is made; narrow it with `from`, `subject_contains` or `has_code` so an earlier
+    email is not taken for the one you want, or pass `after=now` to wait only for new mail. Pass the
+    returned `cursor` as `after` on the next call so nothing arriving between calls is missed. Answers
+    200 with `message: null` and `timed_out: true` when nothing came. A matching message filed as spam
+    is not returned unless you pass `include_spam=true`; it is counted in `held_back`, with its id, so a
+    timeout never hides mail that arrived. A message matches `from` only when it passed DMARC, because
+    anybody can write a `From:`; one that did not is counted in `held_back.unauthenticated`, and
     `include_unauthenticated=true` returns it.
 
     Args:
@@ -148,7 +150,8 @@ def sync_detailed(
         after (datetime.datetime | Literal['now'] | Unset): Only messages that arrived after this:
             the `cursor` a previous call returned, or `now`. Without it, the wait first looks back 2
             minutes and returns the newest matching message from then, so a code that beat you to the
-            call is not missed.
+            call is not missed. To wait for mail you are about to cause, take a cursor with `now`
+            first.
         timeout (int | Unset):  Default: 50.
 
     Raises:
@@ -196,15 +199,17 @@ def sync(
 
      Holds the request open until a message matching the filters arrives at the address, or `timeout`
     seconds pass — one call where you would otherwise poll. The message carries `extracted`:
-    verification codes and links, most likely first. Without `after`, it first looks back 2 minutes and
-    returns the newest matching message from then, because a code often lands before the call is made;
-    narrow it with `from`, `subject_contains` or `has_code` so an earlier email is not taken for the one
-    you want, or pass `after=now` to wait only for new mail. Pass the returned `cursor` as `after` on
-    the next call so nothing arriving between calls is missed. Answers 200 with `message: null` and
-    `timed_out: true` when nothing came. A matching message filed as spam is not returned unless you
-    pass `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail
-    that arrived. A message matches `from` only when it passed DMARC, because anybody can write a
-    `From:`; one that did not is counted in `held_back.unauthenticated`, and
+    verification codes and links, most likely first. To wait for mail you are about to cause, take a
+    cursor first: call with `after=now&timeout=1`, keep the `cursor`, submit the form or send, then wait
+    with that cursor as `after`, so the mail cannot arrive before the wait starts. Without `after`, it
+    first looks back 2 minutes and returns the newest matching message from then, because a code often
+    lands before the call is made; narrow it with `from`, `subject_contains` or `has_code` so an earlier
+    email is not taken for the one you want, or pass `after=now` to wait only for new mail. Pass the
+    returned `cursor` as `after` on the next call so nothing arriving between calls is missed. Answers
+    200 with `message: null` and `timed_out: true` when nothing came. A matching message filed as spam
+    is not returned unless you pass `include_spam=true`; it is counted in `held_back`, with its id, so a
+    timeout never hides mail that arrived. A message matches `from` only when it passed DMARC, because
+    anybody can write a `From:`; one that did not is counted in `held_back.unauthenticated`, and
     `include_unauthenticated=true` returns it.
 
     Args:
@@ -221,7 +226,8 @@ def sync(
         after (datetime.datetime | Literal['now'] | Unset): Only messages that arrived after this:
             the `cursor` a previous call returned, or `now`. Without it, the wait first looks back 2
             minutes and returns the newest matching message from then, so a code that beat you to the
-            call is not missed.
+            call is not missed. To wait for mail you are about to cause, take a cursor with `now`
+            first.
         timeout (int | Unset):  Default: 50.
 
     Raises:
@@ -264,15 +270,17 @@ async def asyncio_detailed(
 
      Holds the request open until a message matching the filters arrives at the address, or `timeout`
     seconds pass — one call where you would otherwise poll. The message carries `extracted`:
-    verification codes and links, most likely first. Without `after`, it first looks back 2 minutes and
-    returns the newest matching message from then, because a code often lands before the call is made;
-    narrow it with `from`, `subject_contains` or `has_code` so an earlier email is not taken for the one
-    you want, or pass `after=now` to wait only for new mail. Pass the returned `cursor` as `after` on
-    the next call so nothing arriving between calls is missed. Answers 200 with `message: null` and
-    `timed_out: true` when nothing came. A matching message filed as spam is not returned unless you
-    pass `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail
-    that arrived. A message matches `from` only when it passed DMARC, because anybody can write a
-    `From:`; one that did not is counted in `held_back.unauthenticated`, and
+    verification codes and links, most likely first. To wait for mail you are about to cause, take a
+    cursor first: call with `after=now&timeout=1`, keep the `cursor`, submit the form or send, then wait
+    with that cursor as `after`, so the mail cannot arrive before the wait starts. Without `after`, it
+    first looks back 2 minutes and returns the newest matching message from then, because a code often
+    lands before the call is made; narrow it with `from`, `subject_contains` or `has_code` so an earlier
+    email is not taken for the one you want, or pass `after=now` to wait only for new mail. Pass the
+    returned `cursor` as `after` on the next call so nothing arriving between calls is missed. Answers
+    200 with `message: null` and `timed_out: true` when nothing came. A matching message filed as spam
+    is not returned unless you pass `include_spam=true`; it is counted in `held_back`, with its id, so a
+    timeout never hides mail that arrived. A message matches `from` only when it passed DMARC, because
+    anybody can write a `From:`; one that did not is counted in `held_back.unauthenticated`, and
     `include_unauthenticated=true` returns it.
 
     Args:
@@ -289,7 +297,8 @@ async def asyncio_detailed(
         after (datetime.datetime | Literal['now'] | Unset): Only messages that arrived after this:
             the `cursor` a previous call returned, or `now`. Without it, the wait first looks back 2
             minutes and returns the newest matching message from then, so a code that beat you to the
-            call is not missed.
+            call is not missed. To wait for mail you are about to cause, take a cursor with `now`
+            first.
         timeout (int | Unset):  Default: 50.
 
     Raises:
@@ -335,15 +344,17 @@ async def asyncio(
 
      Holds the request open until a message matching the filters arrives at the address, or `timeout`
     seconds pass — one call where you would otherwise poll. The message carries `extracted`:
-    verification codes and links, most likely first. Without `after`, it first looks back 2 minutes and
-    returns the newest matching message from then, because a code often lands before the call is made;
-    narrow it with `from`, `subject_contains` or `has_code` so an earlier email is not taken for the one
-    you want, or pass `after=now` to wait only for new mail. Pass the returned `cursor` as `after` on
-    the next call so nothing arriving between calls is missed. Answers 200 with `message: null` and
-    `timed_out: true` when nothing came. A matching message filed as spam is not returned unless you
-    pass `include_spam=true`; it is counted in `held_back`, with its id, so a timeout never hides mail
-    that arrived. A message matches `from` only when it passed DMARC, because anybody can write a
-    `From:`; one that did not is counted in `held_back.unauthenticated`, and
+    verification codes and links, most likely first. To wait for mail you are about to cause, take a
+    cursor first: call with `after=now&timeout=1`, keep the `cursor`, submit the form or send, then wait
+    with that cursor as `after`, so the mail cannot arrive before the wait starts. Without `after`, it
+    first looks back 2 minutes and returns the newest matching message from then, because a code often
+    lands before the call is made; narrow it with `from`, `subject_contains` or `has_code` so an earlier
+    email is not taken for the one you want, or pass `after=now` to wait only for new mail. Pass the
+    returned `cursor` as `after` on the next call so nothing arriving between calls is missed. Answers
+    200 with `message: null` and `timed_out: true` when nothing came. A matching message filed as spam
+    is not returned unless you pass `include_spam=true`; it is counted in `held_back`, with its id, so a
+    timeout never hides mail that arrived. A message matches `from` only when it passed DMARC, because
+    anybody can write a `From:`; one that did not is counted in `held_back.unauthenticated`, and
     `include_unauthenticated=true` returns it.
 
     Args:
@@ -360,7 +371,8 @@ async def asyncio(
         after (datetime.datetime | Literal['now'] | Unset): Only messages that arrived after this:
             the `cursor` a previous call returned, or `now`. Without it, the wait first looks back 2
             minutes and returns the newest matching message from then, so a code that beat you to the
-            call is not missed.
+            call is not missed. To wait for mail you are about to cause, take a cursor with `now`
+            first.
         timeout (int | Unset):  Default: 50.
 
     Raises:

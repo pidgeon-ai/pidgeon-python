@@ -155,6 +155,7 @@ def test_a_wait_narrows_and_resumes(
 
     spec.await_message(ADDRESS, from_address="example.com", has_code=True, timeout=30)
     spec.await_message(ADDRESS, after="2026-10-22T10:00:00.000Z")
+    spec.await_message(ADDRESS, after="now", timeout=1)
 
     first = awaited.calls[0][1]
     assert first["identity_id"] == ADDRESS
@@ -163,6 +164,8 @@ def test_a_wait_narrows_and_resumes(
     assert first["timeout"] == 30
     assert first["after"] is UNSET
     assert awaited.calls[1][1]["after"].isoformat() == "2026-10-22T10:00:00+00:00"
+    # A cursor taken before the mail is caused, which used to fail to parse.
+    assert awaited.calls[2][1]["after"] == "now"
 
 
 def test_unset_filters_are_left_out(

@@ -49,6 +49,15 @@ def _given(value: Any) -> Any:
     return UNSET if value is None else value
 
 
+def _cursor(after: Optional[str]) -> Any:
+    """A previous wait's `cursor`, or "now" to take one before causing the mail."""
+    if not after:
+        return UNSET
+    if after == "now":
+        return "now"
+    return datetime.datetime.fromisoformat(after)
+
+
 class PidgeonToolSpec(BaseToolSpec):
     """
     Pidgeon email inbox tool spec.
@@ -279,7 +288,10 @@ class PidgeonToolSpec(BaseToolSpec):
 
         Use it after submitting a sign-up form: the message comes back with
         `extracted.codes` and `extracted.links`, verification codes and
-        confirm links, most likely first. Answers `timed_out: true` when
+        confirm links, most likely first. When you are about to cause the
+        mail, take a cursor first: call with `after="now"` and `timeout=1`,
+        keep the `cursor`, submit the form or send, then wait with that
+        cursor as `after`. Answers `timed_out: true` when
         nothing came; pass the returned `cursor` as `after` to keep waiting
         without missing anything. Mail filed as spam is counted in `held_back`.
 
@@ -289,7 +301,7 @@ class PidgeonToolSpec(BaseToolSpec):
             subject_contains: Only mail whose subject contains this.
             has_code: Only mail carrying a verification code, to skip a welcome email.
             timeout: Seconds to wait, at most 280.
-            after: The `cursor` of a previous wait.
+            after: The `cursor` of a previous wait, or "now".
 
         """
         return self._call(
@@ -300,7 +312,7 @@ class PidgeonToolSpec(BaseToolSpec):
                 subject_contains=_given(subject_contains),
                 has_code=MessagesAwaitHasCode.TRUE if has_code else UNSET,
                 timeout=timeout,
-                after=datetime.datetime.fromisoformat(after) if after else UNSET,
+                after=_cursor(after),
                 body=MessagesAwaitBody.CLEAN,
             )
         )

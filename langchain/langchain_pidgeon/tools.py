@@ -412,7 +412,10 @@ class AwaitMessage(PidgeonTool):
         READ,
         "Waits until a message arrives at an address — after you submit a sign-up "
         "form, say — and returns it with `extracted.codes` and `extracted.links`: "
-        "verification codes and confirm links, most likely first. Narrow it with "
+        "verification codes and confirm links, most likely first. When you are about "
+        'to cause the mail, take a cursor first: call with `after: "now"` and '
+        "`timeout: 1`, keep the `cursor`, submit the form or send, then wait with that "
+        "cursor as `after`. Narrow it with "
         "`from_`, `subject_contains` or `has_code`. Answers `timed_out: true` after "
         "`timeout` seconds (default 50, at most 280); pass the returned `cursor` as "
         "`after` to keep waiting. Without `after` it first looks back 2 minutes and "
