@@ -7,7 +7,7 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.domain_detail import DomainDetail
+    from ..models.created_domain import CreatedDomain
 
 
 T = TypeVar("T", bound="DomainsCreateResponse201")
@@ -17,10 +17,10 @@ T = TypeVar("T", bound="DomainsCreateResponse201")
 class DomainsCreateResponse201:
     """
     Attributes:
-        data (DomainDetail):
+        data (CreatedDomain):
     """
 
-    data: DomainDetail
+    data: CreatedDomain
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -38,10 +38,10 @@ class DomainsCreateResponse201:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.domain_detail import DomainDetail  # noqa: PLC0415
+        from ..models.created_domain import CreatedDomain  # noqa: PLC0415
 
         d = dict(src_dict)
-        data = DomainDetail.from_dict(d.pop("data"))
+        data = CreatedDomain.from_dict(d.pop("data"))
 
         domains_create_response_201 = cls(
             data=data,

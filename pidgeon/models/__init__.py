@@ -97,6 +97,12 @@ from .calendar_update_event_body_status import CalendarUpdateEventBodyStatus
 from .calendar_update_event_mode import CalendarUpdateEventMode
 from .calendar_update_event_response_200 import CalendarUpdateEventResponse200
 from .calendar_update_response_200 import CalendarUpdateResponse200
+from .created_domain import CreatedDomain
+from .created_domain_dns_records_item import CreatedDomainDnsRecordsItem
+from .created_domain_dns_records_item_state_type_0 import CreatedDomainDnsRecordsItemStateType0
+from .created_domain_dns_records_item_status import CreatedDomainDnsRecordsItemStatus
+from .created_domain_existing_mail_type_0 import CreatedDomainExistingMailType0
+from .created_domain_existing_mail_type_0_provider import CreatedDomainExistingMailType0Provider
 from .deleted import Deleted
 from .delivery import Delivery
 from .dns_record import DnsRecord
@@ -483,6 +489,12 @@ __all__ = (
     "CalendarUpdateEventMode",
     "CalendarUpdateEventResponse200",
     "CalendarUpdateResponse200",
+    "CreatedDomain",
+    "CreatedDomainDnsRecordsItem",
+    "CreatedDomainDnsRecordsItemStateType0",
+    "CreatedDomainDnsRecordsItemStatus",
+    "CreatedDomainExistingMailType0",
+    "CreatedDomainExistingMailType0Provider",
     "Deleted",
     "Delivery",
     "DnsRecord",
