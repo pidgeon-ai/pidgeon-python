@@ -66,6 +66,10 @@ def sync_detailed(
      Idempotent with an `Idempotency-Key` header: the same key returns the first result rather than
     creating a second address.
 
+    Needs a key with admin over the account, or over its pod. A **test key** creates a test address
+    (`test: true`): outside your plan’s counts, at most 100 at once, taking only test mail, and deleted
+    a day after it was made.
+
     Args:
         idempotency_key (str | Unset):
         body (IdentitiesCreateBody):
@@ -102,6 +106,10 @@ def sync(
      Idempotent with an `Idempotency-Key` header: the same key returns the first result rather than
     creating a second address.
 
+    Needs a key with admin over the account, or over its pod. A **test key** creates a test address
+    (`test: true`): outside your plan’s counts, at most 100 at once, taking only test mail, and deleted
+    a day after it was made.
+
     Args:
         idempotency_key (str | Unset):
         body (IdentitiesCreateBody):
@@ -132,6 +140,10 @@ async def asyncio_detailed(
 
      Idempotent with an `Idempotency-Key` header: the same key returns the first result rather than
     creating a second address.
+
+    Needs a key with admin over the account, or over its pod. A **test key** creates a test address
+    (`test: true`): outside your plan’s counts, at most 100 at once, taking only test mail, and deleted
+    a day after it was made.
 
     Args:
         idempotency_key (str | Unset):
@@ -166,6 +178,10 @@ async def asyncio(
 
      Idempotent with an `Idempotency-Key` header: the same key returns the first result rather than
     creating a second address.
+
+    Needs a key with admin over the account, or over its pod. A **test key** creates a test address
+    (`test: true`): outside your plan’s counts, at most 100 at once, taking only test mail, and deleted
+    a day after it was made.
 
     Args:
         idempotency_key (str | Unset):

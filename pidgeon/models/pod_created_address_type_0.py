@@ -36,6 +36,8 @@ class PodCreatedAddressType0:
         tenant_id (None | str): Your own opaque grouping for this address. Never parsed here.
         pod_id (str): The pod this address is in. Every workspace has one to start with and every address is in one, so
             this is never null.
+        test (bool): A test address, made by a test key: it counts against no plan, takes only test mail (a test send or
+            `POST /test/inbound`), and is deleted a day after it was made.
     """
 
     id: str
@@ -56,6 +58,7 @@ class PodCreatedAddressType0:
     receive_policy: str
     tenant_id: None | str
     pod_id: str
+    test: bool
 
     def to_dict(self) -> dict[str, Any]:
         id = self.id
@@ -97,6 +100,8 @@ class PodCreatedAddressType0:
 
         pod_id = self.pod_id
 
+        test = self.test
+
         field_dict: dict[str, Any] = {}
 
         field_dict.update(
@@ -119,6 +124,7 @@ class PodCreatedAddressType0:
                 "receive_policy": receive_policy,
                 "tenant_id": tenant_id,
                 "pod_id": pod_id,
+                "test": test,
             }
         )
 
@@ -180,6 +186,8 @@ class PodCreatedAddressType0:
 
         pod_id = d.pop("pod_id")
 
+        test = d.pop("test")
+
         pod_created_address_type_0 = cls(
             id=id,
             email=email,
@@ -199,6 +207,7 @@ class PodCreatedAddressType0:
             receive_policy=receive_policy,
             tenant_id=tenant_id,
             pod_id=pod_id,
+            test=test,
         )
 
         return pod_created_address_type_0
