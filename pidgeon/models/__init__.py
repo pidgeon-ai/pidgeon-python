@@ -176,6 +176,7 @@ from .identities_suspend_tenant_response_200 import IdentitiesSuspendTenantRespo
 from .identities_update_body import IdentitiesUpdateBody
 from .identities_update_body_capabilities import IdentitiesUpdateBodyCapabilities
 from .identities_update_body_mode import IdentitiesUpdateBodyMode
+from .identities_update_body_receive_policy import IdentitiesUpdateBodyReceivePolicy
 from .identities_update_body_send_policy import IdentitiesUpdateBodySendPolicy
 from .identities_update_body_status import IdentitiesUpdateBodyStatus
 from .identities_update_response_200 import IdentitiesUpdateResponse200
@@ -561,6 +562,7 @@ __all__ = (
     "IdentitiesUpdateBody",
     "IdentitiesUpdateBodyCapabilities",
     "IdentitiesUpdateBodyMode",
+    "IdentitiesUpdateBodyReceivePolicy",
     "IdentitiesUpdateBodySendPolicy",
     "IdentitiesUpdateBodyStatus",
     "IdentitiesUpdateResponse200",

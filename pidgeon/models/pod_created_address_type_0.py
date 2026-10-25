@@ -31,6 +31,8 @@ class PodCreatedAddressType0:
         created_at (str): ISO-8601, UTC.
         expires_at (None | str): When it stops accepting mail. Expiry suspends the address; it never deletes it.
         send_policy (str): Who it may write to: open, reply_only (somebody who wrote to it first), or list.
+        receive_policy (str): Who may write to it: open, or list (only senders with an inbox rule, on mail that passes
+            DMARC).
         tenant_id (None | str): Your own opaque grouping for this address. Never parsed here.
         pod_id (str): The pod this address is in. Every workspace has one to start with and every address is in one, so
             this is never null.
@@ -51,6 +53,7 @@ class PodCreatedAddressType0:
     created_at: str
     expires_at: None | str
     send_policy: str
+    receive_policy: str
     tenant_id: None | str
     pod_id: str
 
@@ -87,6 +90,8 @@ class PodCreatedAddressType0:
 
         send_policy = self.send_policy
 
+        receive_policy = self.receive_policy
+
         tenant_id: None | str
         tenant_id = self.tenant_id
 
@@ -111,6 +116,7 @@ class PodCreatedAddressType0:
                 "created_at": created_at,
                 "expires_at": expires_at,
                 "send_policy": send_policy,
+                "receive_policy": receive_policy,
                 "tenant_id": tenant_id,
                 "pod_id": pod_id,
             }
@@ -163,6 +169,8 @@ class PodCreatedAddressType0:
 
         send_policy = d.pop("send_policy")
 
+        receive_policy = d.pop("receive_policy")
+
         def _parse_tenant_id(data: object) -> None | str:
             if data is None:
                 return data
@@ -188,6 +196,7 @@ class PodCreatedAddressType0:
             created_at=created_at,
             expires_at=expires_at,
             send_policy=send_policy,
+            receive_policy=receive_policy,
             tenant_id=tenant_id,
             pod_id=pod_id,
         )

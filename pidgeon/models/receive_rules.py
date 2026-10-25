@@ -17,14 +17,18 @@ class ReceiveRules:
     """
     Attributes:
         identity_id (str):
+        receive_policy (str): open, or list: only senders with an inbox rule, on mail that passes DMARC.
         rules (list[ReceiveRulesRulesItem]):
     """
 
     identity_id: str
+    receive_policy: str
     rules: list[ReceiveRulesRulesItem]
 
     def to_dict(self) -> dict[str, Any]:
         identity_id = self.identity_id
+
+        receive_policy = self.receive_policy
 
         rules = []
         for rules_item_data in self.rules:
@@ -36,6 +40,7 @@ class ReceiveRules:
         field_dict.update(
             {
                 "identity_id": identity_id,
+                "receive_policy": receive_policy,
                 "rules": rules,
             }
         )
@@ -49,6 +54,8 @@ class ReceiveRules:
         d = dict(src_dict)
         identity_id = d.pop("identity_id")
 
+        receive_policy = d.pop("receive_policy")
+
         rules = []
         _rules = d.pop("rules")
         for rules_item_data in _rules:
@@ -58,6 +65,7 @@ class ReceiveRules:
 
         receive_rules = cls(
             identity_id=identity_id,
+            receive_policy=receive_policy,
             rules=rules,
         )
 

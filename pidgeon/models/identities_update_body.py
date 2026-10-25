@@ -8,6 +8,7 @@ from uuid import UUID
 from attrs import define as _attrs_define
 
 from ..models.identities_update_body_mode import IdentitiesUpdateBodyMode
+from ..models.identities_update_body_receive_policy import IdentitiesUpdateBodyReceivePolicy
 from ..models.identities_update_body_send_policy import IdentitiesUpdateBodySendPolicy
 from ..models.identities_update_body_status import IdentitiesUpdateBodyStatus
 from ..types import UNSET, Unset
@@ -31,6 +32,9 @@ class IdentitiesUpdateBody:
             so the correspondence survives.
         send_policy (IdentitiesUpdateBodySendPolicy | Unset): Who it may write to. `reply_only` makes an address
             structurally unable to start a conversation with a stranger.
+        receive_policy (IdentitiesUpdateBodyReceivePolicy | Unset): Who may write to it. `list` accepts only senders
+            with an `inbox` receive rule whose mail passes DMARC, and refuses everybody else before anything is stored. A
+            key with admin on the address may tighten it; loosening needs its owner.
         tenant_id (None | str | Unset): Your own opaque grouping — a customer id, whatever your side calls it. Never
             parsed here.
         pod_id (None | Unset | UUID): The pod this belongs to — your account’s default when you name none. A pod is a
@@ -44,6 +48,7 @@ class IdentitiesUpdateBody:
     status: IdentitiesUpdateBodyStatus | Unset = UNSET
     expires_at: datetime.datetime | None | Unset = UNSET
     send_policy: IdentitiesUpdateBodySendPolicy | Unset = UNSET
+    receive_policy: IdentitiesUpdateBodyReceivePolicy | Unset = UNSET
     tenant_id: None | str | Unset = UNSET
     pod_id: None | Unset | UUID = UNSET
 
@@ -78,6 +83,10 @@ class IdentitiesUpdateBody:
         if not isinstance(self.send_policy, Unset):
             send_policy = self.send_policy.value
 
+        receive_policy: str | Unset = UNSET
+        if not isinstance(self.receive_policy, Unset):
+            receive_policy = self.receive_policy.value
+
         tenant_id: None | str | Unset
         if isinstance(self.tenant_id, Unset):
             tenant_id = UNSET
@@ -107,6 +116,8 @@ class IdentitiesUpdateBody:
             field_dict["expires_at"] = expires_at
         if send_policy is not UNSET:
             field_dict["send_policy"] = send_policy
+        if receive_policy is not UNSET:
+            field_dict["receive_policy"] = receive_policy
         if tenant_id is not UNSET:
             field_dict["tenant_id"] = tenant_id
         if pod_id is not UNSET:
@@ -174,6 +185,13 @@ class IdentitiesUpdateBody:
         else:
             send_policy = IdentitiesUpdateBodySendPolicy(_send_policy)
 
+        _receive_policy = d.pop("receive_policy", UNSET)
+        receive_policy: IdentitiesUpdateBodyReceivePolicy | Unset
+        if isinstance(_receive_policy, Unset):
+            receive_policy = UNSET
+        else:
+            receive_policy = IdentitiesUpdateBodyReceivePolicy(_receive_policy)
+
         def _parse_tenant_id(data: object) -> None | str | Unset:
             if data is None:
                 return data
@@ -207,6 +225,7 @@ class IdentitiesUpdateBody:
             status=status,
             expires_at=expires_at,
             send_policy=send_policy,
+            receive_policy=receive_policy,
             tenant_id=tenant_id,
             pod_id=pod_id,
         )
