@@ -8,15 +8,18 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.drafts_update_body import DraftsUpdateBody
 from ...models.drafts_update_response_200 import DraftsUpdateResponse200
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     id: str,
     *,
     body: DraftsUpdateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     _kwargs: dict[str, Any] = {
         "method": "patch",
@@ -61,6 +64,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: DraftsUpdateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[DraftsUpdateResponse200]:
     """Change some of it, and leave the rest
 
@@ -69,6 +73,7 @@ def sync_detailed(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (DraftsUpdateBody):
 
     Raises:
@@ -83,6 +88,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         id=id,
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -97,6 +103,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: DraftsUpdateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> DraftsUpdateResponse200:
     """Change some of it, and leave the rest
 
@@ -105,6 +112,7 @@ def sync(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (DraftsUpdateBody):
 
     Raises:
@@ -120,6 +128,7 @@ def sync(
         id=id,
         client=client,
         body=body,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -128,6 +137,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: DraftsUpdateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[DraftsUpdateResponse200]:
     """Change some of it, and leave the rest
 
@@ -136,6 +146,7 @@ async def asyncio_detailed(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (DraftsUpdateBody):
 
     Raises:
@@ -150,6 +161,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         id=id,
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -162,6 +174,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: DraftsUpdateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> DraftsUpdateResponse200:
     """Change some of it, and leave the rest
 
@@ -170,6 +183,7 @@ async def asyncio(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (DraftsUpdateBody):
 
     Raises:
@@ -186,5 +200,6 @@ async def asyncio(
             id=id,
             client=client,
             body=body,
+            idempotency_key=idempotency_key,
         )
     ).parsed

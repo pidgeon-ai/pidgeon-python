@@ -23,6 +23,7 @@ def _get_kwargs(
     is_starred: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
+    cursor: str | Unset = UNSET,
 ) -> dict[str, Any]:
 
     params: dict[str, Any] = {}
@@ -56,6 +57,8 @@ def _get_kwargs(
     params["label_id"] = json_label_id
 
     params["limit"] = limit
+
+    params["cursor"] = cursor
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -104,6 +107,7 @@ def sync_detailed(
     is_starred: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
+    cursor: str | Unset = UNSET,
 ) -> Response[MessagesSearchResponse200]:
     """Search messages
 
@@ -123,6 +127,7 @@ def sync_detailed(
         is_starred (str | Unset):
         label_id (UUID | Unset):
         limit (int | Unset):  Default: 50.
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -144,6 +149,7 @@ def sync_detailed(
         is_starred=is_starred,
         label_id=label_id,
         limit=limit,
+        cursor=cursor,
     )
 
     response = client.get_httpx_client().request(
@@ -166,6 +172,7 @@ def sync(
     is_starred: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
+    cursor: str | Unset = UNSET,
 ) -> MessagesSearchResponse200:
     """Search messages
 
@@ -185,6 +192,7 @@ def sync(
         is_starred (str | Unset):
         label_id (UUID | Unset):
         limit (int | Unset):  Default: 50.
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -207,6 +215,7 @@ def sync(
         is_starred=is_starred,
         label_id=label_id,
         limit=limit,
+        cursor=cursor,
     ).parsed
 
 
@@ -223,6 +232,7 @@ async def asyncio_detailed(
     is_starred: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
+    cursor: str | Unset = UNSET,
 ) -> Response[MessagesSearchResponse200]:
     """Search messages
 
@@ -242,6 +252,7 @@ async def asyncio_detailed(
         is_starred (str | Unset):
         label_id (UUID | Unset):
         limit (int | Unset):  Default: 50.
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -263,6 +274,7 @@ async def asyncio_detailed(
         is_starred=is_starred,
         label_id=label_id,
         limit=limit,
+        cursor=cursor,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -283,6 +295,7 @@ async def asyncio(
     is_starred: str | Unset = UNSET,
     label_id: UUID | Unset = UNSET,
     limit: int | Unset = 50,
+    cursor: str | Unset = UNSET,
 ) -> MessagesSearchResponse200:
     """Search messages
 
@@ -302,6 +315,7 @@ async def asyncio(
         is_starred (str | Unset):
         label_id (UUID | Unset):
         limit (int | Unset):  Default: 50.
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -325,5 +339,6 @@ async def asyncio(
             is_starred=is_starred,
             label_id=label_id,
             limit=limit,
+            cursor=cursor,
         )
     ).parsed

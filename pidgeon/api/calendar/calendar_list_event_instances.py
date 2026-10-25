@@ -18,6 +18,7 @@ def _get_kwargs(
     after: datetime.datetime | Unset = UNSET,
     before: datetime.datetime | Unset = UNSET,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> dict[str, Any]:
 
     params: dict[str, Any] = {}
@@ -33,6 +34,8 @@ def _get_kwargs(
     params["before"] = json_before
 
     params["limit"] = limit
+
+    params["cursor"] = cursor
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -81,6 +84,7 @@ def sync_detailed(
     after: datetime.datetime | Unset = UNSET,
     before: datetime.datetime | Unset = UNSET,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> Response[CalendarListEventInstancesResponse200]:
     """The dates a series actually happens
 
@@ -95,6 +99,7 @@ def sync_detailed(
         after (datetime.datetime | Unset):
         before (datetime.datetime | Unset):
         limit (int | Unset):
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -111,6 +116,7 @@ def sync_detailed(
         after=after,
         before=before,
         limit=limit,
+        cursor=cursor,
     )
 
     response = client.get_httpx_client().request(
@@ -128,6 +134,7 @@ def sync(
     after: datetime.datetime | Unset = UNSET,
     before: datetime.datetime | Unset = UNSET,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> CalendarListEventInstancesResponse200:
     """The dates a series actually happens
 
@@ -142,6 +149,7 @@ def sync(
         after (datetime.datetime | Unset):
         before (datetime.datetime | Unset):
         limit (int | Unset):
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -159,6 +167,7 @@ def sync(
         after=after,
         before=before,
         limit=limit,
+        cursor=cursor,
     ).parsed
 
 
@@ -170,6 +179,7 @@ async def asyncio_detailed(
     after: datetime.datetime | Unset = UNSET,
     before: datetime.datetime | Unset = UNSET,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> Response[CalendarListEventInstancesResponse200]:
     """The dates a series actually happens
 
@@ -184,6 +194,7 @@ async def asyncio_detailed(
         after (datetime.datetime | Unset):
         before (datetime.datetime | Unset):
         limit (int | Unset):
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -200,6 +211,7 @@ async def asyncio_detailed(
         after=after,
         before=before,
         limit=limit,
+        cursor=cursor,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -215,6 +227,7 @@ async def asyncio(
     after: datetime.datetime | Unset = UNSET,
     before: datetime.datetime | Unset = UNSET,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> CalendarListEventInstancesResponse200:
     """The dates a series actually happens
 
@@ -229,6 +242,7 @@ async def asyncio(
         after (datetime.datetime | Unset):
         before (datetime.datetime | Unset):
         limit (int | Unset):
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -247,5 +261,6 @@ async def asyncio(
             after=after,
             before=before,
             limit=limit,
+            cursor=cursor,
         )
     ).parsed

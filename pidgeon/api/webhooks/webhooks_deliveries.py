@@ -14,6 +14,7 @@ def _get_kwargs(
     *,
     webhook_id: UUID,
     limit: int | Unset = 25,
+    cursor: str | Unset = UNSET,
 ) -> dict[str, Any]:
 
     params: dict[str, Any] = {}
@@ -22,6 +23,8 @@ def _get_kwargs(
     params["webhook_id"] = json_webhook_id
 
     params["limit"] = limit
+
+    params["cursor"] = cursor
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -62,6 +65,7 @@ def sync_detailed(
     client: AuthenticatedClient | Client,
     webhook_id: UUID,
     limit: int | Unset = 25,
+    cursor: str | Unset = UNSET,
 ) -> Response[WebhooksDeliveriesResponse200]:
     """What happened to each event we tried to hand you
 
@@ -71,6 +75,7 @@ def sync_detailed(
     Args:
         webhook_id (UUID):
         limit (int | Unset):  Default: 25.
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -84,6 +89,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         webhook_id=webhook_id,
         limit=limit,
+        cursor=cursor,
     )
 
     response = client.get_httpx_client().request(
@@ -98,6 +104,7 @@ def sync(
     client: AuthenticatedClient | Client,
     webhook_id: UUID,
     limit: int | Unset = 25,
+    cursor: str | Unset = UNSET,
 ) -> WebhooksDeliveriesResponse200:
     """What happened to each event we tried to hand you
 
@@ -107,6 +114,7 @@ def sync(
     Args:
         webhook_id (UUID):
         limit (int | Unset):  Default: 25.
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -121,6 +129,7 @@ def sync(
         client=client,
         webhook_id=webhook_id,
         limit=limit,
+        cursor=cursor,
     ).parsed
 
 
@@ -129,6 +138,7 @@ async def asyncio_detailed(
     client: AuthenticatedClient | Client,
     webhook_id: UUID,
     limit: int | Unset = 25,
+    cursor: str | Unset = UNSET,
 ) -> Response[WebhooksDeliveriesResponse200]:
     """What happened to each event we tried to hand you
 
@@ -138,6 +148,7 @@ async def asyncio_detailed(
     Args:
         webhook_id (UUID):
         limit (int | Unset):  Default: 25.
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -151,6 +162,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         webhook_id=webhook_id,
         limit=limit,
+        cursor=cursor,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -163,6 +175,7 @@ async def asyncio(
     client: AuthenticatedClient | Client,
     webhook_id: UUID,
     limit: int | Unset = 25,
+    cursor: str | Unset = UNSET,
 ) -> WebhooksDeliveriesResponse200:
     """What happened to each event we tried to hand you
 
@@ -172,6 +185,7 @@ async def asyncio(
     Args:
         webhook_id (UUID):
         limit (int | Unset):  Default: 25.
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -187,5 +201,6 @@ async def asyncio(
             client=client,
             webhook_id=webhook_id,
             limit=limit,
+            cursor=cursor,
         )
     ).parsed

@@ -7,13 +7,18 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.drafts_remove_attachment_response_200 import DraftsRemoveAttachmentResponse200
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     id: str,
     attachment_id: str,
+    *,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     _kwargs: dict[str, Any] = {
         "method": "delete",
@@ -23,6 +28,7 @@ def _get_kwargs(
         ),
     }
 
+    _kwargs["headers"] = headers
     return _kwargs
 
 
@@ -56,6 +62,7 @@ def sync_detailed(
     attachment_id: str,
     *,
     client: AuthenticatedClient | Client,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[DraftsRemoveAttachmentResponse200]:
     """Take a file off a draft
 
@@ -66,6 +73,7 @@ def sync_detailed(
     Args:
         id (str):
         attachment_id (str):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -79,6 +87,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         id=id,
         attachment_id=attachment_id,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -93,6 +102,7 @@ def sync(
     attachment_id: str,
     *,
     client: AuthenticatedClient | Client,
+    idempotency_key: str | Unset = UNSET,
 ) -> DraftsRemoveAttachmentResponse200:
     """Take a file off a draft
 
@@ -103,6 +113,7 @@ def sync(
     Args:
         id (str):
         attachment_id (str):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -117,6 +128,7 @@ def sync(
         id=id,
         attachment_id=attachment_id,
         client=client,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -125,6 +137,7 @@ async def asyncio_detailed(
     attachment_id: str,
     *,
     client: AuthenticatedClient | Client,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[DraftsRemoveAttachmentResponse200]:
     """Take a file off a draft
 
@@ -135,6 +148,7 @@ async def asyncio_detailed(
     Args:
         id (str):
         attachment_id (str):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -148,6 +162,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         id=id,
         attachment_id=attachment_id,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -160,6 +175,7 @@ async def asyncio(
     attachment_id: str,
     *,
     client: AuthenticatedClient | Client,
+    idempotency_key: str | Unset = UNSET,
 ) -> DraftsRemoveAttachmentResponse200:
     """Take a file off a draft
 
@@ -170,6 +186,7 @@ async def asyncio(
     Args:
         id (str):
         attachment_id (str):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -185,5 +202,6 @@ async def asyncio(
             id=id,
             attachment_id=attachment_id,
             client=client,
+            idempotency_key=idempotency_key,
         )
     ).parsed

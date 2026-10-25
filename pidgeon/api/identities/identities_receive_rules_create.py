@@ -8,15 +8,18 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.identities_receive_rules_create_body import IdentitiesReceiveRulesCreateBody
 from ...models.identities_receive_rules_create_response_200 import IdentitiesReceiveRulesCreateResponse200
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     id: str,
     *,
     body: IdentitiesReceiveRulesCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     _kwargs: dict[str, Any] = {
         "method": "post",
@@ -63,6 +66,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: IdentitiesReceiveRulesCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[IdentitiesReceiveRulesCreateResponse200]:
     """Decide what happens to a sender
 
@@ -82,6 +86,7 @@ def sync_detailed(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (IdentitiesReceiveRulesCreateBody):
 
     Raises:
@@ -96,6 +101,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         id=id,
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -110,6 +116,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: IdentitiesReceiveRulesCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> IdentitiesReceiveRulesCreateResponse200:
     """Decide what happens to a sender
 
@@ -129,6 +136,7 @@ def sync(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (IdentitiesReceiveRulesCreateBody):
 
     Raises:
@@ -144,6 +152,7 @@ def sync(
         id=id,
         client=client,
         body=body,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -152,6 +161,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: IdentitiesReceiveRulesCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[IdentitiesReceiveRulesCreateResponse200]:
     """Decide what happens to a sender
 
@@ -171,6 +181,7 @@ async def asyncio_detailed(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (IdentitiesReceiveRulesCreateBody):
 
     Raises:
@@ -185,6 +196,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         id=id,
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -197,6 +209,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: IdentitiesReceiveRulesCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> IdentitiesReceiveRulesCreateResponse200:
     """Decide what happens to a sender
 
@@ -216,6 +229,7 @@ async def asyncio(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (IdentitiesReceiveRulesCreateBody):
 
     Raises:
@@ -232,5 +246,6 @@ async def asyncio(
             id=id,
             client=client,
             body=body,
+            idempotency_key=idempotency_key,
         )
     ).parsed

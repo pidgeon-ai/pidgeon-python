@@ -19,6 +19,7 @@ def _get_kwargs(
     before: datetime.datetime | Unset = UNSET,
     include_overlapping: CalendarGetAgendaIncludeOverlapping | Unset = UNSET,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> dict[str, Any]:
 
     params: dict[str, Any] = {}
@@ -40,6 +41,8 @@ def _get_kwargs(
     params["include_overlapping"] = json_include_overlapping
 
     params["limit"] = limit
+
+    params["cursor"] = cursor
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -85,6 +88,7 @@ def sync_detailed(
     before: datetime.datetime | Unset = UNSET,
     include_overlapping: CalendarGetAgendaIncludeOverlapping | Unset = UNSET,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> Response[CalendarGetAgendaResponse200]:
     """What is on, in a window, in order
 
@@ -99,6 +103,7 @@ def sync_detailed(
         before (datetime.datetime | Unset):
         include_overlapping (CalendarGetAgendaIncludeOverlapping | Unset):
         limit (int | Unset):
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -115,6 +120,7 @@ def sync_detailed(
         before=before,
         include_overlapping=include_overlapping,
         limit=limit,
+        cursor=cursor,
     )
 
     response = client.get_httpx_client().request(
@@ -132,6 +138,7 @@ def sync(
     before: datetime.datetime | Unset = UNSET,
     include_overlapping: CalendarGetAgendaIncludeOverlapping | Unset = UNSET,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> CalendarGetAgendaResponse200:
     """What is on, in a window, in order
 
@@ -146,6 +153,7 @@ def sync(
         before (datetime.datetime | Unset):
         include_overlapping (CalendarGetAgendaIncludeOverlapping | Unset):
         limit (int | Unset):
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -163,6 +171,7 @@ def sync(
         before=before,
         include_overlapping=include_overlapping,
         limit=limit,
+        cursor=cursor,
     ).parsed
 
 
@@ -174,6 +183,7 @@ async def asyncio_detailed(
     before: datetime.datetime | Unset = UNSET,
     include_overlapping: CalendarGetAgendaIncludeOverlapping | Unset = UNSET,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> Response[CalendarGetAgendaResponse200]:
     """What is on, in a window, in order
 
@@ -188,6 +198,7 @@ async def asyncio_detailed(
         before (datetime.datetime | Unset):
         include_overlapping (CalendarGetAgendaIncludeOverlapping | Unset):
         limit (int | Unset):
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -204,6 +215,7 @@ async def asyncio_detailed(
         before=before,
         include_overlapping=include_overlapping,
         limit=limit,
+        cursor=cursor,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -219,6 +231,7 @@ async def asyncio(
     before: datetime.datetime | Unset = UNSET,
     include_overlapping: CalendarGetAgendaIncludeOverlapping | Unset = UNSET,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> CalendarGetAgendaResponse200:
     """What is on, in a window, in order
 
@@ -233,6 +246,7 @@ async def asyncio(
         before (datetime.datetime | Unset):
         include_overlapping (CalendarGetAgendaIncludeOverlapping | Unset):
         limit (int | Unset):
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -251,5 +265,6 @@ async def asyncio(
             before=before,
             include_overlapping=include_overlapping,
             limit=limit,
+            cursor=cursor,
         )
     ).parsed

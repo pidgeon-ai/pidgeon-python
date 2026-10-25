@@ -8,15 +8,18 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.webhooks_update_headers_body import WebhooksUpdateHeadersBody
 from ...models.webhooks_update_headers_response_200 import WebhooksUpdateHeadersResponse200
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     id: str,
     *,
     body: WebhooksUpdateHeadersBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     _kwargs: dict[str, Any] = {
         "method": "put",
@@ -63,6 +66,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: WebhooksUpdateHeadersBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[WebhooksUpdateHeadersResponse200]:
     """Replace the headers this endpoint carries
 
@@ -73,6 +77,7 @@ def sync_detailed(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (WebhooksUpdateHeadersBody):
 
     Raises:
@@ -87,6 +92,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         id=id,
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -101,6 +107,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: WebhooksUpdateHeadersBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> WebhooksUpdateHeadersResponse200:
     """Replace the headers this endpoint carries
 
@@ -111,6 +118,7 @@ def sync(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (WebhooksUpdateHeadersBody):
 
     Raises:
@@ -126,6 +134,7 @@ def sync(
         id=id,
         client=client,
         body=body,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -134,6 +143,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: WebhooksUpdateHeadersBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[WebhooksUpdateHeadersResponse200]:
     """Replace the headers this endpoint carries
 
@@ -144,6 +154,7 @@ async def asyncio_detailed(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (WebhooksUpdateHeadersBody):
 
     Raises:
@@ -158,6 +169,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         id=id,
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -170,6 +182,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: WebhooksUpdateHeadersBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> WebhooksUpdateHeadersResponse200:
     """Replace the headers this endpoint carries
 
@@ -180,6 +193,7 @@ async def asyncio(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
         body (WebhooksUpdateHeadersBody):
 
     Raises:
@@ -196,5 +210,6 @@ async def asyncio(
             id=id,
             client=client,
             body=body,
+            idempotency_key=idempotency_key,
         )
     ).parsed

@@ -14,6 +14,7 @@ from .api_key_access import ApiKeyAccess
 from .api_key_created import ApiKeyCreated
 from .api_key_created_access import ApiKeyCreatedAccess
 from .app_password import AppPassword
+from .app_password_created import AppPasswordCreated
 from .app_passwords_create_body import AppPasswordsCreateBody
 from .app_passwords_create_response_201 import AppPasswordsCreateResponse201
 from .app_passwords_list_response_200 import AppPasswordsListResponse200
@@ -286,6 +287,8 @@ from .messages_send_body import MessagesSendBody
 from .messages_send_body_data import MessagesSendBodyData
 from .messages_send_response_202 import MessagesSendResponse202
 from .messages_undo_body import MessagesUndoBody
+from .messages_undo_body_undo_item import MessagesUndoBodyUndoItem
+from .messages_undo_body_undo_item_rows_item import MessagesUndoBodyUndoItemRowsItem
 from .messages_undo_response_200 import MessagesUndoResponse200
 from .messages_update_body import MessagesUpdateBody
 from .messages_update_body_folder import MessagesUpdateBodyFolder
@@ -371,6 +374,8 @@ from .threads_update_body_owner_type import ThreadsUpdateBodyOwnerType
 from .threads_update_body_status import ThreadsUpdateBodyStatus
 from .threads_update_response_200 import ThreadsUpdateResponse200
 from .undo import Undo
+from .undo_undo_item import UndoUndoItem
+from .undo_undo_item_rows_item import UndoUndoItemRowsItem
 from .uploaded_attachment import UploadedAttachment
 from .verification import Verification
 from .verification_dns_records_item import VerificationDnsRecordsItem
@@ -414,6 +419,7 @@ __all__ = (
     "ApiKeyCreated",
     "ApiKeyCreatedAccess",
     "AppPassword",
+    "AppPasswordCreated",
     "AppPasswordsCreateBody",
     "AppPasswordsCreateResponse201",
     "AppPasswordsListResponse200",
@@ -676,6 +682,8 @@ __all__ = (
     "MessagesSendBodyData",
     "MessagesSendResponse202",
     "MessagesUndoBody",
+    "MessagesUndoBodyUndoItem",
+    "MessagesUndoBodyUndoItemRowsItem",
     "MessagesUndoResponse200",
     "MessagesUpdateBody",
     "MessagesUpdateBodyFolder",
@@ -763,6 +771,8 @@ __all__ = (
     "ThreadsUpdateBodyStatus",
     "ThreadsUpdateResponse200",
     "Undo",
+    "UndoUndoItem",
+    "UndoUndoItemRowsItem",
     "UploadedAttachment",
     "Verification",
     "VerificationDnsRecordsItem",

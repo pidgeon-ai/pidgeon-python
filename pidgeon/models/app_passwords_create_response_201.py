@@ -7,7 +7,7 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.app_password import AppPassword
+    from ..models.app_password_created import AppPasswordCreated
 
 
 T = TypeVar("T", bound="AppPasswordsCreateResponse201")
@@ -17,10 +17,10 @@ T = TypeVar("T", bound="AppPasswordsCreateResponse201")
 class AppPasswordsCreateResponse201:
     """
     Attributes:
-        data (AppPassword):
+        data (AppPasswordCreated):
     """
 
-    data: AppPassword
+    data: AppPasswordCreated
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -38,10 +38,10 @@ class AppPasswordsCreateResponse201:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.app_password import AppPassword  # noqa: PLC0415
+        from ..models.app_password_created import AppPasswordCreated  # noqa: PLC0415
 
         d = dict(src_dict)
-        data = AppPassword.from_dict(d.pop("data"))
+        data = AppPasswordCreated.from_dict(d.pop("data"))
 
         app_passwords_create_response_201 = cls(
             data=data,

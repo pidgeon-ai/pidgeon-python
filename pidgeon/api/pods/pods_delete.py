@@ -15,7 +15,11 @@ def _get_kwargs(
     id: str,
     *,
     delete_addresses: PodsDeleteDeleteAddresses | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     params: dict[str, Any] = {}
 
@@ -35,6 +39,7 @@ def _get_kwargs(
         "params": params,
     }
 
+    _kwargs["headers"] = headers
     return _kwargs
 
 
@@ -66,6 +71,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     delete_addresses: PodsDeleteDeleteAddresses | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[PodsDeleteResponse200]:
     """Delete a pod, its addresses and their mail
 
@@ -83,6 +89,7 @@ def sync_detailed(
         id (str):
         delete_addresses (PodsDeleteDeleteAddresses | Unset): `true` to delete the pod’s addresses
             and all their mail with it. Without it a pod that holds an address is refused with 409.
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -96,6 +103,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         id=id,
         delete_addresses=delete_addresses,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -110,6 +118,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     delete_addresses: PodsDeleteDeleteAddresses | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> PodsDeleteResponse200:
     """Delete a pod, its addresses and their mail
 
@@ -127,6 +136,7 @@ def sync(
         id (str):
         delete_addresses (PodsDeleteDeleteAddresses | Unset): `true` to delete the pod’s addresses
             and all their mail with it. Without it a pod that holds an address is refused with 409.
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -141,6 +151,7 @@ def sync(
         id=id,
         client=client,
         delete_addresses=delete_addresses,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -149,6 +160,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     delete_addresses: PodsDeleteDeleteAddresses | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[PodsDeleteResponse200]:
     """Delete a pod, its addresses and their mail
 
@@ -166,6 +178,7 @@ async def asyncio_detailed(
         id (str):
         delete_addresses (PodsDeleteDeleteAddresses | Unset): `true` to delete the pod’s addresses
             and all their mail with it. Without it a pod that holds an address is refused with 409.
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -179,6 +192,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         id=id,
         delete_addresses=delete_addresses,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -191,6 +205,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     delete_addresses: PodsDeleteDeleteAddresses | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> PodsDeleteResponse200:
     """Delete a pod, its addresses and their mail
 
@@ -208,6 +223,7 @@ async def asyncio(
         id (str):
         delete_addresses (PodsDeleteDeleteAddresses | Unset): `true` to delete the pod’s addresses
             and all their mail with it. Without it a pod that holds an address is refused with 409.
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -223,5 +239,6 @@ async def asyncio(
             id=id,
             client=client,
             delete_addresses=delete_addresses,
+            idempotency_key=idempotency_key,
         )
     ).parsed

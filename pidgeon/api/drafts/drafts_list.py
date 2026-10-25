@@ -14,6 +14,7 @@ def _get_kwargs(
     *,
     identity_id: UUID,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> dict[str, Any]:
 
     params: dict[str, Any] = {}
@@ -22,6 +23,8 @@ def _get_kwargs(
     params["identity_id"] = json_identity_id
 
     params["limit"] = limit
+
+    params["cursor"] = cursor
 
     params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
@@ -62,6 +65,7 @@ def sync_detailed(
     client: AuthenticatedClient | Client,
     identity_id: UUID,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> Response[DraftsListResponse200]:
     """Every draft in one mailbox
 
@@ -72,6 +76,7 @@ def sync_detailed(
     Args:
         identity_id (UUID):
         limit (int | Unset):
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -85,6 +90,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         identity_id=identity_id,
         limit=limit,
+        cursor=cursor,
     )
 
     response = client.get_httpx_client().request(
@@ -99,6 +105,7 @@ def sync(
     client: AuthenticatedClient | Client,
     identity_id: UUID,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> DraftsListResponse200:
     """Every draft in one mailbox
 
@@ -109,6 +116,7 @@ def sync(
     Args:
         identity_id (UUID):
         limit (int | Unset):
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -123,6 +131,7 @@ def sync(
         client=client,
         identity_id=identity_id,
         limit=limit,
+        cursor=cursor,
     ).parsed
 
 
@@ -131,6 +140,7 @@ async def asyncio_detailed(
     client: AuthenticatedClient | Client,
     identity_id: UUID,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> Response[DraftsListResponse200]:
     """Every draft in one mailbox
 
@@ -141,6 +151,7 @@ async def asyncio_detailed(
     Args:
         identity_id (UUID):
         limit (int | Unset):
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -154,6 +165,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         identity_id=identity_id,
         limit=limit,
+        cursor=cursor,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -166,6 +178,7 @@ async def asyncio(
     client: AuthenticatedClient | Client,
     identity_id: UUID,
     limit: int | Unset = UNSET,
+    cursor: str | Unset = UNSET,
 ) -> DraftsListResponse200:
     """Every draft in one mailbox
 
@@ -176,6 +189,7 @@ async def asyncio(
     Args:
         identity_id (UUID):
         limit (int | Unset):
+        cursor (str | Unset): From a previous page’s `next_cursor`. Opaque — do not parse it.
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -191,5 +205,6 @@ async def asyncio(
             client=client,
             identity_id=identity_id,
             limit=limit,
+            cursor=cursor,
         )
     ).parsed

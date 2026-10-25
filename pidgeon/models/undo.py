@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any, TypeVar, cast
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from attrs import define as _attrs_define
 
 from ..types import UNSET, Unset
+
+if TYPE_CHECKING:
+    from ..models.undo_undo_item import UndoUndoItem
+
 
 T = TypeVar("T", bound="Undo")
 
@@ -14,17 +18,20 @@ T = TypeVar("T", bound="Undo")
 class Undo:
     """
     Attributes:
-        undo (list[Any]):
+        undo (list[UndoUndoItem]):
         id (str | Unset):
         applied (int | Unset):
     """
 
-    undo: list[Any]
+    undo: list[UndoUndoItem]
     id: str | Unset = UNSET
     applied: int | Unset = UNSET
 
     def to_dict(self) -> dict[str, Any]:
-        undo = self.undo
+        undo = []
+        for undo_item_data in self.undo:
+            undo_item = undo_item_data.to_dict()
+            undo.append(undo_item)
 
         id = self.id
 
@@ -46,8 +53,15 @@ class Undo:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.undo_undo_item import UndoUndoItem  # noqa: PLC0415
+
         d = dict(src_dict)
-        undo = cast(list[Any], d.pop("undo"))
+        undo = []
+        _undo = d.pop("undo")
+        for undo_item_data in _undo:
+            undo_item = UndoUndoItem.from_dict(undo_item_data)
+
+            undo.append(undo_item)
 
         id = d.pop("id", UNSET)
 

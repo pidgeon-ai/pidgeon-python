@@ -8,14 +8,18 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.identities_receive_rules_delete_response_200 import IdentitiesReceiveRulesDeleteResponse200
-from ...types import UNSET, Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     id: str,
     *,
     rule_id: UUID,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     params: dict[str, Any] = {}
 
@@ -32,6 +36,7 @@ def _get_kwargs(
         "params": params,
     }
 
+    _kwargs["headers"] = headers
     return _kwargs
 
 
@@ -65,6 +70,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     rule_id: UUID,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[IdentitiesReceiveRulesDeleteResponse200]:
     """Remove a rule
 
@@ -73,6 +79,7 @@ def sync_detailed(
     Args:
         id (str):
         rule_id (UUID):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -86,6 +93,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         id=id,
         rule_id=rule_id,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -100,6 +108,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     rule_id: UUID,
+    idempotency_key: str | Unset = UNSET,
 ) -> IdentitiesReceiveRulesDeleteResponse200:
     """Remove a rule
 
@@ -108,6 +117,7 @@ def sync(
     Args:
         id (str):
         rule_id (UUID):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -122,6 +132,7 @@ def sync(
         id=id,
         client=client,
         rule_id=rule_id,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -130,6 +141,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     rule_id: UUID,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[IdentitiesReceiveRulesDeleteResponse200]:
     """Remove a rule
 
@@ -138,6 +150,7 @@ async def asyncio_detailed(
     Args:
         id (str):
         rule_id (UUID):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -151,6 +164,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         id=id,
         rule_id=rule_id,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -163,6 +177,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     rule_id: UUID,
+    idempotency_key: str | Unset = UNSET,
 ) -> IdentitiesReceiveRulesDeleteResponse200:
     """Remove a rule
 
@@ -171,6 +186,7 @@ async def asyncio(
     Args:
         id (str):
         rule_id (UUID):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -186,5 +202,6 @@ async def asyncio(
             id=id,
             client=client,
             rule_id=rule_id,
+            idempotency_key=idempotency_key,
         )
     ).parsed

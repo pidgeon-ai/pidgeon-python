@@ -16,10 +16,14 @@ def _get_kwargs(
     *,
     body: CalendarUpdateBody,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
     if not isinstance(if_match, Unset):
         headers["If-Match"] = if_match
+
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     _kwargs: dict[str, Any] = {
         "method": "patch",
@@ -65,6 +69,7 @@ def sync_detailed(
     client: AuthenticatedClient | Client,
     body: CalendarUpdateBody,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[CalendarUpdateResponse200]:
     """Set the default time zone
 
@@ -74,6 +79,7 @@ def sync_detailed(
     Args:
         id (str):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
         body (CalendarUpdateBody):
 
     Raises:
@@ -89,6 +95,7 @@ def sync_detailed(
         id=id,
         body=body,
         if_match=if_match,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -104,6 +111,7 @@ def sync(
     client: AuthenticatedClient | Client,
     body: CalendarUpdateBody,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> CalendarUpdateResponse200:
     """Set the default time zone
 
@@ -113,6 +121,7 @@ def sync(
     Args:
         id (str):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
         body (CalendarUpdateBody):
 
     Raises:
@@ -129,6 +138,7 @@ def sync(
         client=client,
         body=body,
         if_match=if_match,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -138,6 +148,7 @@ async def asyncio_detailed(
     client: AuthenticatedClient | Client,
     body: CalendarUpdateBody,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[CalendarUpdateResponse200]:
     """Set the default time zone
 
@@ -147,6 +158,7 @@ async def asyncio_detailed(
     Args:
         id (str):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
         body (CalendarUpdateBody):
 
     Raises:
@@ -162,6 +174,7 @@ async def asyncio_detailed(
         id=id,
         body=body,
         if_match=if_match,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -175,6 +188,7 @@ async def asyncio(
     client: AuthenticatedClient | Client,
     body: CalendarUpdateBody,
     if_match: str | Unset = UNSET,
+    idempotency_key: str | Unset = UNSET,
 ) -> CalendarUpdateResponse200:
     """Set the default time zone
 
@@ -184,6 +198,7 @@ async def asyncio(
     Args:
         id (str):
         if_match (str | Unset):
+        idempotency_key (str | Unset):
         body (CalendarUpdateBody):
 
     Raises:
@@ -201,5 +216,6 @@ async def asyncio(
             client=client,
             body=body,
             if_match=if_match,
+            idempotency_key=idempotency_key,
         )
     ).parsed

@@ -8,14 +8,18 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.mailboxes_empty_trash_response_200 import MailboxesEmptyTrashResponse200
-from ...types import UNSET, Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     folder: str,
     *,
     identity_id: UUID,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     params: dict[str, Any] = {}
 
@@ -32,6 +36,7 @@ def _get_kwargs(
         "params": params,
     }
 
+    _kwargs["headers"] = headers
     return _kwargs
 
 
@@ -65,6 +70,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     identity_id: UUID,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[MailboxesEmptyTrashResponse200]:
     """Empty the trash
 
@@ -76,6 +82,7 @@ def sync_detailed(
     Args:
         folder (str):
         identity_id (UUID):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -89,6 +96,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         folder=folder,
         identity_id=identity_id,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -103,6 +111,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     identity_id: UUID,
+    idempotency_key: str | Unset = UNSET,
 ) -> MailboxesEmptyTrashResponse200:
     """Empty the trash
 
@@ -114,6 +123,7 @@ def sync(
     Args:
         folder (str):
         identity_id (UUID):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -128,6 +138,7 @@ def sync(
         folder=folder,
         client=client,
         identity_id=identity_id,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -136,6 +147,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     identity_id: UUID,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[MailboxesEmptyTrashResponse200]:
     """Empty the trash
 
@@ -147,6 +159,7 @@ async def asyncio_detailed(
     Args:
         folder (str):
         identity_id (UUID):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -160,6 +173,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         folder=folder,
         identity_id=identity_id,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -172,6 +186,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     identity_id: UUID,
+    idempotency_key: str | Unset = UNSET,
 ) -> MailboxesEmptyTrashResponse200:
     """Empty the trash
 
@@ -183,6 +198,7 @@ async def asyncio(
     Args:
         folder (str):
         identity_id (UUID):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -198,5 +214,6 @@ async def asyncio(
             folder=folder,
             client=client,
             identity_id=identity_id,
+            idempotency_key=idempotency_key,
         )
     ).parsed

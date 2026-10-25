@@ -21,7 +21,8 @@ class WebhookCreated:
         last_delivered_at (None | str):
         last_failed_at (None | str):
         created_at (str): ISO-8601, UTC.
-        secret (str): Shown once, here, and never again.
+        secret (None | str): Shown once, here, and never again. Null on an `Idempotency-Key` replay (`Idempotent-Replay:
+            true`): the secret is never stored, so delete the webhook and make another.
     """
 
     id: str
@@ -33,7 +34,7 @@ class WebhookCreated:
     last_delivered_at: None | str
     last_failed_at: None | str
     created_at: str
-    secret: str
+    secret: None | str
 
     def to_dict(self) -> dict[str, Any]:
         id = self.id
@@ -57,6 +58,7 @@ class WebhookCreated:
 
         created_at = self.created_at
 
+        secret: None | str
         secret = self.secret
 
         field_dict: dict[str, Any] = {}
@@ -114,7 +116,12 @@ class WebhookCreated:
 
         created_at = d.pop("created_at")
 
-        secret = d.pop("secret")
+        def _parse_secret(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        secret = _parse_secret(d.pop("secret"))
 
         webhook_created = cls(
             id=id,

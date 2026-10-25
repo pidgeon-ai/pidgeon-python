@@ -7,12 +7,17 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.identities_suspend_tenant_response_200 import IdentitiesSuspendTenantResponse200
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     id: str,
+    *,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     _kwargs: dict[str, Any] = {
         "method": "post",
@@ -21,6 +26,7 @@ def _get_kwargs(
         ),
     }
 
+    _kwargs["headers"] = headers
     return _kwargs
 
 
@@ -53,6 +59,7 @@ def sync_detailed(
     id: str,
     *,
     client: AuthenticatedClient | Client,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[IdentitiesSuspendTenantResponse200]:
     """Offboard one of your customers
 
@@ -63,6 +70,7 @@ def sync_detailed(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -75,6 +83,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         id=id,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -88,6 +97,7 @@ def sync(
     id: str,
     *,
     client: AuthenticatedClient | Client,
+    idempotency_key: str | Unset = UNSET,
 ) -> IdentitiesSuspendTenantResponse200:
     """Offboard one of your customers
 
@@ -98,6 +108,7 @@ def sync(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -111,6 +122,7 @@ def sync(
     return sync_detailed(
         id=id,
         client=client,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -118,6 +130,7 @@ async def asyncio_detailed(
     id: str,
     *,
     client: AuthenticatedClient | Client,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[IdentitiesSuspendTenantResponse200]:
     """Offboard one of your customers
 
@@ -128,6 +141,7 @@ async def asyncio_detailed(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -140,6 +154,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         id=id,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -151,6 +166,7 @@ async def asyncio(
     id: str,
     *,
     client: AuthenticatedClient | Client,
+    idempotency_key: str | Unset = UNSET,
 ) -> IdentitiesSuspendTenantResponse200:
     """Offboard one of your customers
 
@@ -161,6 +177,7 @@ async def asyncio(
 
     Args:
         id (str):
+        idempotency_key (str | Unset):
 
     Raises:
         errors.PidgeonError: If the API answers with a failure, 400 or above. It carries the API's `code`, `message` and `field`.
@@ -175,5 +192,6 @@ async def asyncio(
         await asyncio_detailed(
             id=id,
             client=client,
+            idempotency_key=idempotency_key,
         )
     ).parsed

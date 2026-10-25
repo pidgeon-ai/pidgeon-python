@@ -7,14 +7,17 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.app_passwords_create_body import AppPasswordsCreateBody
 from ...models.app_passwords_create_response_201 import AppPasswordsCreateResponse201
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
     body: AppPasswordsCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
+    if not isinstance(idempotency_key, Unset):
+        headers["Idempotency-Key"] = idempotency_key
 
     _kwargs: dict[str, Any] = {
         "method": "post",
@@ -56,6 +59,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: AppPasswordsCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[AppPasswordsCreateResponse201]:
     """Issue IMAP and SMTP credentials for one address
 
@@ -64,6 +68,7 @@ def sync_detailed(
     is handing over exactly that. `username` and `password` are returned together and are useless apart.
 
     Args:
+        idempotency_key (str | Unset):
         body (AppPasswordsCreateBody):
 
     Raises:
@@ -77,6 +82,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = client.get_httpx_client().request(
@@ -90,6 +96,7 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
     body: AppPasswordsCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> AppPasswordsCreateResponse201:
     """Issue IMAP and SMTP credentials for one address
 
@@ -98,6 +105,7 @@ def sync(
     is handing over exactly that. `username` and `password` are returned together and are useless apart.
 
     Args:
+        idempotency_key (str | Unset):
         body (AppPasswordsCreateBody):
 
     Raises:
@@ -112,6 +120,7 @@ def sync(
     return sync_detailed(
         client=client,
         body=body,
+        idempotency_key=idempotency_key,
     ).parsed
 
 
@@ -119,6 +128,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
     body: AppPasswordsCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> Response[AppPasswordsCreateResponse201]:
     """Issue IMAP and SMTP credentials for one address
 
@@ -127,6 +137,7 @@ async def asyncio_detailed(
     is handing over exactly that. `username` and `password` are returned together and are useless apart.
 
     Args:
+        idempotency_key (str | Unset):
         body (AppPasswordsCreateBody):
 
     Raises:
@@ -140,6 +151,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         body=body,
+        idempotency_key=idempotency_key,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -151,6 +163,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
     body: AppPasswordsCreateBody,
+    idempotency_key: str | Unset = UNSET,
 ) -> AppPasswordsCreateResponse201:
     """Issue IMAP and SMTP credentials for one address
 
@@ -159,6 +172,7 @@ async def asyncio(
     is handing over exactly that. `username` and `password` are returned together and are useless apart.
 
     Args:
+        idempotency_key (str | Unset):
         body (AppPasswordsCreateBody):
 
     Raises:
@@ -174,5 +188,6 @@ async def asyncio(
         await asyncio_detailed(
             client=client,
             body=body,
+            idempotency_key=idempotency_key,
         )
     ).parsed
