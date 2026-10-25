@@ -67,7 +67,9 @@ def sync_detailed(
     **rejected** — addresses the provider would not accept at hand-off, so read it before assuming every
     recipient got it. A recipient this address is not allowed to write to is a different thing and
     refuses the whole send: `403` with `blocked` when a rule says no, `not_permitted` when the send
-    policy does. Nothing is sent to anybody in that case.
+    policy does. Nothing is sent to anybody in that case. With a test key, `rejected@` at any domain is
+    always rejected and `bounce@` bounces, and `Pidgeon-Test-Fail` causes a 429, a 503, a slow answer or
+    a lost one: https://pidgeon.ai/docs/test-mode#causing-failures.
 
     Args:
         idempotency_key (str | Unset):
@@ -106,7 +108,9 @@ def sync(
     **rejected** — addresses the provider would not accept at hand-off, so read it before assuming every
     recipient got it. A recipient this address is not allowed to write to is a different thing and
     refuses the whole send: `403` with `blocked` when a rule says no, `not_permitted` when the send
-    policy does. Nothing is sent to anybody in that case.
+    policy does. Nothing is sent to anybody in that case. With a test key, `rejected@` at any domain is
+    always rejected and `bounce@` bounces, and `Pidgeon-Test-Fail` causes a 429, a 503, a slow answer or
+    a lost one: https://pidgeon.ai/docs/test-mode#causing-failures.
 
     Args:
         idempotency_key (str | Unset):
@@ -140,7 +144,9 @@ async def asyncio_detailed(
     **rejected** — addresses the provider would not accept at hand-off, so read it before assuming every
     recipient got it. A recipient this address is not allowed to write to is a different thing and
     refuses the whole send: `403` with `blocked` when a rule says no, `not_permitted` when the send
-    policy does. Nothing is sent to anybody in that case.
+    policy does. Nothing is sent to anybody in that case. With a test key, `rejected@` at any domain is
+    always rejected and `bounce@` bounces, and `Pidgeon-Test-Fail` causes a 429, a 503, a slow answer or
+    a lost one: https://pidgeon.ai/docs/test-mode#causing-failures.
 
     Args:
         idempotency_key (str | Unset):
@@ -177,7 +183,9 @@ async def asyncio(
     **rejected** — addresses the provider would not accept at hand-off, so read it before assuming every
     recipient got it. A recipient this address is not allowed to write to is a different thing and
     refuses the whole send: `403` with `blocked` when a rule says no, `not_permitted` when the send
-    policy does. Nothing is sent to anybody in that case.
+    policy does. Nothing is sent to anybody in that case. With a test key, `rejected@` at any domain is
+    always rejected and `bounce@` bounces, and `Pidgeon-Test-Fail` causes a 429, a 503, a slow answer or
+    a lost one: https://pidgeon.ai/docs/test-mode#causing-failures.
 
     Args:
         idempotency_key (str | Unset):
