@@ -21,8 +21,8 @@ class SetupLink:
         width (float | None): The popup size the provider asks for, when it states one.
         height (float | None):
         reason (None | SetupLinkReasonType0): `provider` — that zone’s DNS provider does not support Domain Connect,
-            which is the common case. `unconfigured` — it does, and this deployment is not registered as a service provider,
-            which is ours to fix. Null when `supported` is true.
+            which is the common case, or has not approved Pidgeon’s template yet. `unconfigured` — it does, and this
+            deployment has no key to sign the request with, which is ours to fix. Null when `supported` is true.
     """
 
     supported: bool
