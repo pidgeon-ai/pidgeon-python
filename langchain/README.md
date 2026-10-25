@@ -34,7 +34,7 @@ print(result["messages"][-1].content)
 ```
 
 `PIDGEON_API_KEY` is a `pgn_live_…` key. Make one at
-[pidgeon.ai/app/developers/keys](https://pidgeon.ai/app/developers/keys), or
+[pidgeon.ai/app/developers/keys](https://pidgeon.ai/signup?utm_source=pypi&utm_medium=readme&utm_campaign=langchain&next=/app/developers/keys), or
 let your agent sign itself up: [pidgeon.ai/skill.md](https://pidgeon.ai/skill.md)
 is two calls, and the only thing it needs from a person is a six-digit code.
 

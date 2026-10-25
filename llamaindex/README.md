@@ -10,7 +10,7 @@ pip install llama-index-tools-pidgeon
 ```
 
 `PIDGEON_API_KEY` is a `pgn_live_…` key. Make one at
-[pidgeon.ai/app/developers/keys](https://pidgeon.ai/app/developers/keys), with
+[pidgeon.ai/app/developers/keys](https://pidgeon.ai/signup?utm_source=pypi&utm_medium=readme&utm_campaign=llamaindex&next=/app/developers/keys), with
 the narrowest access the agent needs: one address, and `read` unless it has to
 send. The key is the whole of the access control. A `read` key cannot send,
 whatever the agent is told.

@@ -2,6 +2,7 @@
 
 import datetime
 import os
+from importlib.metadata import version
 from typing import Any, Callable, Dict, List, Optional
 
 import httpx
@@ -38,6 +39,9 @@ BASE_URL = "https://pidgeon.ai/api/v1"
 
 # `await_message` holds one request open for up to 280 seconds. httpx gives
 # up on a read after 5 unless told otherwise.
+# Ours by name: Pidgeon labels the first client an account uses from it.
+USER_AGENT = f"llama-index-tools-pidgeon/{version('llama-index-tools-pidgeon')}"
+
 TIMEOUT = httpx.Timeout(300.0, connect=10.0)
 
 
@@ -95,7 +99,12 @@ class PidgeonToolSpec(BaseToolSpec):
                     "Pass api_key or set PIDGEON_API_KEY. "
                     "Create a key at https://pidgeon.ai/app/developers/keys."
                 )
-            client = AuthenticatedClient(base_url=base_url, token=key, timeout=TIMEOUT)
+            client = AuthenticatedClient(
+                base_url=base_url,
+                token=key,
+                timeout=TIMEOUT,
+                headers={"User-Agent": USER_AGENT},
+            )
         self.client = client
 
     def _call(self, request: Callable[[], Any]) -> Dict[str, Any]:

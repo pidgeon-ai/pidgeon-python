@@ -1,8 +1,20 @@
 import ssl
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _version
 from typing import Any, Self
 
 import httpx
 from attrs import define, evolve, field
+
+try:
+    _VERSION = _version("pidgeon")
+except PackageNotFoundError:  # running from a checkout
+    _VERSION = "dev"
+
+# Ours by name, on every request unless the caller sets its own — which is
+# how `langchain-pidgeon` names itself. Pidgeon labels the first client an
+# account uses from this header; the name and version, nothing about the machine.
+USER_AGENT = f"pidgeon-python/{_VERSION}"
 
 
 @define
@@ -82,7 +94,7 @@ class Client:
             self._client = httpx.Client(
                 base_url=self._base_url,
                 cookies=self._cookies,
-                headers=self._headers,
+                headers={"User-Agent": USER_AGENT, **self._headers},
                 timeout=self._timeout,
                 verify=self._verify_ssl,
                 follow_redirects=self._follow_redirects,
@@ -113,7 +125,7 @@ class Client:
             self._async_client = httpx.AsyncClient(
                 base_url=self._base_url,
                 cookies=self._cookies,
-                headers=self._headers,
+                headers={"User-Agent": USER_AGENT, **self._headers},
                 timeout=self._timeout,
                 verify=self._verify_ssl,
                 follow_redirects=self._follow_redirects,
@@ -216,7 +228,7 @@ class AuthenticatedClient:
             self._client = httpx.Client(
                 base_url=self._base_url,
                 cookies=self._cookies,
-                headers=self._headers,
+                headers={"User-Agent": USER_AGENT, **self._headers},
                 timeout=self._timeout,
                 verify=self._verify_ssl,
                 follow_redirects=self._follow_redirects,
@@ -248,7 +260,7 @@ class AuthenticatedClient:
             self._async_client = httpx.AsyncClient(
                 base_url=self._base_url,
                 cookies=self._cookies,
-                headers=self._headers,
+                headers={"User-Agent": USER_AGENT, **self._headers},
                 timeout=self._timeout,
                 verify=self._verify_ssl,
                 follow_redirects=self._follow_redirects,
