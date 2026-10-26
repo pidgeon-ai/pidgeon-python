@@ -37,6 +37,7 @@ from .awaited_message_held_back import AwaitedMessageHeldBack
 from .awaited_message_message_type_0 import AwaitedMessageMessageType0
 from .awaited_message_message_type_0_attachments_item import AwaitedMessageMessageType0AttachmentsItem
 from .awaited_message_message_type_0_authentication import AwaitedMessageMessageType0Authentication
+from .awaited_message_message_type_0_authentication_arc_type_0 import AwaitedMessageMessageType0AuthenticationArcType0
 from .awaited_message_message_type_0_cc_item import AwaitedMessageMessageType0CcItem
 from .awaited_message_message_type_0_data_type_0 import AwaitedMessageMessageType0DataType0
 from .awaited_message_message_type_0_extracted import AwaitedMessageMessageType0Extracted
@@ -236,6 +237,7 @@ from .member_role import MemberRole
 from .message import Message
 from .message_attachments_item import MessageAttachmentsItem
 from .message_authentication import MessageAuthentication
+from .message_authentication_arc_type_0 import MessageAuthenticationArcType0
 from .message_cc_item import MessageCcItem
 from .message_data_type_0 import MessageDataType0
 from .message_extracted import MessageExtracted
@@ -442,6 +444,7 @@ __all__ = (
     "AwaitedMessageMessageType0",
     "AwaitedMessageMessageType0AttachmentsItem",
     "AwaitedMessageMessageType0Authentication",
+    "AwaitedMessageMessageType0AuthenticationArcType0",
     "AwaitedMessageMessageType0CcItem",
     "AwaitedMessageMessageType0DataType0",
     "AwaitedMessageMessageType0Extracted",
@@ -632,6 +635,7 @@ __all__ = (
     "Message",
     "MessageAttachmentsItem",
     "MessageAuthentication",
+    "MessageAuthenticationArcType0",
     "MessageCcItem",
     "MessageDataType0",
     "MessageExtracted",

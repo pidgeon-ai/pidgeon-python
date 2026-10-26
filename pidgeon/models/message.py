@@ -50,7 +50,8 @@ class Message:
             none were present.
         authentication (MessageAuthentication): What the receiving transport said about the sending domain. Null means
             it did not report, not that the check failed — normal on outbound, and on inbound it is the difference between
-            unknown and forged. A `From:` is the sending domain's own word when `dmarc` or `signature` is `pass`.
+            unknown and forged. A `From:` is the sending domain's own word when `dmarc` or `signature` is `pass`, or `arc`
+            is set.
         sender (MessageSender): Who this message says it is from. A Pidgeon sender declares it on every message it
             sends; mail from ordinary email has only the address.
         test (bool): Written in test mode: by a test key, as a reply to or forward of a test message, or by `POST
