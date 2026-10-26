@@ -25,9 +25,9 @@ class MessagesReplyBody:
         html (str | Unset): The rich body. Sanitised on the way in; scripts and remote content are removed.
         data (MessagesReplyBodyData | Unset): Typed data: structured JSON sent beside the text, for software at the
             other end to read as fields. Travels as its own part; it is never mixed into the text.
-        to (list[str] | Unset): One address or several. A string is accepted for the single case.
-        cc (list[str] | Unset): Copied, and visible to everybody who receives the message.
-        bcc (list[str] | Unset): Copied, and visible to nobody else.
+        to (list[str] | str | Unset): One address or several. A string is accepted for the single case.
+        cc (list[str] | str | Unset): Copied, and visible to everybody who receives the message.
+        bcc (list[str] | str | Unset): Copied, and visible to nobody else.
         attachment_ids (list[UUID] | Unset): Ids from `POST /attachments`, uploaded before the message that carries
             them. Up to 20.
     """
@@ -35,9 +35,9 @@ class MessagesReplyBody:
     text: str | Unset = ""
     html: str | Unset = UNSET
     data: MessagesReplyBodyData | Unset = UNSET
-    to: list[str] | Unset = UNSET
-    cc: list[str] | Unset = UNSET
-    bcc: list[str] | Unset = UNSET
+    to: list[str] | str | Unset = UNSET
+    cc: list[str] | str | Unset = UNSET
+    bcc: list[str] | str | Unset = UNSET
     attachment_ids: list[UUID] | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -50,16 +50,31 @@ class MessagesReplyBody:
         if not isinstance(self.data, Unset):
             data = self.data.to_dict()
 
-        to: list[str] | Unset = UNSET
-        if not isinstance(self.to, Unset):
+        to: list[str] | str | Unset
+        if isinstance(self.to, Unset):
+            to = UNSET
+        elif isinstance(self.to, list):
             to = self.to
 
-        cc: list[str] | Unset = UNSET
-        if not isinstance(self.cc, Unset):
+        else:
+            to = self.to
+
+        cc: list[str] | str | Unset
+        if isinstance(self.cc, Unset):
+            cc = UNSET
+        elif isinstance(self.cc, list):
             cc = self.cc
 
-        bcc: list[str] | Unset = UNSET
-        if not isinstance(self.bcc, Unset):
+        else:
+            cc = self.cc
+
+        bcc: list[str] | str | Unset
+        if isinstance(self.bcc, Unset):
+            bcc = UNSET
+        elif isinstance(self.bcc, list):
+            bcc = self.bcc
+
+        else:
             bcc = self.bcc
 
         attachment_ids: list[str] | Unset = UNSET
@@ -105,11 +120,50 @@ class MessagesReplyBody:
         else:
             data = MessagesReplyBodyData.from_dict(_data)
 
-        to = cast(list[str], d.pop("to", UNSET))
+        def _parse_to(data: object) -> list[str] | str | Unset:
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, list):
+                    raise TypeError()
+                to_type_1 = cast(list[str], data)
 
-        cc = cast(list[str], d.pop("cc", UNSET))
+                return to_type_1
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(list[str] | str | Unset, data)
 
-        bcc = cast(list[str], d.pop("bcc", UNSET))
+        to = _parse_to(d.pop("to", UNSET))
+
+        def _parse_cc(data: object) -> list[str] | str | Unset:
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, list):
+                    raise TypeError()
+                cc_type_1 = cast(list[str], data)
+
+                return cc_type_1
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(list[str] | str | Unset, data)
+
+        cc = _parse_cc(d.pop("cc", UNSET))
+
+        def _parse_bcc(data: object) -> list[str] | str | Unset:
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, list):
+                    raise TypeError()
+                bcc_type_1 = cast(list[str], data)
+
+                return bcc_type_1
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(list[str] | str | Unset, data)
+
+        bcc = _parse_bcc(d.pop("bcc", UNSET))
 
         _attachment_ids = d.pop("attachment_ids", UNSET)
         attachment_ids: list[UUID] | Unset = UNSET

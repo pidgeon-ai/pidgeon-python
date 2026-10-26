@@ -40,6 +40,10 @@ from .awaited_message_message_type_0_authentication import AwaitedMessageMessage
 from .awaited_message_message_type_0_authentication_arc_type_0 import AwaitedMessageMessageType0AuthenticationArcType0
 from .awaited_message_message_type_0_cc_item import AwaitedMessageMessageType0CcItem
 from .awaited_message_message_type_0_data_type_0 import AwaitedMessageMessageType0DataType0
+from .awaited_message_message_type_0_delivery_type_0 import AwaitedMessageMessageType0DeliveryType0
+from .awaited_message_message_type_0_delivery_type_0_recipients_item import (
+    AwaitedMessageMessageType0DeliveryType0RecipientsItem,
+)
 from .awaited_message_message_type_0_extracted import AwaitedMessageMessageType0Extracted
 from .awaited_message_message_type_0_extracted_codes_item import AwaitedMessageMessageType0ExtractedCodesItem
 from .awaited_message_message_type_0_extracted_codes_item_kind import AwaitedMessageMessageType0ExtractedCodesItemKind
@@ -240,6 +244,8 @@ from .message_authentication import MessageAuthentication
 from .message_authentication_arc_type_0 import MessageAuthenticationArcType0
 from .message_cc_item import MessageCcItem
 from .message_data_type_0 import MessageDataType0
+from .message_delivery_type_0 import MessageDeliveryType0
+from .message_delivery_type_0_recipients_item import MessageDeliveryType0RecipientsItem
 from .message_extracted import MessageExtracted
 from .message_extracted_codes_item import MessageExtractedCodesItem
 from .message_extracted_codes_item_kind import MessageExtractedCodesItemKind
@@ -447,6 +453,8 @@ __all__ = (
     "AwaitedMessageMessageType0AuthenticationArcType0",
     "AwaitedMessageMessageType0CcItem",
     "AwaitedMessageMessageType0DataType0",
+    "AwaitedMessageMessageType0DeliveryType0",
+    "AwaitedMessageMessageType0DeliveryType0RecipientsItem",
     "AwaitedMessageMessageType0Extracted",
     "AwaitedMessageMessageType0ExtractedCodesItem",
     "AwaitedMessageMessageType0ExtractedCodesItemKind",
@@ -638,6 +646,8 @@ __all__ = (
     "MessageAuthenticationArcType0",
     "MessageCcItem",
     "MessageDataType0",
+    "MessageDeliveryType0",
+    "MessageDeliveryType0RecipientsItem",
     "MessageExtracted",
     "MessageExtractedCodesItem",
     "MessageExtractedCodesItemKind",

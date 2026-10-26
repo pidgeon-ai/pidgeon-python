@@ -22,9 +22,9 @@ class DraftsCreateBody:
     Attributes:
         identity_id (UUID): The address this belongs to.
         from_ (str | Unset): An address on a domain you own, and one this key may send from.
-        to (list[str] | Unset): One address or several. A string is accepted for the single case.
-        cc (list[str] | Unset): Copied, and visible to everybody who receives the message.
-        bcc (list[str] | Unset): Copied, and visible to nobody else.
+        to (list[str] | str | Unset): One address or several. A string is accepted for the single case.
+        cc (list[str] | str | Unset): Copied, and visible to everybody who receives the message.
+        bcc (list[str] | str | Unset): Copied, and visible to nobody else.
         subject (None | str | Unset): Left off a reply, where the thread already has one.
         text (None | str | Unset): The plain-text body. Send this even when you send `html` — some clients only read it.
         data (DraftsCreateBodyDataType0 | None | Unset): Typed data: `{ schema, body }`, where `schema` is a URL naming
@@ -39,9 +39,9 @@ class DraftsCreateBody:
 
     identity_id: UUID
     from_: str | Unset = UNSET
-    to: list[str] | Unset = UNSET
-    cc: list[str] | Unset = UNSET
-    bcc: list[str] | Unset = UNSET
+    to: list[str] | str | Unset = UNSET
+    cc: list[str] | str | Unset = UNSET
+    bcc: list[str] | str | Unset = UNSET
     subject: None | str | Unset = UNSET
     text: None | str | Unset = UNSET
     data: DraftsCreateBodyDataType0 | None | Unset = UNSET
@@ -57,16 +57,31 @@ class DraftsCreateBody:
 
         from_ = self.from_
 
-        to: list[str] | Unset = UNSET
-        if not isinstance(self.to, Unset):
+        to: list[str] | str | Unset
+        if isinstance(self.to, Unset):
+            to = UNSET
+        elif isinstance(self.to, list):
             to = self.to
 
-        cc: list[str] | Unset = UNSET
-        if not isinstance(self.cc, Unset):
+        else:
+            to = self.to
+
+        cc: list[str] | str | Unset
+        if isinstance(self.cc, Unset):
+            cc = UNSET
+        elif isinstance(self.cc, list):
             cc = self.cc
 
-        bcc: list[str] | Unset = UNSET
-        if not isinstance(self.bcc, Unset):
+        else:
+            cc = self.cc
+
+        bcc: list[str] | str | Unset
+        if isinstance(self.bcc, Unset):
+            bcc = UNSET
+        elif isinstance(self.bcc, list):
+            bcc = self.bcc
+
+        else:
             bcc = self.bcc
 
         subject: None | str | Unset
@@ -151,11 +166,50 @@ class DraftsCreateBody:
 
         from_ = d.pop("from", UNSET)
 
-        to = cast(list[str], d.pop("to", UNSET))
+        def _parse_to(data: object) -> list[str] | str | Unset:
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, list):
+                    raise TypeError()
+                to_type_1 = cast(list[str], data)
 
-        cc = cast(list[str], d.pop("cc", UNSET))
+                return to_type_1
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(list[str] | str | Unset, data)
 
-        bcc = cast(list[str], d.pop("bcc", UNSET))
+        to = _parse_to(d.pop("to", UNSET))
+
+        def _parse_cc(data: object) -> list[str] | str | Unset:
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, list):
+                    raise TypeError()
+                cc_type_1 = cast(list[str], data)
+
+                return cc_type_1
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(list[str] | str | Unset, data)
+
+        cc = _parse_cc(d.pop("cc", UNSET))
+
+        def _parse_bcc(data: object) -> list[str] | str | Unset:
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, list):
+                    raise TypeError()
+                bcc_type_1 = cast(list[str], data)
+
+                return bcc_type_1
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(list[str] | str | Unset, data)
+
+        bcc = _parse_bcc(d.pop("bcc", UNSET))
 
         def _parse_subject(data: object) -> None | str | Unset:
             if data is None:
