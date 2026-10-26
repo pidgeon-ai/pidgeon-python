@@ -200,6 +200,14 @@ def test_await_message_takes_the_cursor_back() -> None:
     assert api.query()["after"].startswith("2026-10-22T10:00:00")
 
 
+def test_await_message_takes_a_cursor_from_now() -> None:
+    # The description says to start with `after: "now"`, so the field must take it.
+    api = Api((200, TIMED_OUT))
+    AwaitMessage(client=client(api)).invoke({"identity_id": ID, "after": "now", "timeout": 1})
+
+    assert api.query()["after"] == "now"
+
+
 def test_the_client_waits_longer_than_await_can() -> None:
     pidgeon = PidgeonToolkit(api_key=KEY).client
     assert pidgeon.get_httpx_client().timeout.read >= 280 + 10

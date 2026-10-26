@@ -391,11 +391,12 @@ class AwaitMessageInput(BaseModel):
     include_spam: bool | None = Field(
         default=None, description="Also return a matching message filed as spam."
     )
-    after: datetime | None = Field(
+    after: datetime | Literal["now"] | None = Field(
         default=None,
         description=(
-            "The `cursor` from the last wait, so nothing in between is missed. "
-            "Without it, the last 2 minutes are included."
+            "The `cursor` from the last wait, so nothing in between is missed, or "
+            '`"now"` to wait only for new mail. Without it, the last 2 minutes are '
+            "included."
         ),
     )
     timeout: int = Field(default=50, ge=1, le=280, description="Seconds to wait.")
