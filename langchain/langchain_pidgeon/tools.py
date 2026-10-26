@@ -395,8 +395,9 @@ class AwaitMessageInput(BaseModel):
         default=None,
         description=(
             "The `cursor` from the last wait, so nothing in between is missed, or "
-            '`"now"` to wait only for new mail. Without it, the last 2 minutes are '
-            "included."
+            '`"now"`, with `timeout: 1`, for a cursor taken before you cause the mail. '
+            "Leave it out when the mail may already have been sent: the last 2 "
+            "minutes are then included."
         ),
     )
     timeout: int = Field(default=50, ge=1, le=280, description="Seconds to wait.")
@@ -416,7 +417,8 @@ class AwaitMessage(PidgeonTool):
         "verification codes and confirm links, most likely first. When you are about "
         'to cause the mail, take a cursor first: call with `after: "now"` and '
         "`timeout: 1`, keep the `cursor`, submit the form or send, then wait with that "
-        "cursor as `after`. Narrow it with "
+        "cursor as `after`. If the mail may already have been sent, leave `after` "
+        'out: `"now"` would wait past it. Narrow it with '
         "`from_`, `subject_contains` or `has_code`. Answers `timed_out: true` after "
         "`timeout` seconds (default 50, at most 280); pass the returned `cursor` as "
         "`after` to keep waiting. Without `after` it first looks back 2 minutes and "
