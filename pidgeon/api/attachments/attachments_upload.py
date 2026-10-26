@@ -64,8 +64,10 @@ def sync_detailed(
     """Upload a file to send
 
      Multipart, with `identity_id` and `file` parts — not base64 in JSON, because a ten-megabyte PDF is
-    thirteen megabytes of base64 and every proxy in between would have to be told. Name the returned id
-    in `attachment_ids` on a send. An upload expires in a day: it is a file no message refers to yet.
+    thirteen megabytes of base64 and every proxy in between would have to be told. **Under 4 MB only**:
+    the platform refuses a request body over 4.5 MB with its own `413`, whatever your plan allows, so
+    use `POST /attachments/uploads` for anything larger. Name the returned id in `attachment_ids` on a
+    send. An upload expires in a day: it is a file no message refers to yet.
 
     Args:
         idempotency_key (str | Unset):
@@ -101,8 +103,10 @@ def sync(
     """Upload a file to send
 
      Multipart, with `identity_id` and `file` parts — not base64 in JSON, because a ten-megabyte PDF is
-    thirteen megabytes of base64 and every proxy in between would have to be told. Name the returned id
-    in `attachment_ids` on a send. An upload expires in a day: it is a file no message refers to yet.
+    thirteen megabytes of base64 and every proxy in between would have to be told. **Under 4 MB only**:
+    the platform refuses a request body over 4.5 MB with its own `413`, whatever your plan allows, so
+    use `POST /attachments/uploads` for anything larger. Name the returned id in `attachment_ids` on a
+    send. An upload expires in a day: it is a file no message refers to yet.
 
     Args:
         idempotency_key (str | Unset):
@@ -133,8 +137,10 @@ async def asyncio_detailed(
     """Upload a file to send
 
      Multipart, with `identity_id` and `file` parts — not base64 in JSON, because a ten-megabyte PDF is
-    thirteen megabytes of base64 and every proxy in between would have to be told. Name the returned id
-    in `attachment_ids` on a send. An upload expires in a day: it is a file no message refers to yet.
+    thirteen megabytes of base64 and every proxy in between would have to be told. **Under 4 MB only**:
+    the platform refuses a request body over 4.5 MB with its own `413`, whatever your plan allows, so
+    use `POST /attachments/uploads` for anything larger. Name the returned id in `attachment_ids` on a
+    send. An upload expires in a day: it is a file no message refers to yet.
 
     Args:
         idempotency_key (str | Unset):
@@ -168,8 +174,10 @@ async def asyncio(
     """Upload a file to send
 
      Multipart, with `identity_id` and `file` parts — not base64 in JSON, because a ten-megabyte PDF is
-    thirteen megabytes of base64 and every proxy in between would have to be told. Name the returned id
-    in `attachment_ids` on a send. An upload expires in a day: it is a file no message refers to yet.
+    thirteen megabytes of base64 and every proxy in between would have to be told. **Under 4 MB only**:
+    the platform refuses a request body over 4.5 MB with its own `413`, whatever your plan allows, so
+    use `POST /attachments/uploads` for anything larger. Name the returned id in `attachment_ids` on a
+    send. An upload expires in a day: it is a file no message refers to yet.
 
     Args:
         idempotency_key (str | Unset):

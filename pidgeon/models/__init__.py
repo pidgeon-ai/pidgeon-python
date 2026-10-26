@@ -27,6 +27,9 @@ from .attachment_text_firewall_type_0_signals_item_kind import AttachmentTextFir
 from .attachment_text_firewall_type_0_signals_item_where import AttachmentTextFirewallType0SignalsItemWhere
 from .attachment_text_firewall_type_0_verdict import AttachmentTextFirewallType0Verdict
 from .attachment_url import AttachmentUrl
+from .attachments_complete_upload_response_200 import AttachmentsCompleteUploadResponse200
+from .attachments_create_upload_body import AttachmentsCreateUploadBody
+from .attachments_create_upload_response_201 import AttachmentsCreateUploadResponse201
 from .attachments_download_url_response_200 import AttachmentsDownloadUrlResponse200
 from .attachments_text_body import AttachmentsTextBody
 from .attachments_text_response_200 import AttachmentsTextResponse200
@@ -359,6 +362,9 @@ from .sent import Sent
 from .sent_rejected_item import SentRejectedItem
 from .setup_link import SetupLink
 from .setup_link_reason_type_0 import SetupLinkReasonType0
+from .signed_upload import SignedUpload
+from .signed_upload_upload import SignedUploadUpload
+from .signed_upload_upload_headers import SignedUploadUploadHeaders
 from .tenant_suspended import TenantSuspended
 from .test_inbound_body import TestInboundBody
 from .test_inbound_body_data import TestInboundBodyData
@@ -435,6 +441,9 @@ __all__ = (
     "AppPasswordsListResponse200",
     "AppPasswordsRevokeResponse200",
     "Attachment",
+    "AttachmentsCompleteUploadResponse200",
+    "AttachmentsCreateUploadBody",
+    "AttachmentsCreateUploadResponse201",
     "AttachmentsDownloadUrlResponse200",
     "AttachmentsTextBody",
     "AttachmentsTextResponse200",
@@ -764,6 +773,9 @@ __all__ = (
     "SentRejectedItem",
     "SetupLink",
     "SetupLinkReasonType0",
+    "SignedUpload",
+    "SignedUploadUpload",
+    "SignedUploadUploadHeaders",
     "TenantSuspended",
     "TestInboundBody",
     "TestInboundBodyData",
