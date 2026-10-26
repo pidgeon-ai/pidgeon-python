@@ -23,6 +23,11 @@ conversation to a person, then deletes the address (an `admin` key; with
 search.
 The key needs `send` for it.
 
+`python agent_check.py` runs the agent with a model (`OPENAI_API_KEY`) and
+answers each pause itself, on an `admin` key: it makes a test address, reads
+a code and replies, and checks each step. `requirements.txt` pins the
+versions it last ran on.
+
 The guide is at [pidgeon.ai/docs/langchain](https://pidgeon.ai/docs/langchain).
 
 MIT licensed.

@@ -1,4 +1,7 @@
+# The versions the agent last ran on in CI (examples.yml, "langchain (agent)").
 langchain-pidgeon>=0.1,<1
-langchain>=1.4,<2
-langchain-anthropic>=1.7,<2
-langchain-openai>=1.7,<2
+langchain==1.4.7
+langchain-core==1.7.0
+langgraph==1.2.17
+langchain-openai==1.7.2
+langchain-anthropic==1.7.6

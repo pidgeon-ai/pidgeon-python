@@ -14,7 +14,8 @@ it is read-only, and that flag is what decides it.
 `python main.py --check` runs the tools with no model: it makes an address,
 mails it a code, waits for the code, replies, hands the conversation to a
 person, and deletes the address (with an `admin` key; otherwise it expires
-in an hour).
+in an hour). `python agent_check.py` runs this agent with a model and answers
+each pause itself.
 """
 
 import os
@@ -44,7 +45,11 @@ def model() -> str:
     return "openai:gpt-5-mini"
 
 
-def run(task: str) -> None:
+def ask(call: dict) -> bool:
+    return input(f"Allow {call['name']}({call['args']})? [y/N] ").strip().lower() == "y"
+
+
+def run(task: str, approve=ask) -> list:
     tools = PidgeonToolkit().get_tools()
     asks_first = {tool.name: True for tool in tools if not tool.metadata["readOnlyHint"]}
 
@@ -63,14 +68,14 @@ def run(task: str) -> None:
     while result.interrupts:
         decisions = []
         for call in result.interrupts[0].value["action_requests"]:
-            answer = input(f"Allow {call['name']}({call['args']})? [y/N] ")
-            if answer.strip().lower() == "y":
+            if approve(call):
                 decisions.append({"type": "approve"})
             else:
                 decisions.append({"type": "reject", "message": "The person said no."})
         result = agent.invoke(Command(resume={"decisions": decisions}), config, version="v2")
 
     print(result.value["messages"][-1].content)
+    return result.value["messages"]
 
 
 def check() -> None:
