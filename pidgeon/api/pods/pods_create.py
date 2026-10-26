@@ -70,7 +70,9 @@ def sync_detailed(
     **Provisioning in one call.** Pass `address` to create an address in the new pod (the same fields as
     `POST /identities`) and `key` to mint a pod key: a key that reaches the pod’s addresses, now and
     later, and nothing else. All of it is made or none of it is. Needs a live key over the whole
-    account; a test key gets 403, and `key.test` mints a test key for the pod instead.
+    account; a test key gets 403, and `key.test` mints a test key for the pod instead. `key.access` is
+    required; until 26 November 2026 leaving it out still works, with a `warnings` entry, and then it is
+    a 400.
 
     **The token is shown once.** Send an `Idempotency-Key`: a retry with it returns the same pod,
     address and key, with `token: null`, because the secret is never stored. If the first answer was
@@ -116,7 +118,9 @@ def sync(
     **Provisioning in one call.** Pass `address` to create an address in the new pod (the same fields as
     `POST /identities`) and `key` to mint a pod key: a key that reaches the pod’s addresses, now and
     later, and nothing else. All of it is made or none of it is. Needs a live key over the whole
-    account; a test key gets 403, and `key.test` mints a test key for the pod instead.
+    account; a test key gets 403, and `key.test` mints a test key for the pod instead. `key.access` is
+    required; until 26 November 2026 leaving it out still works, with a `warnings` entry, and then it is
+    a 400.
 
     **The token is shown once.** Send an `Idempotency-Key`: a retry with it returns the same pod,
     address and key, with `token: null`, because the secret is never stored. If the first answer was
@@ -157,7 +161,9 @@ async def asyncio_detailed(
     **Provisioning in one call.** Pass `address` to create an address in the new pod (the same fields as
     `POST /identities`) and `key` to mint a pod key: a key that reaches the pod’s addresses, now and
     later, and nothing else. All of it is made or none of it is. Needs a live key over the whole
-    account; a test key gets 403, and `key.test` mints a test key for the pod instead.
+    account; a test key gets 403, and `key.test` mints a test key for the pod instead. `key.access` is
+    required; until 26 November 2026 leaving it out still works, with a `warnings` entry, and then it is
+    a 400.
 
     **The token is shown once.** Send an `Idempotency-Key`: a retry with it returns the same pod,
     address and key, with `token: null`, because the secret is never stored. If the first answer was
@@ -201,7 +207,9 @@ async def asyncio(
     **Provisioning in one call.** Pass `address` to create an address in the new pod (the same fields as
     `POST /identities`) and `key` to mint a pod key: a key that reaches the pod’s addresses, now and
     later, and nothing else. All of it is made or none of it is. Needs a live key over the whole
-    account; a test key gets 403, and `key.test` mints a test key for the pod instead.
+    account; a test key gets 403, and `key.test` mints a test key for the pod instead. `key.access` is
+    required; until 26 November 2026 leaving it out still works, with a `warnings` entry, and then it is
+    a 400.
 
     **The token is shown once.** Send an `Idempotency-Key`: a retry with it returns the same pod,
     address and key, with `token: null`, because the secret is never stored. If the first answer was

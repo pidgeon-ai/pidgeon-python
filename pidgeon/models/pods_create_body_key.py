@@ -18,23 +18,21 @@ class PodsCreateBodyKey:
     the key with `token: null`.
 
         Attributes:
+            access (PodsCreateBodyKeyAccess):
             name (str | Unset):
-            access (PodsCreateBodyKeyAccess | Unset):
             expires_at (datetime.datetime | None | Unset):
             test (bool | Unset): Mint a test-mode key (`pgn_test_`) for the pod instead of a live one.
     """
 
+    access: PodsCreateBodyKeyAccess
     name: str | Unset = UNSET
-    access: PodsCreateBodyKeyAccess | Unset = UNSET
     expires_at: datetime.datetime | None | Unset = UNSET
     test: bool | Unset = UNSET
 
     def to_dict(self) -> dict[str, Any]:
-        name = self.name
+        access = self.access.value
 
-        access: str | Unset = UNSET
-        if not isinstance(self.access, Unset):
-            access = self.access.value
+        name = self.name
 
         expires_at: None | str | Unset
         if isinstance(self.expires_at, Unset):
@@ -48,11 +46,13 @@ class PodsCreateBodyKey:
 
         field_dict: dict[str, Any] = {}
 
-        field_dict.update({})
+        field_dict.update(
+            {
+                "access": access,
+            }
+        )
         if name is not UNSET:
             field_dict["name"] = name
-        if access is not UNSET:
-            field_dict["access"] = access
         if expires_at is not UNSET:
             field_dict["expires_at"] = expires_at
         if test is not UNSET:
@@ -63,14 +63,9 @@ class PodsCreateBodyKey:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         d = dict(src_dict)
-        name = d.pop("name", UNSET)
+        access = PodsCreateBodyKeyAccess(d.pop("access"))
 
-        _access = d.pop("access", UNSET)
-        access: PodsCreateBodyKeyAccess | Unset
-        if isinstance(_access, Unset):
-            access = UNSET
-        else:
-            access = PodsCreateBodyKeyAccess(_access)
+        name = d.pop("name", UNSET)
 
         def _parse_expires_at(data: object) -> datetime.datetime | None | Unset:
             if data is None:
@@ -92,8 +87,8 @@ class PodsCreateBodyKey:
         test = d.pop("test", UNSET)
 
         pods_create_body_key = cls(
-            name=name,
             access=access,
+            name=name,
             expires_at=expires_at,
             test=test,
         )

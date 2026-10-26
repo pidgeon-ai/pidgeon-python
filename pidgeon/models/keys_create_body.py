@@ -18,11 +18,13 @@ class KeysCreateBody:
     """
     Attributes:
         name (str):
-        identity_ids (list[UUID] | Unset):
-        pod_id (UUID | Unset): The pod this belongs to — your account’s default when you name none. A pod is a sending
-            boundary: mail from it lands on its own reputation, so one of your customers cannot damage another’s delivery.
-            It does not change what an address can do, and no key is scoped to one.
-        access (KeysCreateBodyAccess | Unset): What a key may do. Give an agent the narrowest one that works.
+        access (KeysCreateBodyAccess): What a key may do. Give an agent the narrowest one that works.
+        identity_ids (list[UUID] | Unset): The addresses this key may reach. One of `identity_ids`, `pod_id` or
+            `reaches_all` is required. A key can only name addresses it administers itself.
+        pod_id (UUID | Unset): A pod: the key reaches every address in it, now and as it grows. Minted by an owner, or a
+            key at `admin` over every address.
+        reaches_all (bool | Unset): Every address in the account, now and later. Only an owner can ask for it, from the
+            dashboard or a consent screen — a key cannot create a key that reaches everything.
         expires_at (datetime.datetime | None | Unset): When it stops accepting mail. Expiry suspends; it never deletes,
             so the correspondence survives.
         test (bool | Unset): A test-mode key (`pgn_test_`): everything works, nothing is sent outside Pidgeon, and
@@ -30,14 +32,17 @@ class KeysCreateBody:
     """
 
     name: str
+    access: KeysCreateBodyAccess
     identity_ids: list[UUID] | Unset = UNSET
     pod_id: UUID | Unset = UNSET
-    access: KeysCreateBodyAccess | Unset = UNSET
+    reaches_all: bool | Unset = UNSET
     expires_at: datetime.datetime | None | Unset = UNSET
     test: bool | Unset = UNSET
 
     def to_dict(self) -> dict[str, Any]:
         name = self.name
+
+        access = self.access.value
 
         identity_ids: list[str] | Unset = UNSET
         if not isinstance(self.identity_ids, Unset):
@@ -50,9 +55,7 @@ class KeysCreateBody:
         if not isinstance(self.pod_id, Unset):
             pod_id = str(self.pod_id)
 
-        access: str | Unset = UNSET
-        if not isinstance(self.access, Unset):
-            access = self.access.value
+        reaches_all = self.reaches_all
 
         expires_at: None | str | Unset
         if isinstance(self.expires_at, Unset):
@@ -69,14 +72,15 @@ class KeysCreateBody:
         field_dict.update(
             {
                 "name": name,
+                "access": access,
             }
         )
         if identity_ids is not UNSET:
             field_dict["identity_ids"] = identity_ids
         if pod_id is not UNSET:
             field_dict["pod_id"] = pod_id
-        if access is not UNSET:
-            field_dict["access"] = access
+        if reaches_all is not UNSET:
+            field_dict["reaches_all"] = reaches_all
         if expires_at is not UNSET:
             field_dict["expires_at"] = expires_at
         if test is not UNSET:
@@ -88,6 +92,8 @@ class KeysCreateBody:
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         d = dict(src_dict)
         name = d.pop("name")
+
+        access = KeysCreateBodyAccess(d.pop("access"))
 
         _identity_ids = d.pop("identity_ids", UNSET)
         identity_ids: list[UUID] | Unset = UNSET
@@ -105,12 +111,7 @@ class KeysCreateBody:
         else:
             pod_id = UUID(_pod_id)
 
-        _access = d.pop("access", UNSET)
-        access: KeysCreateBodyAccess | Unset
-        if isinstance(_access, Unset):
-            access = UNSET
-        else:
-            access = KeysCreateBodyAccess(_access)
+        reaches_all = d.pop("reaches_all", UNSET)
 
         def _parse_expires_at(data: object) -> datetime.datetime | None | Unset:
             if data is None:
@@ -133,9 +134,10 @@ class KeysCreateBody:
 
         keys_create_body = cls(
             name=name,
+            access=access,
             identity_ids=identity_ids,
             pod_id=pod_id,
-            access=access,
+            reaches_all=reaches_all,
             expires_at=expires_at,
             test=test,
         )

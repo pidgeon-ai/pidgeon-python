@@ -63,8 +63,15 @@ def sync_detailed(
 ) -> Response[KeysCreateResponse201]:
     """Mint a key
 
-     `identity_ids` is required and must be a subset of what the calling key already reaches: a key
-    cannot delegate reach it does not have. The `token` is in this response and nowhere else, ever.
+     Say what the key reaches and what it may do: one of `identity_ids` or `pod_id`, and `access`.
+    `identity_ids` must be addresses the calling key administers, at no more than its own `access`: a
+    key cannot delegate reach it does not have, and `reaches_all` is refused to a key.
+
+    Until 26 November 2026 a request without `access` still works — the new key takes the calling key’s
+    level — and is answered with `Deprecation`, `Sunset` and a `warnings` entry. From that date it is a
+    400 with `field: "access"`.
+
+    The `token` is in this response and nowhere else, ever.
 
     Args:
         idempotency_key (str | Unset):
@@ -99,8 +106,15 @@ def sync(
 ) -> KeysCreateResponse201:
     """Mint a key
 
-     `identity_ids` is required and must be a subset of what the calling key already reaches: a key
-    cannot delegate reach it does not have. The `token` is in this response and nowhere else, ever.
+     Say what the key reaches and what it may do: one of `identity_ids` or `pod_id`, and `access`.
+    `identity_ids` must be addresses the calling key administers, at no more than its own `access`: a
+    key cannot delegate reach it does not have, and `reaches_all` is refused to a key.
+
+    Until 26 November 2026 a request without `access` still works — the new key takes the calling key’s
+    level — and is answered with `Deprecation`, `Sunset` and a `warnings` entry. From that date it is a
+    400 with `field: "access"`.
+
+    The `token` is in this response and nowhere else, ever.
 
     Args:
         idempotency_key (str | Unset):
@@ -130,8 +144,15 @@ async def asyncio_detailed(
 ) -> Response[KeysCreateResponse201]:
     """Mint a key
 
-     `identity_ids` is required and must be a subset of what the calling key already reaches: a key
-    cannot delegate reach it does not have. The `token` is in this response and nowhere else, ever.
+     Say what the key reaches and what it may do: one of `identity_ids` or `pod_id`, and `access`.
+    `identity_ids` must be addresses the calling key administers, at no more than its own `access`: a
+    key cannot delegate reach it does not have, and `reaches_all` is refused to a key.
+
+    Until 26 November 2026 a request without `access` still works — the new key takes the calling key’s
+    level — and is answered with `Deprecation`, `Sunset` and a `warnings` entry. From that date it is a
+    400 with `field: "access"`.
+
+    The `token` is in this response and nowhere else, ever.
 
     Args:
         idempotency_key (str | Unset):
@@ -164,8 +185,15 @@ async def asyncio(
 ) -> KeysCreateResponse201:
     """Mint a key
 
-     `identity_ids` is required and must be a subset of what the calling key already reaches: a key
-    cannot delegate reach it does not have. The `token` is in this response and nowhere else, ever.
+     Say what the key reaches and what it may do: one of `identity_ids` or `pod_id`, and `access`.
+    `identity_ids` must be addresses the calling key administers, at no more than its own `access`: a
+    key cannot delegate reach it does not have, and `reaches_all` is refused to a key.
+
+    Until 26 November 2026 a request without `access` still works — the new key takes the calling key’s
+    level — and is answered with `Deprecation`, `Sunset` and a `warnings` entry. From that date it is a
+    400 with `field: "access"`.
+
+    The `token` is in this response and nowhere else, ever.
 
     Args:
         idempotency_key (str | Unset):

@@ -389,6 +389,8 @@ from .verification import Verification
 from .verification_dns_records_item import VerificationDnsRecordsItem
 from .verification_dns_records_item_state_type_0 import VerificationDnsRecordsItemStateType0
 from .verification_dns_records_item_status import VerificationDnsRecordsItemStatus
+from .warning import Warning_
+from .warning_code import WarningCode
 from .webhook import Webhook
 from .webhook_created import WebhookCreated
 from .webhook_headers import WebhookHeaders
@@ -792,6 +794,8 @@ __all__ = (
     "VerificationDnsRecordsItem",
     "VerificationDnsRecordsItemStateType0",
     "VerificationDnsRecordsItemStatus",
+    "Warning_",
+    "WarningCode",
     "Webhook",
     "WebhookCreated",
     "WebhookHeaders",
