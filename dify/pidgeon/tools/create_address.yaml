@@ -1,0 +1,47 @@
+identity:
+  name: create_address
+  author: pidgeon
+  label:
+    en_US: Create Address
+description:
+  human:
+    en_US: Create an email address for an agent or a workflow. Needs a key with admin access.
+  llm: Creates a new Pidgeon email address and returns it with its id, which Wait for Code and Search Emails take. It can only answer people who wrote first unless Who It May Write To is Anybody. A test key cannot create addresses.
+parameters:
+  - name: address
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Address
+    human_description:
+      en_US: The whole address, such as quotes@acme.pidgeon.email, on pidgeon.email or a domain you have connected.
+    llm_description: The whole address to create, local part and domain, such as signup-7f3a@pidgeon.email.
+  - name: display_name
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Display Name
+    human_description:
+      en_US: The name a recipient sees beside the address.
+    llm_description: Optional. The name a recipient sees beside the address.
+  - name: send_policy
+    type: select
+    required: false
+    form: form
+    default: reply_only
+    label:
+      en_US: Who It May Write To
+    human_description:
+      en_US: Only people who wrote first, or anybody.
+    options:
+      - value: reply_only
+        label:
+          en_US: Only people who wrote first
+      - value: open
+        label:
+          en_US: Anybody
+extra:
+  python:
+    source: tools/create_address.py

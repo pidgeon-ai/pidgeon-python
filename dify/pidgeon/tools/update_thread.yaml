@@ -1,0 +1,69 @@
+identity:
+  name: update_thread
+  author: pidgeon
+  label:
+    en_US: Update Thread
+description:
+  human:
+    en_US: Hand a thread to a person or back to the agent, or change its status.
+  llm: Changes a Pidgeon thread. owner human hands it to a person, so the agent leaves it alone; owner agent gives it back. status is open, waiting, resolved or human_review. Give at least one of them.
+parameters:
+  - name: thread_id
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Thread ID
+    human_description:
+      en_US: The thread_id from a message.
+    llm_description: The thread_id of the thread to change.
+  - name: owner
+    type: select
+    required: false
+    form: llm
+    label:
+      en_US: Owner
+    human_description:
+      en_US: A person, so the agent leaves it alone, or the agent.
+    llm_description: Optional. human to hand the thread to a person, agent to give it back.
+    options:
+      - value: human
+        label:
+          en_US: Hand to a person
+      - value: agent
+        label:
+          en_US: Give back to the agent
+  - name: status
+    type: select
+    required: false
+    form: llm
+    label:
+      en_US: Status
+    human_description:
+      en_US: The thread's status.
+    llm_description: Optional. open, waiting, resolved or human_review.
+    options:
+      - value: open
+        label:
+          en_US: Open
+      - value: waiting
+        label:
+          en_US: Waiting
+      - value: resolved
+        label:
+          en_US: Resolved
+      - value: human_review
+        label:
+          en_US: Human review
+  - name: reason
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Reason
+    human_description:
+      en_US: Why, in a sentence. The person it goes to sees it.
+    llm_description: Optional. Why, in one sentence, for the person who picks it up.
+extra:
+  python:
+    source: tools/update_thread.py

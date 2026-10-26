@@ -1,0 +1,31 @@
+identity:
+  name: reply_to_email
+  author: pidgeon
+  label:
+    en_US: Reply to Email
+description:
+  human:
+    en_US: Answer a message in its thread, from the address it arrived at. This sends real mail.
+  llm: Replies to one Pidgeon message by its message_id, in the same thread and from the address that received it. The recipient and the subject come from the message, so give only the text.
+parameters:
+  - name: message_id
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Message ID
+    human_description:
+      en_US: The message_id from Search Emails or Wait for Code.
+    llm_description: The message_id of the message to answer.
+  - name: text
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Text
+    human_description:
+      en_US: The plain-text body.
+    llm_description: The plain-text body of the reply.
+extra:
+  python:
+    source: tools/reply_to_email.py

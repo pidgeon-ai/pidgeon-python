@@ -1,0 +1,42 @@
+identity:
+  name: wait_for_code
+  author: pidgeon
+  label:
+    en_US: Wait for Code
+description:
+  human:
+    en_US: Wait for the next email at an address, and read the verification code in it.
+  llm: Holds until the next email with a verification code arrives at a Pidgeon address, up to the timeout, and returns the code as `code` with the message. Nothing arriving is not an error, timed_out is true. A code that arrived up to two minutes before the call still counts.
+parameters:
+  - name: address_id
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Address ID
+    human_description:
+      en_US: The id of the address the code is sent to.
+    llm_description: The id of the Pidgeon address the code is sent to (from Create Address).
+  - name: from
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: From
+    human_description:
+      en_US: Only mail from this sender, such as no-reply@github.com. It must pass DMARC.
+    llm_description: Optional. Only accept mail from this sender, such as no-reply@github.com.
+  - name: timeout
+    type: number
+    required: false
+    form: form
+    default: 60
+    min: 1
+    max: 280
+    label:
+      en_US: Wait For (Seconds)
+    human_description:
+      en_US: How long to wait before giving up, up to 280.
+extra:
+  python:
+    source: tools/wait_for_code.py

@@ -1,0 +1,58 @@
+identity:
+  name: send_email
+  author: pidgeon
+  label:
+    en_US: Send Email
+description:
+  human:
+    en_US: Start a new conversation from one of your addresses. This sends real mail.
+  llm: Sends a new email from a Pidgeon address the key may send from. To answer a message, use Reply to Email instead, so it stays in its thread. Returns the message id and any recipient the provider rejected.
+parameters:
+  - name: from
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: From
+    human_description:
+      en_US: The address it is sent from.
+    llm_description: The Pidgeon address to send from, such as quotes@acme.pidgeon.email.
+  - name: to
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: To
+    human_description:
+      en_US: One address, or several separated by commas.
+    llm_description: One recipient address, or several separated by commas.
+  - name: subject
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Subject
+    human_description:
+      en_US: The subject line.
+    llm_description: The subject line.
+  - name: text
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Text
+    human_description:
+      en_US: The plain-text body.
+    llm_description: The plain-text body of the email.
+  - name: cc
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: CC
+    human_description:
+      en_US: Addresses separated by commas.
+    llm_description: Optional. Addresses to copy, separated by commas.
+extra:
+  python:
+    source: tools/send_email.py

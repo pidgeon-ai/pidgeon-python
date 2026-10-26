@@ -1,0 +1,32 @@
+identity:
+  author: pidgeon
+  name: pidgeon
+  label:
+    en_US: Pidgeon
+  description:
+    en_US: Email inboxes for AI agents. Send, reply, search, wait for a verification code and hand a thread to a person.
+  icon: icon.svg
+  tags:
+    - productivity
+    - business
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: Pidgeon API key
+    placeholder:
+      en_US: pgn_live_… or pgn_test_…
+    help:
+      en_US: Make a key with the least access the app needs, on the addresses it uses. A test key (pgn_test_…) sends nothing outside Pidgeon.
+    url: https://pidgeon.ai/app/developers/keys?utm_source=dify
+tools:
+  - tools/create_address.yaml
+  - tools/send_email.yaml
+  - tools/reply_to_email.yaml
+  - tools/search_emails.yaml
+  - tools/wait_for_code.yaml
+  - tools/update_thread.yaml
+extra:
+  python:
+    source: provider/pidgeon.py
