@@ -44,12 +44,12 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
 ) -> Response[Any]:
-    """The message as it arrived
+    """The message as MIME
 
-     `message/rfc822`, not JSON — the point is bytes nobody re-encoded. Received mail is the archived
-    original while it is kept; sent mail, and received mail past its retention, is rebuilt from the
-    stored message. `X-Pidgeon-Reconstructed` says which: a rebuild is not the signed bytes and cannot
-    verify DKIM.
+     `message/rfc822`, not JSON. An API key gets the message rebuilt from the stored message, with a
+    canary token in its text (/docs/firewall): the original bytes cannot carry one, so `X-Pidgeon-
+    Reconstructed` is `true` and a rebuild cannot verify DKIM. The message’s `authentication` is our
+    check of the original’s signatures.
 
     Args:
         id (str):
@@ -79,12 +79,12 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
 ) -> Response[Any]:
-    """The message as it arrived
+    """The message as MIME
 
-     `message/rfc822`, not JSON — the point is bytes nobody re-encoded. Received mail is the archived
-    original while it is kept; sent mail, and received mail past its retention, is rebuilt from the
-    stored message. `X-Pidgeon-Reconstructed` says which: a rebuild is not the signed bytes and cannot
-    verify DKIM.
+     `message/rfc822`, not JSON. An API key gets the message rebuilt from the stored message, with a
+    canary token in its text (/docs/firewall): the original bytes cannot carry one, so `X-Pidgeon-
+    Reconstructed` is `true` and a rebuild cannot verify DKIM. The message’s `authentication` is our
+    check of the original’s signatures.
 
     Args:
         id (str):

@@ -37,6 +37,7 @@ from pidgeon.models import KeysCreateBody, KeysCreateBodyAccess, TestInboundBody
 
 import main
 from langchain_pidgeon import PidgeonToolkit
+from langchain_pidgeon.tools import AwaitMessage
 
 # The cheapest OpenAI model that did this reliably on 26 October, with room
 # for a short reply and no more.
@@ -92,8 +93,27 @@ test = PidgeonToolkit()
 get_message = {tool.name: tool for tool in test.get_tools()}["get_message"]
 
 
+# The code is mailed once the agent is waiting, as a sign-in form's would be
+# after the agent submitted it. Mailed as soon as the address existed, it raced
+# a model that waits with `after: "now"`, as the tool tells it to before it
+# causes the mail: arriving first, it was before the cursor and the wait timed
+# out after 90 seconds (27 October, twice in three runs on gpt-5.4-nano).
+waiting = threading.Event()
+_await = AwaitMessage._run
+
+
+def _await_and_signal(self, **args):
+    waiting.set()
+    return _await(self, **args)
+
+
+AwaitMessage._run = _await_and_signal
+
+
 def mail_the_code() -> None:
-    """Delivered as mail from outside, as soon as the address exists."""
+    """Delivered as mail from outside, a moment after the agent starts waiting."""
+    if waiting.wait(timeout=120):
+        time.sleep(3)
     for _ in range(30):
         try:
             test_inbound.sync(
