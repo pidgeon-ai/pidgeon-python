@@ -38,7 +38,9 @@ class Message:
         cc (list[MessageCcItem]):
         subject (None | str):
         delivered_to (None | str): The envelope recipient, which is not always in `to`.
-        text (None | str):
+        text (None | str): Read with an API key, every body field carries an invisible canary token tied to this
+            conversation. Quote it in a reply here and it is removed before sending; send it anywhere else and the send is
+            refused `exfiltration_blocked`. See /docs/firewall.
         html (str): Sanitised server-side: our policy travels with the content.
         reply_html (str): `html` with the quoted history taken off: what the sender wrote this time.
         quoted_html (None | str): The history the reply quoted, or null when there was nothing to fold.
