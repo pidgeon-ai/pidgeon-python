@@ -31,6 +31,8 @@ class Identity:
         created_at (str): ISO-8601, UTC.
         expires_at (None | str): When it stops accepting mail. Expiry suspends the address; it never deletes it.
         send_policy (str): Who it may write to: open, reply_only (somebody who wrote to it first), or list.
+        send_approval (str): none, or first_contact: a send to somebody this address has never written to or heard from
+            waits for a person to approve it, and is answered `status: "pending_approval"`.
         receive_policy (str): Who may write to it: open, or list (only senders with an inbox rule, on mail that passes
             DMARC).
         hold_suspicious (bool): Whether Pidgeon Firewall holds suspicious mail here for a person: stored, and unreadable
@@ -58,6 +60,7 @@ class Identity:
     created_at: str
     expires_at: None | str
     send_policy: str
+    send_approval: str
     receive_policy: str
     hold_suspicious: bool
     tenant_id: None | str
@@ -97,6 +100,8 @@ class Identity:
 
         send_policy = self.send_policy
 
+        send_approval = self.send_approval
+
         receive_policy = self.receive_policy
 
         hold_suspicious = self.hold_suspicious
@@ -127,6 +132,7 @@ class Identity:
                 "created_at": created_at,
                 "expires_at": expires_at,
                 "send_policy": send_policy,
+                "send_approval": send_approval,
                 "receive_policy": receive_policy,
                 "hold_suspicious": hold_suspicious,
                 "tenant_id": tenant_id,
@@ -182,6 +188,8 @@ class Identity:
 
         send_policy = d.pop("send_policy")
 
+        send_approval = d.pop("send_approval")
+
         receive_policy = d.pop("receive_policy")
 
         hold_suspicious = d.pop("hold_suspicious")
@@ -213,6 +221,7 @@ class Identity:
             created_at=created_at,
             expires_at=expires_at,
             send_policy=send_policy,
+            send_approval=send_approval,
             receive_policy=receive_policy,
             hold_suspicious=hold_suspicious,
             tenant_id=tenant_id,

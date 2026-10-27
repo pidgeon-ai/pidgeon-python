@@ -9,6 +9,7 @@ from attrs import define as _attrs_define
 
 from ..models.identities_update_body_mode import IdentitiesUpdateBodyMode
 from ..models.identities_update_body_receive_policy import IdentitiesUpdateBodyReceivePolicy
+from ..models.identities_update_body_send_approval import IdentitiesUpdateBodySendApproval
 from ..models.identities_update_body_send_policy import IdentitiesUpdateBodySendPolicy
 from ..models.identities_update_body_status import IdentitiesUpdateBodyStatus
 from ..types import UNSET, Unset
@@ -32,6 +33,9 @@ class IdentitiesUpdateBody:
             so the correspondence survives.
         send_policy (IdentitiesUpdateBodySendPolicy | Unset): Who it may write to. `reply_only` makes an address
             structurally unable to start a conversation with a stranger.
+        send_approval (IdentitiesUpdateBodySendApproval | Unset): `first_contact` holds a send to somebody the address
+            has never written to or heard from until a person approves it in the dashboard. A key with admin on the address
+            may turn it on; turning it off needs its owner.
         receive_policy (IdentitiesUpdateBodyReceivePolicy | Unset): Who may write to it. `list` accepts only senders
             with an `inbox` receive rule whose mail passes DMARC, and refuses everybody else before anything is stored. A
             key with admin on the address may tighten it; loosening needs its owner.
@@ -50,6 +54,7 @@ class IdentitiesUpdateBody:
     status: IdentitiesUpdateBodyStatus | Unset = UNSET
     expires_at: datetime.datetime | None | Unset = UNSET
     send_policy: IdentitiesUpdateBodySendPolicy | Unset = UNSET
+    send_approval: IdentitiesUpdateBodySendApproval | Unset = UNSET
     receive_policy: IdentitiesUpdateBodyReceivePolicy | Unset = UNSET
     hold_suspicious: bool | Unset = UNSET
     tenant_id: None | str | Unset = UNSET
@@ -86,6 +91,10 @@ class IdentitiesUpdateBody:
         if not isinstance(self.send_policy, Unset):
             send_policy = self.send_policy.value
 
+        send_approval: str | Unset = UNSET
+        if not isinstance(self.send_approval, Unset):
+            send_approval = self.send_approval.value
+
         receive_policy: str | Unset = UNSET
         if not isinstance(self.receive_policy, Unset):
             receive_policy = self.receive_policy.value
@@ -121,6 +130,8 @@ class IdentitiesUpdateBody:
             field_dict["expires_at"] = expires_at
         if send_policy is not UNSET:
             field_dict["send_policy"] = send_policy
+        if send_approval is not UNSET:
+            field_dict["send_approval"] = send_approval
         if receive_policy is not UNSET:
             field_dict["receive_policy"] = receive_policy
         if hold_suspicious is not UNSET:
@@ -192,6 +203,13 @@ class IdentitiesUpdateBody:
         else:
             send_policy = IdentitiesUpdateBodySendPolicy(_send_policy)
 
+        _send_approval = d.pop("send_approval", UNSET)
+        send_approval: IdentitiesUpdateBodySendApproval | Unset
+        if isinstance(_send_approval, Unset):
+            send_approval = UNSET
+        else:
+            send_approval = IdentitiesUpdateBodySendApproval(_send_approval)
+
         _receive_policy = d.pop("receive_policy", UNSET)
         receive_policy: IdentitiesUpdateBodyReceivePolicy | Unset
         if isinstance(_receive_policy, Unset):
@@ -234,6 +252,7 @@ class IdentitiesUpdateBody:
             status=status,
             expires_at=expires_at,
             send_policy=send_policy,
+            send_approval=send_approval,
             receive_policy=receive_policy,
             hold_suspicious=hold_suspicious,
             tenant_id=tenant_id,

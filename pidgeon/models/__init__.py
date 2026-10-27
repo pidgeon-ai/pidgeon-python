@@ -19,6 +19,9 @@ from .app_passwords_create_body import AppPasswordsCreateBody
 from .app_passwords_create_response_201 import AppPasswordsCreateResponse201
 from .app_passwords_list_response_200 import AppPasswordsListResponse200
 from .app_passwords_revoke_response_200 import AppPasswordsRevokeResponse200
+from .approval import Approval
+from .approval_reason import ApprovalReason
+from .approval_status import ApprovalStatus
 from .attachment import Attachment
 from .attachment_text import AttachmentText
 from .attachment_text_firewall_type_0 import AttachmentTextFirewallType0
@@ -133,8 +136,12 @@ from .domains_update_body import DomainsUpdateBody
 from .domains_update_response_200 import DomainsUpdateResponse200
 from .domains_verify_response_200 import DomainsVerifyResponse200
 from .draft import Draft
+from .draft_approval_type_0 import DraftApprovalType0
+from .draft_approval_type_0_reason import DraftApprovalType0Reason
+from .draft_approval_type_0_status import DraftApprovalType0Status
 from .draft_attachments_item import DraftAttachmentsItem
 from .draft_data_type_0 import DraftDataType0
+from .drafts_approval_response_200 import DraftsApprovalResponse200
 from .drafts_cancel_schedule_response_200 import DraftsCancelScheduleResponse200
 from .drafts_create_body import DraftsCreateBody
 from .drafts_create_body_data_type_0 import DraftsCreateBodyDataType0
@@ -192,6 +199,7 @@ from .identities_update_body import IdentitiesUpdateBody
 from .identities_update_body_capabilities import IdentitiesUpdateBodyCapabilities
 from .identities_update_body_mode import IdentitiesUpdateBodyMode
 from .identities_update_body_receive_policy import IdentitiesUpdateBodyReceivePolicy
+from .identities_update_body_send_approval import IdentitiesUpdateBodySendApproval
 from .identities_update_body_send_policy import IdentitiesUpdateBodySendPolicy
 from .identities_update_body_status import IdentitiesUpdateBodyStatus
 from .identities_update_response_200 import IdentitiesUpdateResponse200
@@ -359,7 +367,10 @@ from .send_rules import SendRules
 from .send_rules_rules_item import SendRulesRulesItem
 from .send_rules_rules_item_match_type import SendRulesRulesItemMatchType
 from .sent import Sent
+from .sent_approval_type_0 import SentApprovalType0
+from .sent_approval_type_0_reason import SentApprovalType0Reason
 from .sent_rejected_item import SentRejectedItem
+from .sent_status import SentStatus
 from .setup_link import SetupLink
 from .setup_link_reason_type_0 import SetupLinkReasonType0
 from .signed_upload import SignedUpload
@@ -440,6 +451,9 @@ __all__ = (
     "AppPasswordsCreateResponse201",
     "AppPasswordsListResponse200",
     "AppPasswordsRevokeResponse200",
+    "Approval",
+    "ApprovalReason",
+    "ApprovalStatus",
     "Attachment",
     "AttachmentsCompleteUploadResponse200",
     "AttachmentsCreateUploadBody",
@@ -544,8 +558,12 @@ __all__ = (
     "DomainsUpdateResponse200",
     "DomainsVerifyResponse200",
     "Draft",
+    "DraftApprovalType0",
+    "DraftApprovalType0Reason",
+    "DraftApprovalType0Status",
     "DraftAttachmentsItem",
     "DraftDataType0",
+    "DraftsApprovalResponse200",
     "DraftsCancelScheduleResponse200",
     "DraftsCreateBody",
     "DraftsCreateBodyDataType0",
@@ -603,6 +621,7 @@ __all__ = (
     "IdentitiesUpdateBodyCapabilities",
     "IdentitiesUpdateBodyMode",
     "IdentitiesUpdateBodyReceivePolicy",
+    "IdentitiesUpdateBodySendApproval",
     "IdentitiesUpdateBodySendPolicy",
     "IdentitiesUpdateBodyStatus",
     "IdentitiesUpdateResponse200",
@@ -770,7 +789,10 @@ __all__ = (
     "SendRulesRulesItem",
     "SendRulesRulesItemMatchType",
     "Sent",
+    "SentApprovalType0",
+    "SentApprovalType0Reason",
     "SentRejectedItem",
+    "SentStatus",
     "SetupLink",
     "SetupLinkReasonType0",
     "SignedUpload",

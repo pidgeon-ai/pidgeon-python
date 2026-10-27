@@ -6,7 +6,7 @@
 # `langchain/` directory on a `langchain-v*` tag (`scripts/release.ts`).
 [project]
 name = "langchain-pidgeon"
-version = "0.1.8"
+version = "0.1.9"
 description = "Email inboxes for LangChain agents: Pidgeon tools to create an address, read, wait for a code, send and reply."
 authors = [{ name = "Pidgeon" }]
 requires-python = ">=3.11"

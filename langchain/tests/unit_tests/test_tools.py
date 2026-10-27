@@ -37,7 +37,18 @@ from langchain_pidgeon.tools import TOOLS
 KEY = "pgn_live_test"
 ID = "0b5d1c1e-6a3f-4c55-9a8e-1f2d3c4b5a69"
 PAGE = {"data": [], "has_more": False, "next_cursor": None}
-SENT = {"data": {"id": ID, "thread_id": ID, "rejected": [], "test": False}}
+# `status`, `draft_id` and `approval` since API 1.43.0: a send can be held for a person.
+SENT = {
+    "data": {
+        "status": "sent",
+        "id": ID,
+        "draft_id": None,
+        "thread_id": ID,
+        "rejected": [],
+        "test": False,
+        "approval": None,
+    }
+}
 TIMED_OUT = {
     "data": {
         "message": None,

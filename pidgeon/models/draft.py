@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any, TypeVar, cast
 from attrs import define as _attrs_define
 
 if TYPE_CHECKING:
+    from ..models.draft_approval_type_0 import DraftApprovalType0
     from ..models.draft_attachments_item import DraftAttachmentsItem
     from ..models.draft_data_type_0 import DraftDataType0
 
@@ -32,6 +33,8 @@ class Draft:
         failed_reason (None | str):
         saved_at (None | str):
         created_at (str):
+        approval (DraftApprovalType0 | None): Set when a send of this draft was held for a person to approve. Null on a
+            draft nobody tried to send.
         attachments (list[DraftAttachmentsItem]):
     """
 
@@ -50,9 +53,11 @@ class Draft:
     failed_reason: None | str
     saved_at: None | str
     created_at: str
+    approval: DraftApprovalType0 | None
     attachments: list[DraftAttachmentsItem]
 
     def to_dict(self) -> dict[str, Any]:
+        from ..models.draft_approval_type_0 import DraftApprovalType0  # noqa: PLC0415
         from ..models.draft_data_type_0 import DraftDataType0  # noqa: PLC0415
 
         id = self.id
@@ -96,6 +101,12 @@ class Draft:
 
         created_at = self.created_at
 
+        approval: dict[str, Any] | None
+        if isinstance(self.approval, DraftApprovalType0):
+            approval = self.approval.to_dict()
+        else:
+            approval = self.approval
+
         attachments = []
         for attachments_item_data in self.attachments:
             attachments_item = attachments_item_data.to_dict()
@@ -120,6 +131,7 @@ class Draft:
                 "failed_reason": failed_reason,
                 "saved_at": saved_at,
                 "created_at": created_at,
+                "approval": approval,
                 "attachments": attachments,
             }
         )
@@ -128,6 +140,7 @@ class Draft:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
+        from ..models.draft_approval_type_0 import DraftApprovalType0  # noqa: PLC0415
         from ..models.draft_attachments_item import DraftAttachmentsItem  # noqa: PLC0415
         from ..models.draft_data_type_0 import DraftDataType0  # noqa: PLC0415
 
@@ -210,6 +223,21 @@ class Draft:
 
         created_at = d.pop("created_at")
 
+        def _parse_approval(data: object) -> DraftApprovalType0 | None:
+            if data is None:
+                return data
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                approval_type_0 = DraftApprovalType0.from_dict(data)
+
+                return approval_type_0
+            except (TypeError, ValueError, AttributeError, KeyError):
+                pass
+            return cast(DraftApprovalType0 | None, data)
+
+        approval = _parse_approval(d.pop("approval"))
+
         attachments = []
         _attachments = d.pop("attachments")
         for attachments_item_data in _attachments:
@@ -233,6 +261,7 @@ class Draft:
             failed_reason=failed_reason,
             saved_at=saved_at,
             created_at=created_at,
+            approval=approval,
             attachments=attachments,
         )
 
