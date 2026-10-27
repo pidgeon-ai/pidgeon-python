@@ -22,8 +22,8 @@ T = TypeVar("T", bound="AwaitedMessageMessageType0FirewallType0")
 class AwaitedMessageMessageType0FirewallType0:
     """
     Attributes:
-        verdict (AwaitedMessageMessageType0FirewallType0Verdict): `suspicious` when any signal fired. Observe-only:
-            nothing is held or changed.
+        verdict (AwaitedMessageMessageType0FirewallType0Verdict): `suspicious` when any signal fired. At an address that
+            holds suspicious mail (`hold_suspicious`) the message is also held for a person: `is_held`.
         signals (list[AwaitedMessageMessageType0FirewallType0SignalsItem]): The rules that fired, most specific first.
             Empty when the verdict is `clean`.
         clean_text (str): What an agent should read: the new text with hidden content and invisible characters removed

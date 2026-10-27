@@ -32,6 +32,8 @@ class MailboxChange:
         is_starred (bool | Unset):
         is_draft (bool | Unset):
         is_spam (bool | Unset):
+        is_held (bool | Unset): Held by Pidgeon Firewall for a person. To a key, `subject`, `preview` and `from_name`
+            are null until a person releases it.
         has_attachments (bool | Unset):
         attachment_count (int | Unset):
         message_count (int | Unset):
@@ -57,6 +59,7 @@ class MailboxChange:
     is_starred: bool | Unset = UNSET
     is_draft: bool | Unset = UNSET
     is_spam: bool | Unset = UNSET
+    is_held: bool | Unset = UNSET
     has_attachments: bool | Unset = UNSET
     attachment_count: int | Unset = UNSET
     message_count: int | Unset = UNSET
@@ -117,6 +120,8 @@ class MailboxChange:
 
         is_spam = self.is_spam
 
+        is_held = self.is_held
+
         has_attachments = self.has_attachments
 
         attachment_count = self.attachment_count
@@ -174,6 +179,8 @@ class MailboxChange:
             field_dict["is_draft"] = is_draft
         if is_spam is not UNSET:
             field_dict["is_spam"] = is_spam
+        if is_held is not UNSET:
+            field_dict["is_held"] = is_held
         if has_attachments is not UNSET:
             field_dict["has_attachments"] = has_attachments
         if attachment_count is not UNSET:
@@ -254,6 +261,8 @@ class MailboxChange:
 
         is_spam = d.pop("is_spam", UNSET)
 
+        is_held = d.pop("is_held", UNSET)
+
         has_attachments = d.pop("has_attachments", UNSET)
 
         attachment_count = d.pop("attachment_count", UNSET)
@@ -298,6 +307,7 @@ class MailboxChange:
             is_starred=is_starred,
             is_draft=is_draft,
             is_spam=is_spam,
+            is_held=is_held,
             has_attachments=has_attachments,
             attachment_count=attachment_count,
             message_count=message_count,

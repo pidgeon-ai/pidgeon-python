@@ -18,8 +18,8 @@ T = TypeVar("T", bound="AttachmentTextFirewallType0")
 class AttachmentTextFirewallType0:
     """
     Attributes:
-        verdict (AttachmentTextFirewallType0Verdict): `suspicious` when any signal fired. Observe-only: nothing is held
-            or changed.
+        verdict (AttachmentTextFirewallType0Verdict): `suspicious` when any signal fired. At an address that holds
+            suspicious mail (`hold_suspicious`) the message is also held for a person: `is_held`.
         signals (list[AttachmentTextFirewallType0SignalsItem]): The rules that fired, most specific first. Empty when
             the verdict is `clean`.
         version (int): Bumped when the rules change in a way that could change a verdict.

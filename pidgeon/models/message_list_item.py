@@ -28,6 +28,8 @@ class MessageListItem:
         is_starred (bool):
         is_draft (bool):
         is_spam (bool):
+        is_held (bool): Held by Pidgeon Firewall for a person. To a key, `subject`, `preview` and `from_name` are null
+            until a person releases it.
         has_attachments (bool):
         attachment_count (int):
         message_count (int):
@@ -50,6 +52,7 @@ class MessageListItem:
     is_starred: bool
     is_draft: bool
     is_spam: bool
+    is_held: bool
     has_attachments: bool
     attachment_count: int
     message_count: int
@@ -91,6 +94,8 @@ class MessageListItem:
 
         is_spam = self.is_spam
 
+        is_held = self.is_held
+
         has_attachments = self.has_attachments
 
         attachment_count = self.attachment_count
@@ -121,6 +126,7 @@ class MessageListItem:
                 "is_starred": is_starred,
                 "is_draft": is_draft,
                 "is_spam": is_spam,
+                "is_held": is_held,
                 "has_attachments": has_attachments,
                 "attachment_count": attachment_count,
                 "message_count": message_count,
@@ -184,6 +190,8 @@ class MessageListItem:
 
         is_spam = d.pop("is_spam")
 
+        is_held = d.pop("is_held")
+
         has_attachments = d.pop("has_attachments")
 
         attachment_count = d.pop("attachment_count")
@@ -215,6 +223,7 @@ class MessageListItem:
             is_starred=is_starred,
             is_draft=is_draft,
             is_spam=is_spam,
+            is_held=is_held,
             has_attachments=has_attachments,
             attachment_count=attachment_count,
             message_count=message_count,

@@ -18,8 +18,8 @@ T = TypeVar("T", bound="MessageFirewallType0")
 class MessageFirewallType0:
     """
     Attributes:
-        verdict (MessageFirewallType0Verdict): `suspicious` when any signal fired. Observe-only: nothing is held or
-            changed.
+        verdict (MessageFirewallType0Verdict): `suspicious` when any signal fired. At an address that holds suspicious
+            mail (`hold_suspicious`) the message is also held for a person: `is_held`.
         signals (list[MessageFirewallType0SignalsItem]): The rules that fired, most specific first. Empty when the
             verdict is `clean`.
         clean_text (str): What an agent should read: the new text with hidden content and invisible characters removed

@@ -47,6 +47,9 @@ class AwaitedMessageMessageType0:
         reply_text (str): The reply as plain text. `text` is the message’s own text part, quote and all.
         is_read (bool):
         is_spam (bool):
+        is_held (bool): Pidgeon Firewall held it for a person. To a key, every content field is empty — subject, text,
+            html, headers, data, attachments — and `firewall` keeps the verdict and where each signal fired, without quotes.
+            A person releases it from the dashboard, and `message.released` fires.
         headers (AwaitedMessageMessageType0Headers): The headers we keep, lowercased: `message-id`, `in-reply-to`,
             `references`, `date`, `reply-to`, `return-path`, `list-id`, `list-unsubscribe`, `precedence`, `auto-submitted`,
             `x-auto-response-suppress`, `x-mailer` and `x-priority`. Not the whole envelope — that is `GET
@@ -97,6 +100,7 @@ class AwaitedMessageMessageType0:
     reply_text: str
     is_read: bool
     is_spam: bool
+    is_held: bool
     headers: AwaitedMessageMessageType0Headers
     authentication: AwaitedMessageMessageType0Authentication
     sender: AwaitedMessageMessageType0Sender
@@ -162,6 +166,8 @@ class AwaitedMessageMessageType0:
         is_read = self.is_read
 
         is_spam = self.is_spam
+
+        is_held = self.is_held
 
         headers = self.headers.to_dict()
 
@@ -231,6 +237,7 @@ class AwaitedMessageMessageType0:
                 "reply_text": reply_text,
                 "is_read": is_read,
                 "is_spam": is_spam,
+                "is_held": is_held,
                 "headers": headers,
                 "authentication": authentication,
                 "sender": sender,
@@ -338,6 +345,8 @@ class AwaitedMessageMessageType0:
         is_read = d.pop("is_read")
 
         is_spam = d.pop("is_spam")
+
+        is_held = d.pop("is_held")
 
         headers = AwaitedMessageMessageType0Headers.from_dict(d.pop("headers"))
 
@@ -450,6 +459,7 @@ class AwaitedMessageMessageType0:
             reply_text=reply_text,
             is_read=is_read,
             is_spam=is_spam,
+            is_held=is_held,
             headers=headers,
             authentication=authentication,
             sender=sender,

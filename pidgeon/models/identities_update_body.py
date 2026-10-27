@@ -35,6 +35,8 @@ class IdentitiesUpdateBody:
         receive_policy (IdentitiesUpdateBodyReceivePolicy | Unset): Who may write to it. `list` accepts only senders
             with an `inbox` receive rule whose mail passes DMARC, and refuses everybody else before anything is stored. A
             key with admin on the address may tighten it; loosening needs its owner.
+        hold_suspicious (bool | Unset): Whether Pidgeon Firewall holds suspicious mail for a person. A key may turn it
+            on; turning it off is a person’s, from the dashboard, because the agent it protects should not be able to.
         tenant_id (None | str | Unset): Your own opaque grouping — a customer id, whatever your side calls it. Never
             parsed here.
         pod_id (None | Unset | UUID): The pod this belongs to — your account’s default when you name none. A pod is a
@@ -49,6 +51,7 @@ class IdentitiesUpdateBody:
     expires_at: datetime.datetime | None | Unset = UNSET
     send_policy: IdentitiesUpdateBodySendPolicy | Unset = UNSET
     receive_policy: IdentitiesUpdateBodyReceivePolicy | Unset = UNSET
+    hold_suspicious: bool | Unset = UNSET
     tenant_id: None | str | Unset = UNSET
     pod_id: None | Unset | UUID = UNSET
 
@@ -87,6 +90,8 @@ class IdentitiesUpdateBody:
         if not isinstance(self.receive_policy, Unset):
             receive_policy = self.receive_policy.value
 
+        hold_suspicious = self.hold_suspicious
+
         tenant_id: None | str | Unset
         if isinstance(self.tenant_id, Unset):
             tenant_id = UNSET
@@ -118,6 +123,8 @@ class IdentitiesUpdateBody:
             field_dict["send_policy"] = send_policy
         if receive_policy is not UNSET:
             field_dict["receive_policy"] = receive_policy
+        if hold_suspicious is not UNSET:
+            field_dict["hold_suspicious"] = hold_suspicious
         if tenant_id is not UNSET:
             field_dict["tenant_id"] = tenant_id
         if pod_id is not UNSET:
@@ -192,6 +199,8 @@ class IdentitiesUpdateBody:
         else:
             receive_policy = IdentitiesUpdateBodyReceivePolicy(_receive_policy)
 
+        hold_suspicious = d.pop("hold_suspicious", UNSET)
+
         def _parse_tenant_id(data: object) -> None | str | Unset:
             if data is None:
                 return data
@@ -226,6 +235,7 @@ class IdentitiesUpdateBody:
             expires_at=expires_at,
             send_policy=send_policy,
             receive_policy=receive_policy,
+            hold_suspicious=hold_suspicious,
             tenant_id=tenant_id,
             pod_id=pod_id,
         )

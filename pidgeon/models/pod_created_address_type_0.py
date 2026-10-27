@@ -33,6 +33,9 @@ class PodCreatedAddressType0:
         send_policy (str): Who it may write to: open, reply_only (somebody who wrote to it first), or list.
         receive_policy (str): Who may write to it: open, or list (only senders with an inbox rule, on mail that passes
             DMARC).
+        hold_suspicious (bool): Whether Pidgeon Firewall holds suspicious mail here for a person: stored, and unreadable
+            with a key until a person releases it from the dashboard. On by default for workspaces made from 27 October
+            2026.
         tenant_id (None | str): Your own opaque grouping for this address. Never parsed here.
         pod_id (str): The pod this address is in. Every workspace has one to start with and every address is in one, so
             this is never null.
@@ -56,6 +59,7 @@ class PodCreatedAddressType0:
     expires_at: None | str
     send_policy: str
     receive_policy: str
+    hold_suspicious: bool
     tenant_id: None | str
     pod_id: str
     test: bool
@@ -95,6 +99,8 @@ class PodCreatedAddressType0:
 
         receive_policy = self.receive_policy
 
+        hold_suspicious = self.hold_suspicious
+
         tenant_id: None | str
         tenant_id = self.tenant_id
 
@@ -122,6 +128,7 @@ class PodCreatedAddressType0:
                 "expires_at": expires_at,
                 "send_policy": send_policy,
                 "receive_policy": receive_policy,
+                "hold_suspicious": hold_suspicious,
                 "tenant_id": tenant_id,
                 "pod_id": pod_id,
                 "test": test,
@@ -177,6 +184,8 @@ class PodCreatedAddressType0:
 
         receive_policy = d.pop("receive_policy")
 
+        hold_suspicious = d.pop("hold_suspicious")
+
         def _parse_tenant_id(data: object) -> None | str:
             if data is None:
                 return data
@@ -205,6 +214,7 @@ class PodCreatedAddressType0:
             expires_at=expires_at,
             send_policy=send_policy,
             receive_policy=receive_policy,
+            hold_suspicious=hold_suspicious,
             tenant_id=tenant_id,
             pod_id=pod_id,
             test=test,
