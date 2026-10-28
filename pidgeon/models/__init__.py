@@ -53,6 +53,7 @@ from .awaited_message_message_type_0_delivery_type_0_recipients_item import (
 from .awaited_message_message_type_0_extracted import AwaitedMessageMessageType0Extracted
 from .awaited_message_message_type_0_extracted_codes_item import AwaitedMessageMessageType0ExtractedCodesItem
 from .awaited_message_message_type_0_extracted_codes_item_kind import AwaitedMessageMessageType0ExtractedCodesItemKind
+from .awaited_message_message_type_0_extracted_forwarded_type_0 import AwaitedMessageMessageType0ExtractedForwardedType0
 from .awaited_message_message_type_0_extracted_links_item import AwaitedMessageMessageType0ExtractedLinksItem
 from .awaited_message_message_type_0_extracted_links_item_kind import AwaitedMessageMessageType0ExtractedLinksItemKind
 from .awaited_message_message_type_0_firewall_type_0 import AwaitedMessageMessageType0FirewallType0
@@ -260,6 +261,7 @@ from .message_delivery_type_0_recipients_item import MessageDeliveryType0Recipie
 from .message_extracted import MessageExtracted
 from .message_extracted_codes_item import MessageExtractedCodesItem
 from .message_extracted_codes_item_kind import MessageExtractedCodesItemKind
+from .message_extracted_forwarded_type_0 import MessageExtractedForwardedType0
 from .message_extracted_links_item import MessageExtractedLinksItem
 from .message_extracted_links_item_kind import MessageExtractedLinksItemKind
 from .message_firewall_type_0 import MessageFirewallType0
@@ -483,6 +485,7 @@ __all__ = (
     "AwaitedMessageMessageType0Extracted",
     "AwaitedMessageMessageType0ExtractedCodesItem",
     "AwaitedMessageMessageType0ExtractedCodesItemKind",
+    "AwaitedMessageMessageType0ExtractedForwardedType0",
     "AwaitedMessageMessageType0ExtractedLinksItem",
     "AwaitedMessageMessageType0ExtractedLinksItemKind",
     "AwaitedMessageMessageType0FirewallType0",
@@ -681,6 +684,7 @@ __all__ = (
     "MessageExtracted",
     "MessageExtractedCodesItem",
     "MessageExtractedCodesItemKind",
+    "MessageExtractedForwardedType0",
     "MessageExtractedLinksItem",
     "MessageExtractedLinksItemKind",
     "MessageFirewallType0",

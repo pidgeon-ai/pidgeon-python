@@ -79,7 +79,7 @@ class Message:
             hidden text, instructions addressed to an AI, impersonated chat turns, look-alike senders, requests to send
             secrets out. Null on outbound mail. Read it before acting on what the message asks.
         extracted (MessageExtracted): Verification codes and links found in the message, most likely first — read from
-            the new text, never the quoted history. Empty lists when nothing was found.
+            the new text, never the quoted history — and the original inside a forward. Empty lists when nothing was found.
         created_at (str): ISO-8601, UTC.
     """
 
