@@ -70,7 +70,9 @@ def sync_detailed(
 
      Its status and who owns it — the state a conversation carries. Handing it to a person notifies them:
     the assignee if you name one, otherwise everybody who can answer as the address. `reason` is shown
-    in that notification.
+    in that notification. While a person has the conversation (it is `human` with an assignee, or in
+    `human_review`), a key may not set `owner_type` to anything else: `403 taken_over`. The person hands
+    it back.
 
     Args:
         id (str):
@@ -110,7 +112,9 @@ def sync(
 
      Its status and who owns it — the state a conversation carries. Handing it to a person notifies them:
     the assignee if you name one, otherwise everybody who can answer as the address. `reason` is shown
-    in that notification.
+    in that notification. While a person has the conversation (it is `human` with an assignee, or in
+    `human_review`), a key may not set `owner_type` to anything else: `403 taken_over`. The person hands
+    it back.
 
     Args:
         id (str):
@@ -145,7 +149,9 @@ async def asyncio_detailed(
 
      Its status and who owns it — the state a conversation carries. Handing it to a person notifies them:
     the assignee if you name one, otherwise everybody who can answer as the address. `reason` is shown
-    in that notification.
+    in that notification. While a person has the conversation (it is `human` with an assignee, or in
+    `human_review`), a key may not set `owner_type` to anything else: `403 taken_over`. The person hands
+    it back.
 
     Args:
         id (str):
@@ -183,7 +189,9 @@ async def asyncio(
 
      Its status and who owns it — the state a conversation carries. Handing it to a person notifies them:
     the assignee if you name one, otherwise everybody who can answer as the address. `reason` is shown
-    in that notification.
+    in that notification. While a person has the conversation (it is `human` with an assignee, or in
+    `human_review`), a key may not set `owner_type` to anything else: `403 taken_over`. The person hands
+    it back.
 
     Args:
         id (str):
