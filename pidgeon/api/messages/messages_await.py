@@ -128,13 +128,15 @@ def sync_detailed(
     with that cursor as `after`, so the mail cannot arrive before the wait starts. Without `after`, it
     first looks back 2 minutes and returns the newest matching message from then, because a code often
     lands before the call is made; narrow it with `from`, `subject_contains` or `has_code` so an earlier
-    email is not taken for the one you want, or pass `after=now` to wait only for new mail. Pass the
-    returned `cursor` as `after` on the next call so nothing arriving between calls is missed. Answers
-    200 with `message: null` and `timed_out: true` when nothing came. A matching message filed as spam
-    is not returned unless you pass `include_spam=true`; it is counted in `held_back`, with its id, so a
-    timeout never hides mail that arrived. A message matches `from` only when it passed DMARC, because
-    anybody can write a `From:`; one that did not is counted in `held_back.unauthenticated`, and
-    `include_unauthenticated=true` returns it.
+    email is not taken for the one you want, or pass `after=now` to wait only for new mail. With
+    `after=now`, `has_code=true` and a `timeout` above 5, it also takes a code that arrived up to 60
+    seconds before the call and that no key has read, and says so with `looked_back: true`: a code that
+    beat the wait is not lost. Pass the returned `cursor` as `after` on the next call so nothing
+    arriving between calls is missed. Answers 200 with `message: null` and `timed_out: true` when
+    nothing came. A matching message filed as spam is not returned unless you pass `include_spam=true`;
+    it is counted in `held_back`, with its id, so a timeout never hides mail that arrived. A message
+    matches `from` only when it passed DMARC, because anybody can write a `From:`; one that did not is
+    counted in `held_back.unauthenticated`, and `include_unauthenticated=true` returns it.
 
     Args:
         identity_id (UUID):
@@ -204,13 +206,15 @@ def sync(
     with that cursor as `after`, so the mail cannot arrive before the wait starts. Without `after`, it
     first looks back 2 minutes and returns the newest matching message from then, because a code often
     lands before the call is made; narrow it with `from`, `subject_contains` or `has_code` so an earlier
-    email is not taken for the one you want, or pass `after=now` to wait only for new mail. Pass the
-    returned `cursor` as `after` on the next call so nothing arriving between calls is missed. Answers
-    200 with `message: null` and `timed_out: true` when nothing came. A matching message filed as spam
-    is not returned unless you pass `include_spam=true`; it is counted in `held_back`, with its id, so a
-    timeout never hides mail that arrived. A message matches `from` only when it passed DMARC, because
-    anybody can write a `From:`; one that did not is counted in `held_back.unauthenticated`, and
-    `include_unauthenticated=true` returns it.
+    email is not taken for the one you want, or pass `after=now` to wait only for new mail. With
+    `after=now`, `has_code=true` and a `timeout` above 5, it also takes a code that arrived up to 60
+    seconds before the call and that no key has read, and says so with `looked_back: true`: a code that
+    beat the wait is not lost. Pass the returned `cursor` as `after` on the next call so nothing
+    arriving between calls is missed. Answers 200 with `message: null` and `timed_out: true` when
+    nothing came. A matching message filed as spam is not returned unless you pass `include_spam=true`;
+    it is counted in `held_back`, with its id, so a timeout never hides mail that arrived. A message
+    matches `from` only when it passed DMARC, because anybody can write a `From:`; one that did not is
+    counted in `held_back.unauthenticated`, and `include_unauthenticated=true` returns it.
 
     Args:
         identity_id (UUID):
@@ -275,13 +279,15 @@ async def asyncio_detailed(
     with that cursor as `after`, so the mail cannot arrive before the wait starts. Without `after`, it
     first looks back 2 minutes and returns the newest matching message from then, because a code often
     lands before the call is made; narrow it with `from`, `subject_contains` or `has_code` so an earlier
-    email is not taken for the one you want, or pass `after=now` to wait only for new mail. Pass the
-    returned `cursor` as `after` on the next call so nothing arriving between calls is missed. Answers
-    200 with `message: null` and `timed_out: true` when nothing came. A matching message filed as spam
-    is not returned unless you pass `include_spam=true`; it is counted in `held_back`, with its id, so a
-    timeout never hides mail that arrived. A message matches `from` only when it passed DMARC, because
-    anybody can write a `From:`; one that did not is counted in `held_back.unauthenticated`, and
-    `include_unauthenticated=true` returns it.
+    email is not taken for the one you want, or pass `after=now` to wait only for new mail. With
+    `after=now`, `has_code=true` and a `timeout` above 5, it also takes a code that arrived up to 60
+    seconds before the call and that no key has read, and says so with `looked_back: true`: a code that
+    beat the wait is not lost. Pass the returned `cursor` as `after` on the next call so nothing
+    arriving between calls is missed. Answers 200 with `message: null` and `timed_out: true` when
+    nothing came. A matching message filed as spam is not returned unless you pass `include_spam=true`;
+    it is counted in `held_back`, with its id, so a timeout never hides mail that arrived. A message
+    matches `from` only when it passed DMARC, because anybody can write a `From:`; one that did not is
+    counted in `held_back.unauthenticated`, and `include_unauthenticated=true` returns it.
 
     Args:
         identity_id (UUID):
@@ -349,13 +355,15 @@ async def asyncio(
     with that cursor as `after`, so the mail cannot arrive before the wait starts. Without `after`, it
     first looks back 2 minutes and returns the newest matching message from then, because a code often
     lands before the call is made; narrow it with `from`, `subject_contains` or `has_code` so an earlier
-    email is not taken for the one you want, or pass `after=now` to wait only for new mail. Pass the
-    returned `cursor` as `after` on the next call so nothing arriving between calls is missed. Answers
-    200 with `message: null` and `timed_out: true` when nothing came. A matching message filed as spam
-    is not returned unless you pass `include_spam=true`; it is counted in `held_back`, with its id, so a
-    timeout never hides mail that arrived. A message matches `from` only when it passed DMARC, because
-    anybody can write a `From:`; one that did not is counted in `held_back.unauthenticated`, and
-    `include_unauthenticated=true` returns it.
+    email is not taken for the one you want, or pass `after=now` to wait only for new mail. With
+    `after=now`, `has_code=true` and a `timeout` above 5, it also takes a code that arrived up to 60
+    seconds before the call and that no key has read, and says so with `looked_back: true`: a code that
+    beat the wait is not lost. Pass the returned `cursor` as `after` on the next call so nothing
+    arriving between calls is missed. Answers 200 with `message: null` and `timed_out: true` when
+    nothing came. A matching message filed as spam is not returned unless you pass `include_spam=true`;
+    it is counted in `held_back`, with its id, so a timeout never hides mail that arrived. A message
+    matches `from` only when it passed DMARC, because anybody can write a `From:`; one that did not is
+    counted in `held_back.unauthenticated`, and `include_unauthenticated=true` returns it.
 
     Args:
         identity_id (UUID):
