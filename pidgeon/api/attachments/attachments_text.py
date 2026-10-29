@@ -67,13 +67,16 @@ def sync_detailed(
     client: AuthenticatedClient | Client,
     body: AttachmentsTextBody | Unset = AttachmentsTextBody.ORIGINAL,
 ) -> Response[AttachmentsTextResponse200]:
-    """Read a text attachment
+    """Read an attachment as text
 
-     A CSV, a log, JSON or another text format, as text — up to 5 MB, and the first 200,000 characters of
-    it. Screened by Pidgeon Firewall with the sender of the message it came with, because a file in an
-    email is mail a model reads: `firewall` says whether it tries to steer you, and `body=clean` returns
-    it with hidden characters removed and lines posing as a chat turn marked. HTML, PDF, Office files
-    and images are refused; `GET /attachments/{id}` gives a link to those.
+     A CSV, a log, JSON or another text format (up to 5 MB), or a PDF, a `.docx` or an `.xlsx` (up to 10
+    MB), as text: the first 200,000 characters of it. Screened by Pidgeon Firewall with the sender of
+    the message it came with, because a file in an email is mail a model reads: `firewall` says whether
+    it tries to steer you, and `body=clean` returns it with hidden content removed. Text a document
+    hides from a person (a hidden Word run, a hidden sheet, row or column) counts as hidden text. Where
+    the address holds suspicious mail, a flagged attachment holds its message, and a key is answered
+    `403 held`. A scanned or password-protected PDF, `.doc`, `.xls`, PowerPoint, HTML and images are
+    refused; `GET /attachments/{id}` gives a link to those.
 
     Args:
         id (str):
@@ -106,13 +109,16 @@ def sync(
     client: AuthenticatedClient | Client,
     body: AttachmentsTextBody | Unset = AttachmentsTextBody.ORIGINAL,
 ) -> AttachmentsTextResponse200:
-    """Read a text attachment
+    """Read an attachment as text
 
-     A CSV, a log, JSON or another text format, as text — up to 5 MB, and the first 200,000 characters of
-    it. Screened by Pidgeon Firewall with the sender of the message it came with, because a file in an
-    email is mail a model reads: `firewall` says whether it tries to steer you, and `body=clean` returns
-    it with hidden characters removed and lines posing as a chat turn marked. HTML, PDF, Office files
-    and images are refused; `GET /attachments/{id}` gives a link to those.
+     A CSV, a log, JSON or another text format (up to 5 MB), or a PDF, a `.docx` or an `.xlsx` (up to 10
+    MB), as text: the first 200,000 characters of it. Screened by Pidgeon Firewall with the sender of
+    the message it came with, because a file in an email is mail a model reads: `firewall` says whether
+    it tries to steer you, and `body=clean` returns it with hidden content removed. Text a document
+    hides from a person (a hidden Word run, a hidden sheet, row or column) counts as hidden text. Where
+    the address holds suspicious mail, a flagged attachment holds its message, and a key is answered
+    `403 held`. A scanned or password-protected PDF, `.doc`, `.xls`, PowerPoint, HTML and images are
+    refused; `GET /attachments/{id}` gives a link to those.
 
     Args:
         id (str):
@@ -140,13 +146,16 @@ async def asyncio_detailed(
     client: AuthenticatedClient | Client,
     body: AttachmentsTextBody | Unset = AttachmentsTextBody.ORIGINAL,
 ) -> Response[AttachmentsTextResponse200]:
-    """Read a text attachment
+    """Read an attachment as text
 
-     A CSV, a log, JSON or another text format, as text — up to 5 MB, and the first 200,000 characters of
-    it. Screened by Pidgeon Firewall with the sender of the message it came with, because a file in an
-    email is mail a model reads: `firewall` says whether it tries to steer you, and `body=clean` returns
-    it with hidden characters removed and lines posing as a chat turn marked. HTML, PDF, Office files
-    and images are refused; `GET /attachments/{id}` gives a link to those.
+     A CSV, a log, JSON or another text format (up to 5 MB), or a PDF, a `.docx` or an `.xlsx` (up to 10
+    MB), as text: the first 200,000 characters of it. Screened by Pidgeon Firewall with the sender of
+    the message it came with, because a file in an email is mail a model reads: `firewall` says whether
+    it tries to steer you, and `body=clean` returns it with hidden content removed. Text a document
+    hides from a person (a hidden Word run, a hidden sheet, row or column) counts as hidden text. Where
+    the address holds suspicious mail, a flagged attachment holds its message, and a key is answered
+    `403 held`. A scanned or password-protected PDF, `.doc`, `.xls`, PowerPoint, HTML and images are
+    refused; `GET /attachments/{id}` gives a link to those.
 
     Args:
         id (str):
@@ -177,13 +186,16 @@ async def asyncio(
     client: AuthenticatedClient | Client,
     body: AttachmentsTextBody | Unset = AttachmentsTextBody.ORIGINAL,
 ) -> AttachmentsTextResponse200:
-    """Read a text attachment
+    """Read an attachment as text
 
-     A CSV, a log, JSON or another text format, as text — up to 5 MB, and the first 200,000 characters of
-    it. Screened by Pidgeon Firewall with the sender of the message it came with, because a file in an
-    email is mail a model reads: `firewall` says whether it tries to steer you, and `body=clean` returns
-    it with hidden characters removed and lines posing as a chat turn marked. HTML, PDF, Office files
-    and images are refused; `GET /attachments/{id}` gives a link to those.
+     A CSV, a log, JSON or another text format (up to 5 MB), or a PDF, a `.docx` or an `.xlsx` (up to 10
+    MB), as text: the first 200,000 characters of it. Screened by Pidgeon Firewall with the sender of
+    the message it came with, because a file in an email is mail a model reads: `firewall` says whether
+    it tries to steer you, and `body=clean` returns it with hidden content removed. Text a document
+    hides from a person (a hidden Word run, a hidden sheet, row or column) counts as hidden text. Where
+    the address holds suspicious mail, a flagged attachment holds its message, and a key is answered
+    `403 held`. A scanned or password-protected PDF, `.doc`, `.xls`, PowerPoint, HTML and images are
+    refused; `GET /attachments/{id}` gives a link to those.
 
     Args:
         id (str):

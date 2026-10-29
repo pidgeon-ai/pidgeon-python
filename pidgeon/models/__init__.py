@@ -29,6 +29,7 @@ from .attachment_text_firewall_type_0_signals_item import AttachmentTextFirewall
 from .attachment_text_firewall_type_0_signals_item_kind import AttachmentTextFirewallType0SignalsItemKind
 from .attachment_text_firewall_type_0_signals_item_where import AttachmentTextFirewallType0SignalsItemWhere
 from .attachment_text_firewall_type_0_verdict import AttachmentTextFirewallType0Verdict
+from .attachment_text_format import AttachmentTextFormat
 from .attachment_url import AttachmentUrl
 from .attachments_complete_upload_response_200 import AttachmentsCompleteUploadResponse200
 from .attachments_create_upload_body import AttachmentsCreateUploadBody
@@ -471,6 +472,7 @@ __all__ = (
     "AttachmentTextFirewallType0SignalsItemKind",
     "AttachmentTextFirewallType0SignalsItemWhere",
     "AttachmentTextFirewallType0Verdict",
+    "AttachmentTextFormat",
     "AttachmentUrl",
     "AwaitedMessage",
     "AwaitedMessageHeldBack",
