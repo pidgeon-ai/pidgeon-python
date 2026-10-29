@@ -138,10 +138,18 @@ def check() -> None:
             status="human_review",
             reason="The LangChain example's check, handing over as it would.",
         )
-        # And back, so the examples workspace never collects threads waiting
-        # for a person. The hand-off itself notifies the workspace's people;
-        # in CI that person has conversation emails off (operations.md §5).
-        call("update_thread", id=message["thread_id"], owner_type="agent", status="open")
+        # And not back: a key cannot take a conversation a person has
+        # (`taken_over`, since 29 October), so the tool hands the model the
+        # API's sentence rather than JSON. Deleting the address below is what
+        # keeps the examples workspace from collecting threads waiting for a
+        # person; in CI that person has conversation emails off
+        # (operations.md §5).
+        refusal = tools["update_thread"].invoke(
+            {"id": message["thread_id"], "owner_type": "agent", "status": "open"}
+        )
+        if refusal.lstrip().startswith("{"):
+            sys.exit(f"Expected a key to be refused the thread back, got {refusal}")
+        print(f"update_thread back: refused ({refusal})")
     finally:
         # Not a tool: deleting an address is a person's call, not a model's.
         # It needs an `admin` key; without one, the address simply expires.
