@@ -3,6 +3,9 @@
 from .address import Address
 from .agent_attach_human_body import AgentAttachHumanBody
 from .agent_attach_human_response_200 import AgentAttachHumanResponse200
+from .agent_connect_body import AgentConnectBody
+from .agent_connect_response_200 import AgentConnectResponse200
+from .agent_connected import AgentConnected
 from .agent_sign_up_body import AgentSignUpBody
 from .agent_sign_up_response_201 import AgentSignUpResponse201
 from .agent_signup import AgentSignup
@@ -438,6 +441,9 @@ __all__ = (
     "Address",
     "AgentAttachHumanBody",
     "AgentAttachHumanResponse200",
+    "AgentConnectBody",
+    "AgentConnected",
+    "AgentConnectResponse200",
     "AgentSignup",
     "AgentSignUpBody",
     "AgentSignUpResponse201",
