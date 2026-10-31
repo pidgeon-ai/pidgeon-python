@@ -315,6 +315,7 @@ from .messages_get_body import MessagesGetBody
 from .messages_get_response_200 import MessagesGetResponse200
 from .messages_list_in_thread_body import MessagesListInThreadBody
 from .messages_list_in_thread_response_200 import MessagesListInThreadResponse200
+from .messages_raw_headers import MessagesRawHeaders
 from .messages_reply_all_body import MessagesReplyAllBody
 from .messages_reply_all_body_data import MessagesReplyAllBodyData
 from .messages_reply_all_response_202 import MessagesReplyAllResponse202
@@ -764,6 +765,7 @@ __all__ = (
     "MessagesGetResponse200",
     "MessagesListInThreadBody",
     "MessagesListInThreadResponse200",
+    "MessagesRawHeaders",
     "MessagesReplyAllBody",
     "MessagesReplyAllBodyData",
     "MessagesReplyAllResponse202",
