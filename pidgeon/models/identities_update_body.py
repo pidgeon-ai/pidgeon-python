@@ -39,6 +39,9 @@ class IdentitiesUpdateBody:
         receive_policy (IdentitiesUpdateBodyReceivePolicy | Unset): Who may write to it. `list` accepts only senders
             with an `inbox` receive rule whose mail passes DMARC, and refuses everybody else before anything is stored. A
             key with admin on the address may tighten it; loosening needs its owner.
+        recipient_cooldown_minutes (int | Unset): Minutes before a send that is not a reply may go to somebody this
+            address just wrote to (`429 recipient_cooldown`). 0 turns it off; at most 1440. Default 10. A key with admin on
+            the address may lengthen it; shortening it or turning it off needs its owner.
         hold_suspicious (bool | Unset): Whether Pidgeon Firewall holds suspicious mail for a person. A key may turn it
             on; turning it off is a person’s, from the dashboard, because the agent it protects should not be able to.
         tenant_id (None | str | Unset): Your own opaque grouping — a customer id, whatever your side calls it. Never
@@ -56,6 +59,7 @@ class IdentitiesUpdateBody:
     send_policy: IdentitiesUpdateBodySendPolicy | Unset = UNSET
     send_approval: IdentitiesUpdateBodySendApproval | Unset = UNSET
     receive_policy: IdentitiesUpdateBodyReceivePolicy | Unset = UNSET
+    recipient_cooldown_minutes: int | Unset = UNSET
     hold_suspicious: bool | Unset = UNSET
     tenant_id: None | str | Unset = UNSET
     pod_id: None | Unset | UUID = UNSET
@@ -99,6 +103,8 @@ class IdentitiesUpdateBody:
         if not isinstance(self.receive_policy, Unset):
             receive_policy = self.receive_policy.value
 
+        recipient_cooldown_minutes = self.recipient_cooldown_minutes
+
         hold_suspicious = self.hold_suspicious
 
         tenant_id: None | str | Unset
@@ -134,6 +140,8 @@ class IdentitiesUpdateBody:
             field_dict["send_approval"] = send_approval
         if receive_policy is not UNSET:
             field_dict["receive_policy"] = receive_policy
+        if recipient_cooldown_minutes is not UNSET:
+            field_dict["recipient_cooldown_minutes"] = recipient_cooldown_minutes
         if hold_suspicious is not UNSET:
             field_dict["hold_suspicious"] = hold_suspicious
         if tenant_id is not UNSET:
@@ -217,6 +225,8 @@ class IdentitiesUpdateBody:
         else:
             receive_policy = IdentitiesUpdateBodyReceivePolicy(_receive_policy)
 
+        recipient_cooldown_minutes = d.pop("recipient_cooldown_minutes", UNSET)
+
         hold_suspicious = d.pop("hold_suspicious", UNSET)
 
         def _parse_tenant_id(data: object) -> None | str | Unset:
@@ -254,6 +264,7 @@ class IdentitiesUpdateBody:
             send_policy=send_policy,
             send_approval=send_approval,
             receive_policy=receive_policy,
+            recipient_cooldown_minutes=recipient_cooldown_minutes,
             hold_suspicious=hold_suspicious,
             tenant_id=tenant_id,
             pod_id=pod_id,

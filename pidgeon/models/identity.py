@@ -35,6 +35,8 @@ class Identity:
             waits for a person to approve it, and is answered `status: "pending_approval"`.
         receive_policy (str): Who may write to it: open, or list (only senders with an inbox rule, on mail that passes
             DMARC).
+        recipient_cooldown_minutes (int): Minutes before a send that is not a reply may go to somebody this address just
+            wrote to; sooner is refused `429 recipient_cooldown`. 0 is off. Default 10.
         hold_suspicious (bool): Whether Pidgeon Firewall holds suspicious mail here for a person: stored, and unreadable
             with a key until a person releases it from the dashboard. On by default for workspaces made from 27 October
             2026.
@@ -62,6 +64,7 @@ class Identity:
     send_policy: str
     send_approval: str
     receive_policy: str
+    recipient_cooldown_minutes: int
     hold_suspicious: bool
     tenant_id: None | str
     pod_id: str
@@ -104,6 +107,8 @@ class Identity:
 
         receive_policy = self.receive_policy
 
+        recipient_cooldown_minutes = self.recipient_cooldown_minutes
+
         hold_suspicious = self.hold_suspicious
 
         tenant_id: None | str
@@ -134,6 +139,7 @@ class Identity:
                 "send_policy": send_policy,
                 "send_approval": send_approval,
                 "receive_policy": receive_policy,
+                "recipient_cooldown_minutes": recipient_cooldown_minutes,
                 "hold_suspicious": hold_suspicious,
                 "tenant_id": tenant_id,
                 "pod_id": pod_id,
@@ -192,6 +198,8 @@ class Identity:
 
         receive_policy = d.pop("receive_policy")
 
+        recipient_cooldown_minutes = d.pop("recipient_cooldown_minutes")
+
         hold_suspicious = d.pop("hold_suspicious")
 
         def _parse_tenant_id(data: object) -> None | str:
@@ -223,6 +231,7 @@ class Identity:
             send_policy=send_policy,
             send_approval=send_approval,
             receive_policy=receive_policy,
+            recipient_cooldown_minutes=recipient_cooldown_minutes,
             hold_suspicious=hold_suspicious,
             tenant_id=tenant_id,
             pod_id=pod_id,

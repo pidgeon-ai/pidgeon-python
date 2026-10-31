@@ -305,6 +305,9 @@ from .messages_await_has_code import MessagesAwaitHasCode
 from .messages_await_include_spam import MessagesAwaitIncludeSpam
 from .messages_await_include_unauthenticated import MessagesAwaitIncludeUnauthenticated
 from .messages_await_response_200 import MessagesAwaitResponse200
+from .messages_check_body import MessagesCheckBody
+from .messages_check_body_data import MessagesCheckBodyData
+from .messages_check_response_200 import MessagesCheckResponse200
 from .messages_forward_body import MessagesForwardBody
 from .messages_forward_body_data import MessagesForwardBodyData
 from .messages_forward_response_202 import MessagesForwardResponse202
@@ -384,6 +387,10 @@ from .routing_update_body_status import RoutingUpdateBodyStatus
 from .routing_update_response_200 import RoutingUpdateResponse200
 from .search_hit import SearchHit
 from .search_hit_folder import SearchHitFolder
+from .send_check import SendCheck
+from .send_check_approval_type_0 import SendCheckApprovalType0
+from .send_check_approval_type_0_reason import SendCheckApprovalType0Reason
+from .send_check_status import SendCheckStatus
 from .send_rule_removed import SendRuleRemoved
 from .send_rules import SendRules
 from .send_rules_rules_item import SendRulesRulesItem
@@ -745,6 +752,9 @@ __all__ = (
     "MessagesAwaitIncludeSpam",
     "MessagesAwaitIncludeUnauthenticated",
     "MessagesAwaitResponse200",
+    "MessagesCheckBody",
+    "MessagesCheckBodyData",
+    "MessagesCheckResponse200",
     "MessageSender",
     "MessageSenderKindType0",
     "MessagesForwardBody",
@@ -828,6 +838,10 @@ __all__ = (
     "RoutingUpdateResponse200",
     "SearchHit",
     "SearchHitFolder",
+    "SendCheck",
+    "SendCheckApprovalType0",
+    "SendCheckApprovalType0Reason",
+    "SendCheckStatus",
     "SendRuleRemoved",
     "SendRules",
     "SendRulesRulesItem",
