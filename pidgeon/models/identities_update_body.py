@@ -39,9 +39,9 @@ class IdentitiesUpdateBody:
         receive_policy (IdentitiesUpdateBodyReceivePolicy | Unset): Who may write to it. `list` accepts only senders
             with an `inbox` receive rule whose mail passes DMARC, and refuses everybody else before anything is stored. A
             key with admin on the address may tighten it; loosening needs its owner.
-        recipient_cooldown_minutes (int | Unset): Minutes before a send that is not a reply may go to somebody this
-            address just wrote to (`429 recipient_cooldown`). 0 turns it off; at most 1440. Default 10. A key with admin on
-            the address may lengthen it; shortening it or turning it off needs its owner.
+        recipient_cooldown_minutes (int | Unset): The window in minutes in which this address sends one person at most
+            three messages that are not replies; the fourth is `429 recipient_cooldown`. 0 turns it off; at most 1440.
+            Default 10. A key with admin on the address may lengthen it; shortening it or turning it off needs its owner.
         hold_suspicious (bool | Unset): Whether Pidgeon Firewall holds suspicious mail for a person. A key may turn it
             on; turning it off is a person’s, from the dashboard, because the agent it protects should not be able to.
         tenant_id (None | str | Unset): Your own opaque grouping — a customer id, whatever your side calls it. Never

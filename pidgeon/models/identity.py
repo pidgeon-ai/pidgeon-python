@@ -35,8 +35,8 @@ class Identity:
             waits for a person to approve it, and is answered `status: "pending_approval"`.
         receive_policy (str): Who may write to it: open, or list (only senders with an inbox rule, on mail that passes
             DMARC).
-        recipient_cooldown_minutes (int): Minutes before a send that is not a reply may go to somebody this address just
-            wrote to; sooner is refused `429 recipient_cooldown`. 0 is off. Default 10.
+        recipient_cooldown_minutes (int): The window in minutes in which this address sends one person at most three
+            messages that are not replies; the fourth is refused `429 recipient_cooldown`. 0 is off. Default 10.
         hold_suspicious (bool): Whether Pidgeon Firewall holds suspicious mail here for a person: stored, and unreadable
             with a key until a person releases it from the dashboard. On by default for workspaces made from 27 October
             2026.
