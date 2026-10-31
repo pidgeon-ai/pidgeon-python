@@ -6,6 +6,22 @@ from .agent_attach_human_response_200 import AgentAttachHumanResponse200
 from .agent_connect_body import AgentConnectBody
 from .agent_connect_response_200 import AgentConnectResponse200
 from .agent_connected import AgentConnected
+from .agent_setup import AgentSetup
+from .agent_setup_addresses_item import AgentSetupAddressesItem
+from .agent_setup_addresses_item_next_type_0 import AgentSetupAddressesItemNextType0
+from .agent_setup_next_type_0 import AgentSetupNextType0
+from .agent_setup_next_type_0_id import AgentSetupNextType0Id
+from .agent_setup_next_type_0_owner import AgentSetupNextType0Owner
+from .agent_setup_next_type_0_records_type_0_item import AgentSetupNextType0RecordsType0Item
+from .agent_setup_next_type_0_records_type_0_item_state_type_0 import AgentSetupNextType0RecordsType0ItemStateType0
+from .agent_setup_next_type_0_records_type_0_item_status import AgentSetupNextType0RecordsType0ItemStatus
+from .agent_setup_response_200 import AgentSetupResponse200
+from .agent_setup_steps_item import AgentSetupStepsItem
+from .agent_setup_steps_item_id import AgentSetupStepsItemId
+from .agent_setup_steps_item_owner import AgentSetupStepsItemOwner
+from .agent_setup_steps_item_records_type_0_item import AgentSetupStepsItemRecordsType0Item
+from .agent_setup_steps_item_records_type_0_item_state_type_0 import AgentSetupStepsItemRecordsType0ItemStateType0
+from .agent_setup_steps_item_records_type_0_item_status import AgentSetupStepsItemRecordsType0ItemStatus
 from .agent_sign_up_body import AgentSignUpBody
 from .agent_sign_up_response_201 import AgentSignUpResponse201
 from .agent_signup import AgentSignup
@@ -444,6 +460,22 @@ __all__ = (
     "AgentConnectBody",
     "AgentConnected",
     "AgentConnectResponse200",
+    "AgentSetup",
+    "AgentSetupAddressesItem",
+    "AgentSetupAddressesItemNextType0",
+    "AgentSetupNextType0",
+    "AgentSetupNextType0Id",
+    "AgentSetupNextType0Owner",
+    "AgentSetupNextType0RecordsType0Item",
+    "AgentSetupNextType0RecordsType0ItemStateType0",
+    "AgentSetupNextType0RecordsType0ItemStatus",
+    "AgentSetupResponse200",
+    "AgentSetupStepsItem",
+    "AgentSetupStepsItemId",
+    "AgentSetupStepsItemOwner",
+    "AgentSetupStepsItemRecordsType0Item",
+    "AgentSetupStepsItemRecordsType0ItemStateType0",
+    "AgentSetupStepsItemRecordsType0ItemStatus",
     "AgentSignup",
     "AgentSignUpBody",
     "AgentSignUpResponse201",
