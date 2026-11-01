@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any, TypeVar, cast
 from uuid import UUID
@@ -31,6 +32,7 @@ class MessagesCheckBody:
             other end to read as fields. Travels as its own part; it is never mixed into the text.
         attachment_ids (list[UUID] | Unset): Ids from `POST /attachments`, uploaded before the message that carries
             them. Up to 20.
+        send_at (datetime.datetime | Unset):
         in_reply_to (None | Unset | UUID): The message being answered. Keeps the conversation together in the
             recipient’s client too.
         in_reply_to_message_id (None | Unset | UUID): The same field as `in_reply_to`, under the name this endpoint has
@@ -48,6 +50,7 @@ class MessagesCheckBody:
     html: str | Unset = UNSET
     data: MessagesCheckBodyData | Unset = UNSET
     attachment_ids: list[UUID] | Unset = UNSET
+    send_at: datetime.datetime | Unset = UNSET
     in_reply_to: None | Unset | UUID = UNSET
     in_reply_to_message_id: None | Unset | UUID = UNSET
     forward: bool | Unset = UNSET
@@ -97,6 +100,10 @@ class MessagesCheckBody:
                 attachment_ids_item = str(attachment_ids_item_data)
                 attachment_ids.append(attachment_ids_item)
 
+        send_at: str | Unset = UNSET
+        if not isinstance(self.send_at, Unset):
+            send_at = self.send_at.isoformat()
+
         in_reply_to: None | str | Unset
         if isinstance(self.in_reply_to, Unset):
             in_reply_to = UNSET
@@ -137,6 +144,8 @@ class MessagesCheckBody:
             field_dict["data"] = data
         if attachment_ids is not UNSET:
             field_dict["attachment_ids"] = attachment_ids
+        if send_at is not UNSET:
+            field_dict["send_at"] = send_at
         if in_reply_to is not UNSET:
             field_dict["in_reply_to"] = in_reply_to
         if in_reply_to_message_id is not UNSET:
@@ -218,6 +227,13 @@ class MessagesCheckBody:
 
                 attachment_ids.append(attachment_ids_item)
 
+        _send_at = d.pop("send_at", UNSET)
+        send_at: datetime.datetime | Unset
+        if isinstance(_send_at, Unset):
+            send_at = UNSET
+        else:
+            send_at = datetime.datetime.fromisoformat(_send_at)
+
         def _parse_in_reply_to(data: object) -> None | Unset | UUID:
             if data is None:
                 return data
@@ -264,6 +280,7 @@ class MessagesCheckBody:
             html=html,
             data=data,
             attachment_ids=attachment_ids,
+            send_at=send_at,
             in_reply_to=in_reply_to,
             in_reply_to_message_id=in_reply_to_message_id,
             forward=forward,

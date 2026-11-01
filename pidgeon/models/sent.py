@@ -22,9 +22,13 @@ class Sent:
         status (SentStatus): `sent`: handed to the network. `pending_approval`: **nothing was sent** — the message is a
             draft waiting for a person to approve it (`approval` says why and until when). Poll `GET
             /drafts/{draft_id}/approval`, or subscribe to `draft.approved`, `draft.rejected` and `draft.expired`.
+            `scheduled`: it was given a `send_at`, and Pidgeon sends it then with no further call; `cancel` takes it back.
+            With `approval` set it also waits for a person, and goes at `send_at` once they approve.
         id (str): The message. On `pending_approval` it is the draft’s id, which the message keeps if it is approved.
-        draft_id (None | str): The held draft on `pending_approval`; null on `sent`.
-        thread_id (str):
+        draft_id (None | str): The draft that holds it on `pending_approval` or `scheduled`; null on `sent`.
+        thread_id (None | str): The conversation. Null on a `scheduled` new message, which starts one when sent.
+        send_at (None | str): When a `scheduled` send goes out. Null otherwise.
+        cancel (None | str): On `scheduled`: the call that takes it back, `DELETE /v1/drafts/{id}/schedule`.
         rejected (list[SentRejectedItem]):
         test (bool): True when this was a test-mode send: nothing was handed to the mail provider, and only this
             account’s own addresses received it.
@@ -34,7 +38,9 @@ class Sent:
     status: SentStatus
     id: str
     draft_id: None | str
-    thread_id: str
+    thread_id: None | str
+    send_at: None | str
+    cancel: None | str
     rejected: list[SentRejectedItem]
     test: bool
     approval: None | SentApprovalType0
@@ -49,7 +55,14 @@ class Sent:
         draft_id: None | str
         draft_id = self.draft_id
 
+        thread_id: None | str
         thread_id = self.thread_id
+
+        send_at: None | str
+        send_at = self.send_at
+
+        cancel: None | str
+        cancel = self.cancel
 
         rejected = []
         for rejected_item_data in self.rejected:
@@ -72,6 +85,8 @@ class Sent:
                 "id": id,
                 "draft_id": draft_id,
                 "thread_id": thread_id,
+                "send_at": send_at,
+                "cancel": cancel,
                 "rejected": rejected,
                 "test": test,
                 "approval": approval,
@@ -97,7 +112,26 @@ class Sent:
 
         draft_id = _parse_draft_id(d.pop("draft_id"))
 
-        thread_id = d.pop("thread_id")
+        def _parse_thread_id(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        thread_id = _parse_thread_id(d.pop("thread_id"))
+
+        def _parse_send_at(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        send_at = _parse_send_at(d.pop("send_at"))
+
+        def _parse_cancel(data: object) -> None | str:
+            if data is None:
+                return data
+            return cast(None | str, data)
+
+        cancel = _parse_cancel(d.pop("cancel"))
 
         rejected = []
         _rejected = d.pop("rejected")
@@ -128,6 +162,8 @@ class Sent:
             id=id,
             draft_id=draft_id,
             thread_id=thread_id,
+            send_at=send_at,
+            cancel=cancel,
             rejected=rejected,
             test=test,
             approval=approval,

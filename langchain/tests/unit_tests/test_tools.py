@@ -47,6 +47,9 @@ SENT = {
         "rejected": [],
         "test": False,
         "approval": None,
+        # Every send answers these since 1.52.0 (`send_at`): null unless scheduled.
+        "send_at": None,
+        "cancel": None,
     }
 }
 TIMED_OUT = {

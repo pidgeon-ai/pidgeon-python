@@ -3,6 +3,7 @@ from enum import StrEnum
 
 class SentStatus(StrEnum):
     PENDING_APPROVAL = "pending_approval"
+    SCHEDULED = "scheduled"
     SENT = "sent"
 
     @classmethod

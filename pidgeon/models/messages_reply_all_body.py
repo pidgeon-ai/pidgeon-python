@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any, TypeVar, cast
 from uuid import UUID
@@ -30,6 +31,7 @@ class MessagesReplyAllBody:
         bcc (list[str] | str | Unset): Copied, and visible to nobody else.
         attachment_ids (list[UUID] | Unset): Ids from `POST /attachments`, uploaded before the message that carries
             them. Up to 20.
+        send_at (datetime.datetime | Unset):
     """
 
     text: str | Unset = ""
@@ -39,6 +41,7 @@ class MessagesReplyAllBody:
     cc: list[str] | str | Unset = UNSET
     bcc: list[str] | str | Unset = UNSET
     attachment_ids: list[UUID] | Unset = UNSET
+    send_at: datetime.datetime | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -84,6 +87,10 @@ class MessagesReplyAllBody:
                 attachment_ids_item = str(attachment_ids_item_data)
                 attachment_ids.append(attachment_ids_item)
 
+        send_at: str | Unset = UNSET
+        if not isinstance(self.send_at, Unset):
+            send_at = self.send_at.isoformat()
+
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
@@ -101,6 +108,8 @@ class MessagesReplyAllBody:
             field_dict["bcc"] = bcc
         if attachment_ids is not UNSET:
             field_dict["attachment_ids"] = attachment_ids
+        if send_at is not UNSET:
+            field_dict["send_at"] = send_at
 
         return field_dict
 
@@ -174,6 +183,13 @@ class MessagesReplyAllBody:
 
                 attachment_ids.append(attachment_ids_item)
 
+        _send_at = d.pop("send_at", UNSET)
+        send_at: datetime.datetime | Unset
+        if isinstance(_send_at, Unset):
+            send_at = UNSET
+        else:
+            send_at = datetime.datetime.fromisoformat(_send_at)
+
         messages_reply_all_body = cls(
             text=text,
             html=html,
@@ -182,6 +198,7 @@ class MessagesReplyAllBody:
             cc=cc,
             bcc=bcc,
             attachment_ids=attachment_ids,
+            send_at=send_at,
         )
 
         messages_reply_all_body.additional_properties = d
