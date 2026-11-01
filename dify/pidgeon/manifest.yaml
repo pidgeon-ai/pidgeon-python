@@ -5,7 +5,7 @@ name: pidgeon
 label:
   en_US: Pidgeon
 description:
-  en_US: Email inboxes for AI agents. Give an agent or a workflow its own address, then send, reply, search, wait for a verification code and hand a thread to a person.
+  en_US: Email inboxes for your team and your AI agents. Give an agent or a workflow its own address, then send, reply, search, wait for a verification code and hand a thread to a person.
 icon: icon.svg
 created_at: '2026-10-26T00:00:00Z'
 repo: https://github.com/pidgeon-ai/pidgeon-python/tree/main/dify/pidgeon

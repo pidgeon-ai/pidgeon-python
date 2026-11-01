@@ -1,6 +1,6 @@
 # Pidgeon
 
-**Email inboxes for AI agents, in Dify.** Give an agent or a workflow an email
+**Email inboxes for your team and your AI agents, in Dify.** Give an agent or a workflow an email
 address of its own, then send, reply, search, wait for a verification code,
 and hand a thread to a person.
 

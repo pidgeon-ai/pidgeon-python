@@ -13,8 +13,8 @@
 # `prd/one-source-of-capability.md`.
 [project]
 name = "pidgeon"
-version = "1.51.1"
-description = "Email inboxes for AI agents — Python SDK for Pidgeon: create addresses, send, receive and reply."
+version = "1.51.2"
+description = "Email inboxes for your team and your AI agents — Python SDK for Pidgeon: create addresses, send, receive and reply."
 authors = [{ name = "Pidgeon" }]
 requires-python = ">=3.11"
 readme = "README.md"
