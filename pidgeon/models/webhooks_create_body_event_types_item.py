@@ -32,6 +32,7 @@ class WebhooksCreateBodyEventTypesItem(StrEnum):
     MESSAGE_RELEASED = "message.released"
     MESSAGE_SENT = "message.sent"
     MESSAGE_SPAM = "message.spam"
+    REFERRAL_REWARDED = "referral.rewarded"
     THREAD_ASSIGNED = "thread.assigned"
     THREAD_CREATED = "thread.created"
     THREAD_UNASSIGNED = "thread.unassigned"

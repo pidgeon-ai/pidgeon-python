@@ -294,6 +294,9 @@ class PidgeonToolSpec(BaseToolSpec):
         cursor as `after`. Answers `timed_out: true` when
         nothing came; pass the returned `cursor` as `after` to keep waiting
         without missing anything. Mail filed as spam is counted in `held_back`.
+        Waiting never needs a second send: do not send the message, submit
+        the form or ask for a new code again while you wait, which puts a
+        second copy in someone's inbox and often voids the first code.
 
         Args:
             identity_id: The address to wait on.

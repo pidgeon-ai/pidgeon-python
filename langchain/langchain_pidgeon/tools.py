@@ -425,7 +425,11 @@ class AwaitMessage(PidgeonTool):
         "returns the newest match from then, so a code that arrived before you "
         "called is not missed; narrow it so an earlier email is not taken for the "
         "one you want. A matching message filed as spam is counted in "
-        "`held_back` rather than returned, so check there before deciding nothing came.",
+        "`held_back` rather than returned, so check there before deciding nothing came. "
+        "Waiting never needs a second send: on `timed_out: true`, wait again with the "
+        "`cursor` as `after`; do not send the message, submit the form or ask for a new "
+        "code again, which puts a second copy in someone's inbox and often voids the "
+        "first code.",
     )
     args_schema: type[BaseModel] = AwaitMessageInput
 
