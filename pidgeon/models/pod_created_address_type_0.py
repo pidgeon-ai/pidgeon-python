@@ -40,6 +40,8 @@ class PodCreatedAddressType0:
         hold_suspicious (bool): Whether Pidgeon Firewall holds suspicious mail here for a person: stored, and unreadable
             with a key until a person releases it from the dashboard. On by default for workspaces made from 27 October
             2026.
+        ai_line (bool): Whether mail an agent sends from it ends with the visible AI line, from 17 November 2026. The
+            signed declaration headers are sent either way.
         tenant_id (None | str): Your own opaque grouping for this address. Never parsed here.
         pod_id (str): The pod this address is in. Every workspace has one to start with and every address is in one, so
             this is never null.
@@ -66,6 +68,7 @@ class PodCreatedAddressType0:
     receive_policy: str
     recipient_cooldown_minutes: int
     hold_suspicious: bool
+    ai_line: bool
     tenant_id: None | str
     pod_id: str
     test: bool
@@ -111,6 +114,8 @@ class PodCreatedAddressType0:
 
         hold_suspicious = self.hold_suspicious
 
+        ai_line = self.ai_line
+
         tenant_id: None | str
         tenant_id = self.tenant_id
 
@@ -141,6 +146,7 @@ class PodCreatedAddressType0:
                 "receive_policy": receive_policy,
                 "recipient_cooldown_minutes": recipient_cooldown_minutes,
                 "hold_suspicious": hold_suspicious,
+                "ai_line": ai_line,
                 "tenant_id": tenant_id,
                 "pod_id": pod_id,
                 "test": test,
@@ -202,6 +208,8 @@ class PodCreatedAddressType0:
 
         hold_suspicious = d.pop("hold_suspicious")
 
+        ai_line = d.pop("ai_line")
+
         def _parse_tenant_id(data: object) -> None | str:
             if data is None:
                 return data
@@ -233,6 +241,7 @@ class PodCreatedAddressType0:
             receive_policy=receive_policy,
             recipient_cooldown_minutes=recipient_cooldown_minutes,
             hold_suspicious=hold_suspicious,
+            ai_line=ai_line,
             tenant_id=tenant_id,
             pod_id=pod_id,
             test=test,

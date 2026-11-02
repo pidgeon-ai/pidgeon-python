@@ -44,6 +44,10 @@ class IdentitiesUpdateBody:
             Default 10. A key with admin on the address may lengthen it; shortening it or turning it off needs its owner.
         hold_suspicious (bool | Unset): Whether Pidgeon Firewall holds suspicious mail for a person. A key may turn it
             on; turning it off is a person’s, from the dashboard, because the agent it protects should not be able to.
+        ai_line (bool | Unset): Whether mail an agent sends from it ends with one line a person can read: “Written by an
+            AI agent for …. Check it: …”, linking to the message’s verify page. On by default, from 17 November 2026. Turn
+            it off where the address’s own footer already says so; the signed declaration headers are sent either way. Needs
+            admin on the address.
         tenant_id (None | str | Unset): Your own opaque grouping — a customer id, whatever your side calls it. Never
             parsed here.
         pod_id (None | Unset | UUID): The pod this belongs to — your account’s default when you name none. A pod is a
@@ -61,6 +65,7 @@ class IdentitiesUpdateBody:
     receive_policy: IdentitiesUpdateBodyReceivePolicy | Unset = UNSET
     recipient_cooldown_minutes: int | Unset = UNSET
     hold_suspicious: bool | Unset = UNSET
+    ai_line: bool | Unset = UNSET
     tenant_id: None | str | Unset = UNSET
     pod_id: None | Unset | UUID = UNSET
 
@@ -107,6 +112,8 @@ class IdentitiesUpdateBody:
 
         hold_suspicious = self.hold_suspicious
 
+        ai_line = self.ai_line
+
         tenant_id: None | str | Unset
         if isinstance(self.tenant_id, Unset):
             tenant_id = UNSET
@@ -144,6 +151,8 @@ class IdentitiesUpdateBody:
             field_dict["recipient_cooldown_minutes"] = recipient_cooldown_minutes
         if hold_suspicious is not UNSET:
             field_dict["hold_suspicious"] = hold_suspicious
+        if ai_line is not UNSET:
+            field_dict["ai_line"] = ai_line
         if tenant_id is not UNSET:
             field_dict["tenant_id"] = tenant_id
         if pod_id is not UNSET:
@@ -229,6 +238,8 @@ class IdentitiesUpdateBody:
 
         hold_suspicious = d.pop("hold_suspicious", UNSET)
 
+        ai_line = d.pop("ai_line", UNSET)
+
         def _parse_tenant_id(data: object) -> None | str | Unset:
             if data is None:
                 return data
@@ -266,6 +277,7 @@ class IdentitiesUpdateBody:
             receive_policy=receive_policy,
             recipient_cooldown_minutes=recipient_cooldown_minutes,
             hold_suspicious=hold_suspicious,
+            ai_line=ai_line,
             tenant_id=tenant_id,
             pod_id=pod_id,
         )
