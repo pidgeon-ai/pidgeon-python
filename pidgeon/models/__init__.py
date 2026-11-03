@@ -112,6 +112,8 @@ from .calendar_event_kind import CalendarEventKind
 from .calendar_event_recurrence_type_0 import CalendarEventRecurrenceType0
 from .calendar_event_source import CalendarEventSource
 from .calendar_event_status import CalendarEventStatus
+from .calendar_free_time_response_200 import CalendarFreeTimeResponse200
+from .calendar_free_time_skip_weekends import CalendarFreeTimeSkipWeekends
 from .calendar_get_agenda_include_overlapping import CalendarGetAgendaIncludeOverlapping
 from .calendar_get_agenda_response_200 import CalendarGetAgendaResponse200
 from .calendar_get_event_response_200 import CalendarGetEventResponse200
@@ -130,6 +132,20 @@ from .calendar_update_event_body_status import CalendarUpdateEventBodyStatus
 from .calendar_update_event_mode import CalendarUpdateEventMode
 from .calendar_update_event_response_200 import CalendarUpdateEventResponse200
 from .calendar_update_response_200 import CalendarUpdateResponse200
+from .contact import Contact
+from .contact_blocked_type_0 import ContactBlockedType0
+from .contact_kind import ContactKind
+from .contacts_block_response_200 import ContactsBlockResponse200
+from .contacts_create_body import ContactsCreateBody
+from .contacts_create_body_kind import ContactsCreateBodyKind
+from .contacts_create_response_201 import ContactsCreateResponse201
+from .contacts_delete_response_200 import ContactsDeleteResponse200
+from .contacts_get_response_200 import ContactsGetResponse200
+from .contacts_list_response_200 import ContactsListResponse200
+from .contacts_unblock_response_200 import ContactsUnblockResponse200
+from .contacts_update_body import ContactsUpdateBody
+from .contacts_update_body_kind import ContactsUpdateBodyKind
+from .contacts_update_response_200 import ContactsUpdateResponse200
 from .created_domain import CreatedDomain
 from .created_domain_dns_records_item import CreatedDomainDnsRecordsItem
 from .created_domain_dns_records_item_state_type_0 import CreatedDomainDnsRecordsItemStateType0
@@ -192,6 +208,9 @@ from .event_response_event_source import EventResponseEventSource
 from .event_response_event_status import EventResponseEventStatus
 from .events_get_response_200 import EventsGetResponse200
 from .events_list_response_200 import EventsListResponse200
+from .free_time import FreeTime
+from .free_time_busy_item import FreeTimeBusyItem
+from .free_time_slots_item import FreeTimeSlotsItem
 from .identities_access_create_body import IdentitiesAccessCreateBody
 from .identities_access_create_body_access import IdentitiesAccessCreateBodyAccess
 from .identities_access_create_response_200 import IdentitiesAccessCreateResponse200
@@ -564,6 +583,8 @@ __all__ = (
     "CalendarEventRecurrenceType0",
     "CalendarEventSource",
     "CalendarEventStatus",
+    "CalendarFreeTimeResponse200",
+    "CalendarFreeTimeSkipWeekends",
     "CalendarGetAgendaIncludeOverlapping",
     "CalendarGetAgendaResponse200",
     "CalendarGetEventResponse200",
@@ -582,6 +603,20 @@ __all__ = (
     "CalendarUpdateEventMode",
     "CalendarUpdateEventResponse200",
     "CalendarUpdateResponse200",
+    "Contact",
+    "ContactBlockedType0",
+    "ContactKind",
+    "ContactsBlockResponse200",
+    "ContactsCreateBody",
+    "ContactsCreateBodyKind",
+    "ContactsCreateResponse201",
+    "ContactsDeleteResponse200",
+    "ContactsGetResponse200",
+    "ContactsListResponse200",
+    "ContactsUnblockResponse200",
+    "ContactsUpdateBody",
+    "ContactsUpdateBodyKind",
+    "ContactsUpdateResponse200",
     "CreatedDomain",
     "CreatedDomainDnsRecordsItem",
     "CreatedDomainDnsRecordsItemStateType0",
@@ -644,6 +679,9 @@ __all__ = (
     "EventResponseEventStatus",
     "EventsGetResponse200",
     "EventsListResponse200",
+    "FreeTime",
+    "FreeTimeBusyItem",
+    "FreeTimeSlotsItem",
     "IdentitiesAccessCreateBody",
     "IdentitiesAccessCreateBodyAccess",
     "IdentitiesAccessCreateResponse200",
