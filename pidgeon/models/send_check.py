@@ -9,6 +9,7 @@ from ..models.send_check_status import SendCheckStatus
 
 if TYPE_CHECKING:
     from ..models.send_check_approval_type_0 import SendCheckApprovalType0
+    from ..models.send_check_recipients_item import SendCheckRecipientsItem
 
 
 T = TypeVar("T", bound="SendCheck")
@@ -30,6 +31,8 @@ class SendCheck:
         test (bool): True when the real send would be a test-mode send.
         approval (None | SendCheckApprovalType0): Why it would wait, when `status` is `pending_approval`. Null
             otherwise.
+        recipients (list[SendCheckRecipientsItem]): Each recipient once, from `to`, `cc` and `bcc`, and whether it would
+            get this signed and verified: send typed `data` where `network` is true, prose where it is false.
     """
 
     dry_run: bool
@@ -42,6 +45,7 @@ class SendCheck:
     thread_id: None | str
     test: bool
     approval: None | SendCheckApprovalType0
+    recipients: list[SendCheckRecipientsItem]
 
     def to_dict(self) -> dict[str, Any]:
         from ..models.send_check_approval_type_0 import SendCheckApprovalType0  # noqa: PLC0415
@@ -71,6 +75,11 @@ class SendCheck:
         else:
             approval = self.approval
 
+        recipients = []
+        for recipients_item_data in self.recipients:
+            recipients_item = recipients_item_data.to_dict()
+            recipients.append(recipients_item)
+
         field_dict: dict[str, Any] = {}
 
         field_dict.update(
@@ -85,6 +94,7 @@ class SendCheck:
                 "thread_id": thread_id,
                 "test": test,
                 "approval": approval,
+                "recipients": recipients,
             }
         )
 
@@ -93,6 +103,7 @@ class SendCheck:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         from ..models.send_check_approval_type_0 import SendCheckApprovalType0  # noqa: PLC0415
+        from ..models.send_check_recipients_item import SendCheckRecipientsItem  # noqa: PLC0415
 
         d = dict(src_dict)
         dry_run = d.pop("dry_run")
@@ -133,6 +144,13 @@ class SendCheck:
 
         approval = _parse_approval(d.pop("approval"))
 
+        recipients = []
+        _recipients = d.pop("recipients")
+        for recipients_item_data in _recipients:
+            recipients_item = SendCheckRecipientsItem.from_dict(recipients_item_data)
+
+            recipients.append(recipients_item)
+
         send_check = cls(
             dry_run=dry_run,
             would_send=would_send,
@@ -144,6 +162,7 @@ class SendCheck:
             thread_id=thread_id,
             test=test,
             approval=approval,
+            recipients=recipients,
         )
 
         return send_check

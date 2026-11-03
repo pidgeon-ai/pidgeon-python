@@ -420,6 +420,8 @@ from .search_hit_folder import SearchHitFolder
 from .send_check import SendCheck
 from .send_check_approval_type_0 import SendCheckApprovalType0
 from .send_check_approval_type_0_reason import SendCheckApprovalType0Reason
+from .send_check_recipients_item import SendCheckRecipientsItem
+from .send_check_recipients_item_kind_type_0 import SendCheckRecipientsItemKindType0
 from .send_check_status import SendCheckStatus
 from .send_rule_removed import SendRuleRemoved
 from .send_rules import SendRules
@@ -917,6 +919,8 @@ __all__ = (
     "SendCheck",
     "SendCheckApprovalType0",
     "SendCheckApprovalType0Reason",
+    "SendCheckRecipientsItem",
+    "SendCheckRecipientsItemKindType0",
     "SendCheckStatus",
     "SenderVerification",
     "SenderVerificationBody",
