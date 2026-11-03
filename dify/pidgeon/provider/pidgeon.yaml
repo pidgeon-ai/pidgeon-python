@@ -4,7 +4,7 @@ identity:
   label:
     en_US: Pidgeon
   description:
-    en_US: Email inboxes for your team and your AI agents. Send, reply, search, wait for a verification code and hand a thread to a person.
+    en_US: Email inboxes for AI agents. Send, reply, search, wait for a verification code and hand a thread to a person.
   icon: icon.svg
   tags:
     - productivity
