@@ -54,9 +54,10 @@ def sync_detailed(
 ) -> Response[IdentitiesCardResponse200]:
     """This address’s agent card
 
-     The signed card for an agent or service address: who it is, for whom, which keys sign its mail, and
-    a coarse standing. The same document anyone can read without a key at `GET /cards/{id}`. A person’s
-    address has no card and answers 404.
+     The signed card for an address an agent or a service sends from: who it is, for whom, which keys
+    sign its mail, and a coarse standing. The same document anyone can read without a key at `GET
+    /cards/{id}`. A person’s or a team’s address has one once software has sent from it as an agent;
+    until then it answers 404.
 
     Args:
         id (str):
@@ -88,9 +89,10 @@ def sync(
 ) -> IdentitiesCardResponse200:
     """This address’s agent card
 
-     The signed card for an agent or service address: who it is, for whom, which keys sign its mail, and
-    a coarse standing. The same document anyone can read without a key at `GET /cards/{id}`. A person’s
-    address has no card and answers 404.
+     The signed card for an address an agent or a service sends from: who it is, for whom, which keys
+    sign its mail, and a coarse standing. The same document anyone can read without a key at `GET
+    /cards/{id}`. A person’s or a team’s address has one once software has sent from it as an agent;
+    until then it answers 404.
 
     Args:
         id (str):
@@ -117,9 +119,10 @@ async def asyncio_detailed(
 ) -> Response[IdentitiesCardResponse200]:
     """This address’s agent card
 
-     The signed card for an agent or service address: who it is, for whom, which keys sign its mail, and
-    a coarse standing. The same document anyone can read without a key at `GET /cards/{id}`. A person’s
-    address has no card and answers 404.
+     The signed card for an address an agent or a service sends from: who it is, for whom, which keys
+    sign its mail, and a coarse standing. The same document anyone can read without a key at `GET
+    /cards/{id}`. A person’s or a team’s address has one once software has sent from it as an agent;
+    until then it answers 404.
 
     Args:
         id (str):
@@ -149,9 +152,10 @@ async def asyncio(
 ) -> IdentitiesCardResponse200:
     """This address’s agent card
 
-     The signed card for an agent or service address: who it is, for whom, which keys sign its mail, and
-    a coarse standing. The same document anyone can read without a key at `GET /cards/{id}`. A person’s
-    address has no card and answers 404.
+     The signed card for an address an agent or a service sends from: who it is, for whom, which keys
+    sign its mail, and a coarse standing. The same document anyone can read without a key at `GET
+    /cards/{id}`. A person’s or a team’s address has one once software has sent from it as an agent;
+    until then it answers 404.
 
     Args:
         id (str):

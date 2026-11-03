@@ -55,8 +55,9 @@ def sync_detailed(
      Public, with no key. An agent or service address’s identity, signed by the domain that vouches for
     it: `jws` is a compact JWS (EdDSA) to check against the keys at `<iss>/.well-known/post.json`, and
     `card` is its payload, decoded for reading. Good for a day (`exp`). The URL is permanent, and every
-    agent message names it in its signed `Agent-attribution`. Anything that has no card — a person’s
-    address, a deleted one, an id that is nothing — answers the same 404. Limited per IP.
+    agent message names it in its signed `Agent-attribution`. A person’s or a team’s address has one
+    once software has sent from it as an agent. Anything that has no card — a person’s address only
+    people send from, a deleted one, an id that is nothing — answers the same 404. Limited per IP.
 
     Args:
         id (str):
@@ -91,8 +92,9 @@ def sync(
      Public, with no key. An agent or service address’s identity, signed by the domain that vouches for
     it: `jws` is a compact JWS (EdDSA) to check against the keys at `<iss>/.well-known/post.json`, and
     `card` is its payload, decoded for reading. Good for a day (`exp`). The URL is permanent, and every
-    agent message names it in its signed `Agent-attribution`. Anything that has no card — a person’s
-    address, a deleted one, an id that is nothing — answers the same 404. Limited per IP.
+    agent message names it in its signed `Agent-attribution`. A person’s or a team’s address has one
+    once software has sent from it as an agent. Anything that has no card — a person’s address only
+    people send from, a deleted one, an id that is nothing — answers the same 404. Limited per IP.
 
     Args:
         id (str):
@@ -122,8 +124,9 @@ async def asyncio_detailed(
      Public, with no key. An agent or service address’s identity, signed by the domain that vouches for
     it: `jws` is a compact JWS (EdDSA) to check against the keys at `<iss>/.well-known/post.json`, and
     `card` is its payload, decoded for reading. Good for a day (`exp`). The URL is permanent, and every
-    agent message names it in its signed `Agent-attribution`. Anything that has no card — a person’s
-    address, a deleted one, an id that is nothing — answers the same 404. Limited per IP.
+    agent message names it in its signed `Agent-attribution`. A person’s or a team’s address has one
+    once software has sent from it as an agent. Anything that has no card — a person’s address only
+    people send from, a deleted one, an id that is nothing — answers the same 404. Limited per IP.
 
     Args:
         id (str):
@@ -156,8 +159,9 @@ async def asyncio(
      Public, with no key. An agent or service address’s identity, signed by the domain that vouches for
     it: `jws` is a compact JWS (EdDSA) to check against the keys at `<iss>/.well-known/post.json`, and
     `card` is its payload, decoded for reading. Good for a day (`exp`). The URL is permanent, and every
-    agent message names it in its signed `Agent-attribution`. Anything that has no card — a person’s
-    address, a deleted one, an id that is nothing — answers the same 404. Limited per IP.
+    agent message names it in its signed `Agent-attribution`. A person’s or a team’s address has one
+    once software has sent from it as an agent. Anything that has no card — a person’s address only
+    people send from, a deleted one, an id that is nothing — answers the same 404. Limited per IP.
 
     Args:
         id (str):
