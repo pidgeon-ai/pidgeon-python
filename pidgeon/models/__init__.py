@@ -3,6 +3,14 @@
 from .address import Address
 from .agent_attach_human_body import AgentAttachHumanBody
 from .agent_attach_human_response_200 import AgentAttachHumanResponse200
+from .agent_card import AgentCard
+from .agent_card_card import AgentCardCard
+from .agent_card_card_keys_item import AgentCardCardKeysItem
+from .agent_card_card_keys_item_type import AgentCardCardKeysItemType
+from .agent_card_card_kind import AgentCardCardKind
+from .agent_card_card_operator import AgentCardCardOperator
+from .agent_card_card_reputation import AgentCardCardReputation
+from .agent_card_card_reputation_standing import AgentCardCardReputationStanding
 from .agent_connect_body import AgentConnectBody
 from .agent_connect_response_200 import AgentConnectResponse200
 from .agent_connected import AgentConnected
@@ -132,6 +140,7 @@ from .calendar_update_event_body_status import CalendarUpdateEventBodyStatus
 from .calendar_update_event_mode import CalendarUpdateEventMode
 from .calendar_update_event_response_200 import CalendarUpdateEventResponse200
 from .calendar_update_response_200 import CalendarUpdateResponse200
+from .cards_get_response_200 import CardsGetResponse200
 from .contact import Contact
 from .contact_blocked_type_0 import ContactBlockedType0
 from .contact_kind import ContactKind
@@ -216,6 +225,7 @@ from .identities_access_create_body_access import IdentitiesAccessCreateBodyAcce
 from .identities_access_create_response_200 import IdentitiesAccessCreateResponse200
 from .identities_access_delete_response_200 import IdentitiesAccessDeleteResponse200
 from .identities_access_get_response_200 import IdentitiesAccessGetResponse200
+from .identities_card_response_200 import IdentitiesCardResponse200
 from .identities_create_body import IdentitiesCreateBody
 from .identities_create_body_mode import IdentitiesCreateBodyMode
 from .identities_create_body_send_policy import IdentitiesCreateBodySendPolicy
@@ -415,6 +425,20 @@ from .send_rule_removed import SendRuleRemoved
 from .send_rules import SendRules
 from .send_rules_rules_item import SendRulesRulesItem
 from .send_rules_rules_item_match_type import SendRulesRulesItemMatchType
+from .sender_verification import SenderVerification
+from .sender_verification_body import SenderVerificationBody
+from .sender_verification_card_type_0 import SenderVerificationCardType0
+from .sender_verification_operator_type_0 import SenderVerificationOperatorType0
+from .sender_verification_sender_type_0 import SenderVerificationSenderType0
+from .sender_verification_sender_type_0_kind_type_0 import SenderVerificationSenderType0KindType0
+from .sender_verification_signatures import SenderVerificationSignatures
+from .sender_verification_signatures_declaration import SenderVerificationSignaturesDeclaration
+from .sender_verification_signatures_declaration_result import SenderVerificationSignaturesDeclarationResult
+from .sender_verification_signatures_envelope import SenderVerificationSignaturesEnvelope
+from .sender_verification_signatures_envelope_result import SenderVerificationSignaturesEnvelopeResult
+from .sender_verification_verdict import SenderVerificationVerdict
+from .sender_verification_warnings_item import SenderVerificationWarningsItem
+from .sender_verification_warnings_item_code import SenderVerificationWarningsItemCode
 from .sent import Sent
 from .sent_approval_type_0 import SentApprovalType0
 from .sent_approval_type_0_reason import SentApprovalType0Reason
@@ -455,6 +479,8 @@ from .verification import Verification
 from .verification_dns_records_item import VerificationDnsRecordsItem
 from .verification_dns_records_item_state_type_0 import VerificationDnsRecordsItemStateType0
 from .verification_dns_records_item_status import VerificationDnsRecordsItemStatus
+from .verify_sender_body import VerifySenderBody
+from .verify_sender_response_200 import VerifySenderResponse200
 from .warning import Warning_
 from .warning_code import WarningCode
 from .webhook import Webhook
@@ -484,6 +510,14 @@ __all__ = (
     "Address",
     "AgentAttachHumanBody",
     "AgentAttachHumanResponse200",
+    "AgentCard",
+    "AgentCardCard",
+    "AgentCardCardKeysItem",
+    "AgentCardCardKeysItemType",
+    "AgentCardCardKind",
+    "AgentCardCardOperator",
+    "AgentCardCardReputation",
+    "AgentCardCardReputationStanding",
     "AgentConnectBody",
     "AgentConnected",
     "AgentConnectResponse200",
@@ -603,6 +637,7 @@ __all__ = (
     "CalendarUpdateEventMode",
     "CalendarUpdateEventResponse200",
     "CalendarUpdateResponse200",
+    "CardsGetResponse200",
     "Contact",
     "ContactBlockedType0",
     "ContactKind",
@@ -687,6 +722,7 @@ __all__ = (
     "IdentitiesAccessCreateResponse200",
     "IdentitiesAccessDeleteResponse200",
     "IdentitiesAccessGetResponse200",
+    "IdentitiesCardResponse200",
     "IdentitiesCreateBody",
     "IdentitiesCreateBodyMode",
     "IdentitiesCreateBodySendPolicy",
@@ -882,6 +918,20 @@ __all__ = (
     "SendCheckApprovalType0",
     "SendCheckApprovalType0Reason",
     "SendCheckStatus",
+    "SenderVerification",
+    "SenderVerificationBody",
+    "SenderVerificationCardType0",
+    "SenderVerificationOperatorType0",
+    "SenderVerificationSenderType0",
+    "SenderVerificationSenderType0KindType0",
+    "SenderVerificationSignatures",
+    "SenderVerificationSignaturesDeclaration",
+    "SenderVerificationSignaturesDeclarationResult",
+    "SenderVerificationSignaturesEnvelope",
+    "SenderVerificationSignaturesEnvelopeResult",
+    "SenderVerificationVerdict",
+    "SenderVerificationWarningsItem",
+    "SenderVerificationWarningsItemCode",
     "SendRuleRemoved",
     "SendRules",
     "SendRulesRulesItem",
@@ -926,6 +976,8 @@ __all__ = (
     "VerificationDnsRecordsItem",
     "VerificationDnsRecordsItemStateType0",
     "VerificationDnsRecordsItemStatus",
+    "VerifySenderBody",
+    "VerifySenderResponse200",
     "Warning_",
     "WarningCode",
     "Webhook",
