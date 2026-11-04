@@ -13,16 +13,21 @@ class SenderVerificationOperatorType0:
     """
     Attributes:
         domain (str):
-        verified (bool):
+        verified (bool): True only when the domain’s owner proved it.
+        shared (bool): True for pidgeon.email and a company’s name on it: a shared domain anyone can get an address on,
+            so never `verified`.
     """
 
     domain: str
     verified: bool
+    shared: bool
 
     def to_dict(self) -> dict[str, Any]:
         domain = self.domain
 
         verified = self.verified
+
+        shared = self.shared
 
         field_dict: dict[str, Any] = {}
 
@@ -30,6 +35,7 @@ class SenderVerificationOperatorType0:
             {
                 "domain": domain,
                 "verified": verified,
+                "shared": shared,
             }
         )
 
@@ -42,9 +48,12 @@ class SenderVerificationOperatorType0:
 
         verified = d.pop("verified")
 
+        shared = d.pop("shared")
+
         sender_verification_operator_type_0 = cls(
             domain=domain,
             verified=verified,
+            shared=shared,
         )
 
         return sender_verification_operator_type_0

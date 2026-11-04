@@ -16,7 +16,8 @@ T = TypeVar("T", bound="SenderVerificationCardType0")
 class SenderVerificationCardType0:
     """
     Attributes:
-        url (str):
+        url (str): The card’s page, for a person.
+        api_url (str): The card as JSON, with its signed JWS.
         standing (str):
         since (str):
         log (None | SenderVerificationCardType0LogType0): The card’s latest entry in the public card log and its
@@ -24,6 +25,7 @@ class SenderVerificationCardType0:
     """
 
     url: str
+    api_url: str
     standing: str
     since: str
     log: None | SenderVerificationCardType0LogType0
@@ -32,6 +34,8 @@ class SenderVerificationCardType0:
         from ..models.sender_verification_card_type_0_log_type_0 import SenderVerificationCardType0LogType0  # noqa: PLC0415
 
         url = self.url
+
+        api_url = self.api_url
 
         standing = self.standing
 
@@ -48,6 +52,7 @@ class SenderVerificationCardType0:
         field_dict.update(
             {
                 "url": url,
+                "api_url": api_url,
                 "standing": standing,
                 "since": since,
                 "log": log,
@@ -62,6 +67,8 @@ class SenderVerificationCardType0:
 
         d = dict(src_dict)
         url = d.pop("url")
+
+        api_url = d.pop("api_url")
 
         standing = d.pop("standing")
 
@@ -84,6 +91,7 @@ class SenderVerificationCardType0:
 
         sender_verification_card_type_0 = cls(
             url=url,
+            api_url=api_url,
             standing=standing,
             since=since,
             log=log,
