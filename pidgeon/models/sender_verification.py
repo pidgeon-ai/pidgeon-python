@@ -10,6 +10,7 @@ from ..models.sender_verification_verdict import SenderVerificationVerdict
 
 if TYPE_CHECKING:
     from ..models.sender_verification_card_type_0 import SenderVerificationCardType0
+    from ..models.sender_verification_grants_item import SenderVerificationGrantsItem
     from ..models.sender_verification_operator_type_0 import SenderVerificationOperatorType0
     from ..models.sender_verification_sender_type_0 import SenderVerificationSenderType0
     from ..models.sender_verification_signatures import SenderVerificationSignatures
@@ -35,6 +36,9 @@ class SenderVerification:
         body (SenderVerificationBody):
         signatures (SenderVerificationSignatures):
         card (None | SenderVerificationCardType0): The sender’s agent card, when we issue it.
+        grants (list[SenderVerificationGrantsItem]): What the sender may do: each grant it carried (`Post-Grant`) or
+            that was sent in `grants`, checked against the sender a signature verified. Act on `valid`. Empty when there
+            were none.
         warnings (list[SenderVerificationWarningsItem]):
     """
 
@@ -49,6 +53,7 @@ class SenderVerification:
     body: SenderVerificationBody
     signatures: SenderVerificationSignatures
     card: None | SenderVerificationCardType0
+    grants: list[SenderVerificationGrantsItem]
     warnings: list[SenderVerificationWarningsItem]
 
     def to_dict(self) -> dict[str, Any]:
@@ -93,6 +98,11 @@ class SenderVerification:
         else:
             card = self.card
 
+        grants = []
+        for grants_item_data in self.grants:
+            grants_item = grants_item_data.to_dict()
+            grants.append(grants_item)
+
         warnings = []
         for warnings_item_data in self.warnings:
             warnings_item = warnings_item_data.to_dict()
@@ -113,6 +123,7 @@ class SenderVerification:
                 "body": body,
                 "signatures": signatures,
                 "card": card,
+                "grants": grants,
                 "warnings": warnings,
             }
         )
@@ -122,6 +133,7 @@ class SenderVerification:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         from ..models.sender_verification_card_type_0 import SenderVerificationCardType0  # noqa: PLC0415
+        from ..models.sender_verification_grants_item import SenderVerificationGrantsItem  # noqa: PLC0415
         from ..models.sender_verification_operator_type_0 import SenderVerificationOperatorType0  # noqa: PLC0415
         from ..models.sender_verification_sender_type_0 import SenderVerificationSenderType0  # noqa: PLC0415
         from ..models.sender_verification_signatures import SenderVerificationSignatures  # noqa: PLC0415
@@ -206,6 +218,13 @@ class SenderVerification:
 
         card = _parse_card(d.pop("card"))
 
+        grants = []
+        _grants = d.pop("grants")
+        for grants_item_data in _grants:
+            grants_item = SenderVerificationGrantsItem.from_dict(grants_item_data)
+
+            grants.append(grants_item)
+
         warnings = []
         _warnings = d.pop("warnings")
         for warnings_item_data in _warnings:
@@ -225,6 +244,7 @@ class SenderVerification:
             body=body,
             signatures=signatures,
             card=card,
+            grants=grants,
             warnings=warnings,
         )
 

@@ -239,6 +239,33 @@ from .events_list_response_200 import EventsListResponse200
 from .free_time import FreeTime
 from .free_time_busy_item import FreeTimeBusyItem
 from .free_time_slots_item import FreeTimeSlotsItem
+from .grant import Grant
+from .grant_grantor_type_0 import GrantGrantorType0
+from .grant_grantor_type_1 import GrantGrantorType1
+from .grant_scope import GrantScope
+from .grant_scope_limit import GrantScopeLimit
+from .grant_state import GrantState
+from .grant_state_status import GrantStateStatus
+from .grant_status import GrantStatus
+from .grant_subject import GrantSubject
+from .grant_subject_type import GrantSubjectType
+from .grant_template import GrantTemplate
+from .grant_template_limit_type_0 import GrantTemplateLimitType0
+from .grant_template_subject_type import GrantTemplateSubjectType
+from .grants_create_body import GrantsCreateBody
+from .grants_create_body_grantor_type_0 import GrantsCreateBodyGrantorType0
+from .grants_create_body_grantor_type_1 import GrantsCreateBodyGrantorType1
+from .grants_create_response_201 import GrantsCreateResponse201
+from .grants_get_response_200 import GrantsGetResponse200
+from .grants_list_response_200 import GrantsListResponse200
+from .grants_revoke_response_200 import GrantsRevokeResponse200
+from .grants_status_response_200 import GrantsStatusResponse200
+from .grants_templates_create_body import GrantsTemplatesCreateBody
+from .grants_templates_create_body_limit import GrantsTemplatesCreateBodyLimit
+from .grants_templates_create_body_subject_type import GrantsTemplatesCreateBodySubjectType
+from .grants_templates_create_response_201 import GrantsTemplatesCreateResponse201
+from .grants_templates_delete_response_200 import GrantsTemplatesDeleteResponse200
+from .grants_templates_list_response_200 import GrantsTemplatesListResponse200
 from .identities_access_create_body import IdentitiesAccessCreateBody
 from .identities_access_create_body_access import IdentitiesAccessCreateBodyAccess
 from .identities_access_create_response_200 import IdentitiesAccessCreateResponse200
@@ -458,6 +485,14 @@ from .sender_verification import SenderVerification
 from .sender_verification_body import SenderVerificationBody
 from .sender_verification_card_type_0 import SenderVerificationCardType0
 from .sender_verification_card_type_0_log_type_0 import SenderVerificationCardType0LogType0
+from .sender_verification_grants_item import SenderVerificationGrantsItem
+from .sender_verification_grants_item_grantor_type_0_type_0 import SenderVerificationGrantsItemGrantorType0Type0
+from .sender_verification_grants_item_grantor_type_0_type_1 import SenderVerificationGrantsItemGrantorType0Type1
+from .sender_verification_grants_item_reason_type_0 import SenderVerificationGrantsItemReasonType0
+from .sender_verification_grants_item_scope_type_0 import SenderVerificationGrantsItemScopeType0
+from .sender_verification_grants_item_scope_type_0_limit import SenderVerificationGrantsItemScopeType0Limit
+from .sender_verification_grants_item_subject_type_0 import SenderVerificationGrantsItemSubjectType0
+from .sender_verification_grants_item_subject_type_0_type import SenderVerificationGrantsItemSubjectType0Type
 from .sender_verification_operator_type_0 import SenderVerificationOperatorType0
 from .sender_verification_sender_type_0 import SenderVerificationSenderType0
 from .sender_verification_sender_type_0_kind_type_0 import SenderVerificationSenderType0KindType0
@@ -770,6 +805,33 @@ __all__ = (
     "FreeTime",
     "FreeTimeBusyItem",
     "FreeTimeSlotsItem",
+    "Grant",
+    "GrantGrantorType0",
+    "GrantGrantorType1",
+    "GrantScope",
+    "GrantScopeLimit",
+    "GrantsCreateBody",
+    "GrantsCreateBodyGrantorType0",
+    "GrantsCreateBodyGrantorType1",
+    "GrantsCreateResponse201",
+    "GrantsGetResponse200",
+    "GrantsListResponse200",
+    "GrantsRevokeResponse200",
+    "GrantsStatusResponse200",
+    "GrantState",
+    "GrantStateStatus",
+    "GrantStatus",
+    "GrantsTemplatesCreateBody",
+    "GrantsTemplatesCreateBodyLimit",
+    "GrantsTemplatesCreateBodySubjectType",
+    "GrantsTemplatesCreateResponse201",
+    "GrantsTemplatesDeleteResponse200",
+    "GrantsTemplatesListResponse200",
+    "GrantSubject",
+    "GrantSubjectType",
+    "GrantTemplate",
+    "GrantTemplateLimitType0",
+    "GrantTemplateSubjectType",
     "IdentitiesAccessCreateBody",
     "IdentitiesAccessCreateBodyAccess",
     "IdentitiesAccessCreateResponse200",
@@ -985,6 +1047,14 @@ __all__ = (
     "SenderVerificationBody",
     "SenderVerificationCardType0",
     "SenderVerificationCardType0LogType0",
+    "SenderVerificationGrantsItem",
+    "SenderVerificationGrantsItemGrantorType0Type0",
+    "SenderVerificationGrantsItemGrantorType0Type1",
+    "SenderVerificationGrantsItemReasonType0",
+    "SenderVerificationGrantsItemScopeType0",
+    "SenderVerificationGrantsItemScopeType0Limit",
+    "SenderVerificationGrantsItemSubjectType0",
+    "SenderVerificationGrantsItemSubjectType0Type",
     "SenderVerificationOperatorType0",
     "SenderVerificationSenderType0",
     "SenderVerificationSenderType0KindType0",

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
@@ -23,11 +23,17 @@ class VerifySenderBody:
         request (VerifySenderBodyRequest | Unset): An HTTP request an agent signed (HTTP Message Signatures, Web Bot
             Auth), as received. Send this or `message`.
         recipient (str | Unset):
+        grants (list[str] | Unset): Grants sent beside the message or request rather than in a `Post-Grant` header, such
+            as an MCP call’s `_meta["ai.pidgeon.post/grant"]`: compact JWS.
+        subject (str | Unset): The customer, account or order you are about to act on. A grant for another one answers
+            `wrong_subject`.
     """
 
     message: str | Unset = UNSET
     request: VerifySenderBodyRequest | Unset = UNSET
     recipient: str | Unset = UNSET
+    grants: list[str] | Unset = UNSET
+    subject: str | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -39,6 +45,12 @@ class VerifySenderBody:
 
         recipient = self.recipient
 
+        grants: list[str] | Unset = UNSET
+        if not isinstance(self.grants, Unset):
+            grants = self.grants
+
+        subject = self.subject
+
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
@@ -48,6 +60,10 @@ class VerifySenderBody:
             field_dict["request"] = request
         if recipient is not UNSET:
             field_dict["recipient"] = recipient
+        if grants is not UNSET:
+            field_dict["grants"] = grants
+        if subject is not UNSET:
+            field_dict["subject"] = subject
 
         return field_dict
 
@@ -67,10 +83,16 @@ class VerifySenderBody:
 
         recipient = d.pop("recipient", UNSET)
 
+        grants = cast(list[str], d.pop("grants", UNSET))
+
+        subject = d.pop("subject", UNSET)
+
         verify_sender_body = cls(
             message=message,
             request=request,
             recipient=recipient,
+            grants=grants,
+            subject=subject,
         )
 
         verify_sender_body.additional_properties = d

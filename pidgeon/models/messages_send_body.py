@@ -32,6 +32,7 @@ class MessagesSendBody:
             end to read as fields. Travels as its own part; it is never mixed into the text.
         attachment_ids (list[UUID] | Unset): Ids from `POST /attachments`, uploaded before the message that carries
             them. Up to 20.
+        grant_ids (list[UUID] | Unset):
         send_at (datetime.datetime | Unset):
         in_reply_to (None | Unset | UUID): The message being answered. Keeps the conversation together in the
             recipient’s client too.
@@ -48,6 +49,7 @@ class MessagesSendBody:
     html: str | Unset = UNSET
     data: MessagesSendBodyData | Unset = UNSET
     attachment_ids: list[UUID] | Unset = UNSET
+    grant_ids: list[UUID] | Unset = UNSET
     send_at: datetime.datetime | Unset = UNSET
     in_reply_to: None | Unset | UUID = UNSET
     in_reply_to_message_id: None | Unset | UUID = UNSET
@@ -97,6 +99,13 @@ class MessagesSendBody:
                 attachment_ids_item = str(attachment_ids_item_data)
                 attachment_ids.append(attachment_ids_item)
 
+        grant_ids: list[str] | Unset = UNSET
+        if not isinstance(self.grant_ids, Unset):
+            grant_ids = []
+            for grant_ids_item_data in self.grant_ids:
+                grant_ids_item = str(grant_ids_item_data)
+                grant_ids.append(grant_ids_item)
+
         send_at: str | Unset = UNSET
         if not isinstance(self.send_at, Unset):
             send_at = self.send_at.isoformat()
@@ -139,6 +148,8 @@ class MessagesSendBody:
             field_dict["data"] = data
         if attachment_ids is not UNSET:
             field_dict["attachment_ids"] = attachment_ids
+        if grant_ids is not UNSET:
+            field_dict["grant_ids"] = grant_ids
         if send_at is not UNSET:
             field_dict["send_at"] = send_at
         if in_reply_to is not UNSET:
@@ -220,6 +231,15 @@ class MessagesSendBody:
 
                 attachment_ids.append(attachment_ids_item)
 
+        _grant_ids = d.pop("grant_ids", UNSET)
+        grant_ids: list[UUID] | Unset = UNSET
+        if _grant_ids is not UNSET:
+            grant_ids = []
+            for grant_ids_item_data in _grant_ids:
+                grant_ids_item = UUID(grant_ids_item_data)
+
+                grant_ids.append(grant_ids_item)
+
         _send_at = d.pop("send_at", UNSET)
         send_at: datetime.datetime | Unset
         if isinstance(_send_at, Unset):
@@ -271,6 +291,7 @@ class MessagesSendBody:
             html=html,
             data=data,
             attachment_ids=attachment_ids,
+            grant_ids=grant_ids,
             send_at=send_at,
             in_reply_to=in_reply_to,
             in_reply_to_message_id=in_reply_to_message_id,

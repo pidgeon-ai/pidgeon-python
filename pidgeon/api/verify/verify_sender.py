@@ -66,8 +66,11 @@ def sync_detailed(
     a signed message replayed to you. Or send `request` instead of `message`: an HTTP request an agent
     signed with HTTP Message Signatures (RFC 9421) in Web Bot Auth’s profile, which is also how an MCP
     call over HTTP is signed; the key is found by its `keyid` among domains proved with `pidgeon id`, or
-    in the directory its `Signature-Agent` names. Nothing sent is stored. Limited per IP; a key may be
-    sent and is not required.
+    in the directory its `Signature-Agent` names. `grants` says what the sender may do: each grant it
+    carried in `Post-Grant`, or that you send in `grants`, checked against the sender a signature
+    verified — act on each one’s `valid`, and pass `subject` to have it checked against the customer,
+    account or order you are about to act on. Nothing sent is stored. Limited per IP; a key may be sent
+    and is not required.
 
     Args:
         body (VerifySenderBody):
@@ -106,8 +109,11 @@ def sync(
     a signed message replayed to you. Or send `request` instead of `message`: an HTTP request an agent
     signed with HTTP Message Signatures (RFC 9421) in Web Bot Auth’s profile, which is also how an MCP
     call over HTTP is signed; the key is found by its `keyid` among domains proved with `pidgeon id`, or
-    in the directory its `Signature-Agent` names. Nothing sent is stored. Limited per IP; a key may be
-    sent and is not required.
+    in the directory its `Signature-Agent` names. `grants` says what the sender may do: each grant it
+    carried in `Post-Grant`, or that you send in `grants`, checked against the sender a signature
+    verified — act on each one’s `valid`, and pass `subject` to have it checked against the customer,
+    account or order you are about to act on. Nothing sent is stored. Limited per IP; a key may be sent
+    and is not required.
 
     Args:
         body (VerifySenderBody):
@@ -141,8 +147,11 @@ async def asyncio_detailed(
     a signed message replayed to you. Or send `request` instead of `message`: an HTTP request an agent
     signed with HTTP Message Signatures (RFC 9421) in Web Bot Auth’s profile, which is also how an MCP
     call over HTTP is signed; the key is found by its `keyid` among domains proved with `pidgeon id`, or
-    in the directory its `Signature-Agent` names. Nothing sent is stored. Limited per IP; a key may be
-    sent and is not required.
+    in the directory its `Signature-Agent` names. `grants` says what the sender may do: each grant it
+    carried in `Post-Grant`, or that you send in `grants`, checked against the sender a signature
+    verified — act on each one’s `valid`, and pass `subject` to have it checked against the customer,
+    account or order you are about to act on. Nothing sent is stored. Limited per IP; a key may be sent
+    and is not required.
 
     Args:
         body (VerifySenderBody):
@@ -179,8 +188,11 @@ async def asyncio(
     a signed message replayed to you. Or send `request` instead of `message`: an HTTP request an agent
     signed with HTTP Message Signatures (RFC 9421) in Web Bot Auth’s profile, which is also how an MCP
     call over HTTP is signed; the key is found by its `keyid` among domains proved with `pidgeon id`, or
-    in the directory its `Signature-Agent` names. Nothing sent is stored. Limited per IP; a key may be
-    sent and is not required.
+    in the directory its `Signature-Agent` names. `grants` says what the sender may do: each grant it
+    carried in `Post-Grant`, or that you send in `grants`, checked against the sender a signature
+    verified — act on each one’s `valid`, and pass `subject` to have it checked against the customer,
+    account or order you are about to act on. Nothing sent is stored. Limited per IP; a key may be sent
+    and is not required.
 
     Args:
         body (VerifySenderBody):
