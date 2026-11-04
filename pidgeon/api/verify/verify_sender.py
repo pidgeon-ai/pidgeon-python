@@ -63,8 +63,11 @@ def sync_detailed(
     sent it, on whose behalf, and whether its signatures hold — the signed agent declaration (`Agent-of`
     under an aligned DKIM signature) and the `Post-Envelope` — for Pidgeon’s mail and any other signer
     using the same formats. Act on `verdict`. Pass `recipient`, the address it reached you at, to catch
-    a signed message replayed to you. Nothing sent is stored. Limited per IP; a key may be sent and is
-    not required.
+    a signed message replayed to you. Or send `request` instead of `message`: an HTTP request an agent
+    signed with HTTP Message Signatures (RFC 9421) in Web Bot Auth’s profile, which is also how an MCP
+    call over HTTP is signed; the key is found by its `keyid` among domains proved with `pidgeon id`, or
+    in the directory its `Signature-Agent` names. Nothing sent is stored. Limited per IP; a key may be
+    sent and is not required.
 
     Args:
         body (VerifySenderBody):
@@ -100,8 +103,11 @@ def sync(
     sent it, on whose behalf, and whether its signatures hold — the signed agent declaration (`Agent-of`
     under an aligned DKIM signature) and the `Post-Envelope` — for Pidgeon’s mail and any other signer
     using the same formats. Act on `verdict`. Pass `recipient`, the address it reached you at, to catch
-    a signed message replayed to you. Nothing sent is stored. Limited per IP; a key may be sent and is
-    not required.
+    a signed message replayed to you. Or send `request` instead of `message`: an HTTP request an agent
+    signed with HTTP Message Signatures (RFC 9421) in Web Bot Auth’s profile, which is also how an MCP
+    call over HTTP is signed; the key is found by its `keyid` among domains proved with `pidgeon id`, or
+    in the directory its `Signature-Agent` names. Nothing sent is stored. Limited per IP; a key may be
+    sent and is not required.
 
     Args:
         body (VerifySenderBody):
@@ -132,8 +138,11 @@ async def asyncio_detailed(
     sent it, on whose behalf, and whether its signatures hold — the signed agent declaration (`Agent-of`
     under an aligned DKIM signature) and the `Post-Envelope` — for Pidgeon’s mail and any other signer
     using the same formats. Act on `verdict`. Pass `recipient`, the address it reached you at, to catch
-    a signed message replayed to you. Nothing sent is stored. Limited per IP; a key may be sent and is
-    not required.
+    a signed message replayed to you. Or send `request` instead of `message`: an HTTP request an agent
+    signed with HTTP Message Signatures (RFC 9421) in Web Bot Auth’s profile, which is also how an MCP
+    call over HTTP is signed; the key is found by its `keyid` among domains proved with `pidgeon id`, or
+    in the directory its `Signature-Agent` names. Nothing sent is stored. Limited per IP; a key may be
+    sent and is not required.
 
     Args:
         body (VerifySenderBody):
@@ -167,8 +176,11 @@ async def asyncio(
     sent it, on whose behalf, and whether its signatures hold — the signed agent declaration (`Agent-of`
     under an aligned DKIM signature) and the `Post-Envelope` — for Pidgeon’s mail and any other signer
     using the same formats. Act on `verdict`. Pass `recipient`, the address it reached you at, to catch
-    a signed message replayed to you. Nothing sent is stored. Limited per IP; a key may be sent and is
-    not required.
+    a signed message replayed to you. Or send `request` instead of `message`: an HTTP request an agent
+    signed with HTTP Message Signatures (RFC 9421) in Web Bot Auth’s profile, which is also how an MCP
+    call over HTTP is signed; the key is found by its `keyid` among domains proved with `pidgeon id`, or
+    in the directory its `Signature-Agent` names. Nothing sent is stored. Limited per IP; a key may be
+    sent and is not required.
 
     Args:
         body (VerifySenderBody):

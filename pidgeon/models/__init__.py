@@ -438,6 +438,8 @@ from .sender_verification_signatures_declaration import SenderVerificationSignat
 from .sender_verification_signatures_declaration_result import SenderVerificationSignaturesDeclarationResult
 from .sender_verification_signatures_envelope import SenderVerificationSignaturesEnvelope
 from .sender_verification_signatures_envelope_result import SenderVerificationSignaturesEnvelopeResult
+from .sender_verification_signatures_request import SenderVerificationSignaturesRequest
+from .sender_verification_signatures_request_result import SenderVerificationSignaturesRequestResult
 from .sender_verification_verdict import SenderVerificationVerdict
 from .sender_verification_warnings_item import SenderVerificationWarningsItem
 from .sender_verification_warnings_item_code import SenderVerificationWarningsItemCode
@@ -482,6 +484,8 @@ from .verification_dns_records_item import VerificationDnsRecordsItem
 from .verification_dns_records_item_state_type_0 import VerificationDnsRecordsItemStateType0
 from .verification_dns_records_item_status import VerificationDnsRecordsItemStatus
 from .verify_sender_body import VerifySenderBody
+from .verify_sender_body_request import VerifySenderBodyRequest
+from .verify_sender_body_request_headers import VerifySenderBodyRequestHeaders
 from .verify_sender_response_200 import VerifySenderResponse200
 from .warning import Warning_
 from .warning_code import WarningCode
@@ -933,6 +937,8 @@ __all__ = (
     "SenderVerificationSignaturesDeclarationResult",
     "SenderVerificationSignaturesEnvelope",
     "SenderVerificationSignaturesEnvelopeResult",
+    "SenderVerificationSignaturesRequest",
+    "SenderVerificationSignaturesRequestResult",
     "SenderVerificationVerdict",
     "SenderVerificationWarningsItem",
     "SenderVerificationWarningsItemCode",
@@ -981,6 +987,8 @@ __all__ = (
     "VerificationDnsRecordsItemStateType0",
     "VerificationDnsRecordsItemStatus",
     "VerifySenderBody",
+    "VerifySenderBodyRequest",
+    "VerifySenderBodyRequestHeaders",
     "VerifySenderResponse200",
     "Warning_",
     "WarningCode",
