@@ -8,6 +8,7 @@ class WebhooksCreateBodyEventTypesItem(StrEnum):
     CALENDAR_EVENT_RESPONDED = "calendar.event.responded"
     CALENDAR_EVENT_STARTING = "calendar.event.starting"
     CALENDAR_EVENT_UPDATED = "calendar.event.updated"
+    CARD_LOG_MATCHED = "card_log.matched"
     DOMAIN_DNS_CHANGED = "domain.dns_changed"
     DOMAIN_VERIFIED = "domain.verified"
     DRAFT_APPROVAL_REQUESTED = "draft.approval_requested"
