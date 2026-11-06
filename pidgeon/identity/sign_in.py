@@ -26,7 +26,9 @@ against the real token endpoint and the real site library.
 
 from __future__ import annotations
 
+import base64
 import contextlib
+import json
 import os
 import re
 import time
@@ -120,14 +122,41 @@ def _string(value: Any) -> str | None:
     return value if isinstance(value, str) else None
 
 
-def site_metadata(site: str, client: httpx.Client | None = None) -> dict[str, str]:
-    """The site's ``issuer`` and ``client_id``, from ``GET`` on its token endpoint."""
+def site_metadata(site: str, client: httpx.Client | None = None) -> dict[str, Any]:
+    """The site's ``issuer``, every issuer it accepts agents from (``issuers``, ``issuer``
+    first) and its ``client_id``, from ``GET`` on its token endpoint."""
     with _http(client) as http:
         response = http.get(site, headers={"accept": "application/json"})
     body = _json(response)
     if not response.is_success or not isinstance(body.get("issuer"), str) or not isinstance(body.get("client_id"), str):
         raise SignInError("site", response.status_code, None, f"{site} does not offer Sign in with Pidgeon.")
-    return {"issuer": body["issuer"], "client_id": body["client_id"], "token_endpoint": site}
+    listed = body.get("issuers")
+    issuers = [_trim(body["issuer"])] + [
+        _trim(issuer) for issuer in (listed if isinstance(listed, list) else []) if isinstance(issuer, str)
+    ]
+    return {
+        "issuer": body["issuer"],
+        "issuers": list(dict.fromkeys(issuers)),
+        "client_id": body["client_id"],
+        "token_endpoint": site,
+    }
+
+
+def _trim(issuer: str) -> str:
+    return re.sub(r"/$", "", issuer)
+
+
+def _issuer_for(site: Mapping[str, Any], card: str) -> str:
+    """The issuer to sign in at: the one that signed the card, when the site lists it, else the site's."""
+    parts = card.split(".")
+    try:
+        payload = json.loads(base64.urlsafe_b64decode(parts[1] + "=" * (-len(parts[1]) % 4)))
+        iss = _trim(payload["iss"]) if isinstance(payload, dict) and isinstance(payload.get("iss"), str) else None
+        if iss and iss in site["issuers"]:
+            return iss
+    except (IndexError, ValueError, TypeError):
+        pass  # Not a card we can read: the issuer will say so.
+    return _trim(site["issuer"])
 
 
 def _default_post_host(domain: str) -> str:
@@ -170,7 +199,7 @@ def dpop_proof(identity: Identity, method: str, url: str) -> str:
 
 
 # The headers that show Pidgeon who is asking, given the request it will see.
-_Authenticate = Callable[[str, str, dict[str, str], str, dict[str, str]], dict[str, str]]
+_Authenticate = Callable[[str, str, dict[str, str], str, dict[str, Any]], dict[str, str]]
 
 
 def sign_in_with_pidgeon(
@@ -196,7 +225,7 @@ def sign_in_with_pidgeon(
     """
 
     def authenticate(
-        token_endpoint: str, exchange: str, headers: dict[str, str], signer: str, _site: dict[str, str]
+        token_endpoint: str, exchange: str, headers: dict[str, str], signer: str, _site: dict[str, Any]
     ) -> dict[str, str]:
         return sign_request(
             identity,
@@ -236,7 +265,7 @@ def sign_in_with_api_key(
     trusted = re.sub(r"/$", "", issuer if issuer is not None else PIDGEON_ISSUER)
 
     def authenticate(
-        token_endpoint: str, _exchange: str, _headers: dict[str, str], _signer: str, metadata: dict[str, str]
+        token_endpoint: str, _exchange: str, _headers: dict[str, str], _signer: str, metadata: dict[str, Any]
     ) -> dict[str, str]:
         if (
             re.sub(r"/$", "", metadata["issuer"]) != trusted
@@ -254,7 +283,7 @@ def sign_in_with_api_key(
             headers["post-grant"] = re.sub(r"\s+", "", grant)
         return headers
 
-    def admit(metadata: dict[str, str]) -> None:
+    def admit(metadata: dict[str, Any]) -> None:
         # Before anything is fetched from it: an issuer the site names is not
         # contacted at all unless it is ours, as the TypeScript does.
         if re.sub(r"/$", "", metadata["issuer"]) != trusted:
@@ -279,7 +308,7 @@ def _sign_in(
     delegation: bool,
     client: httpx.Client | None,
     authenticate: _Authenticate,
-    admit: Callable[[dict[str, str]], None] | None = None,
+    admit: Callable[[dict[str, Any]], None] | None = None,
 ) -> PidgeonSignIn:
     del grant  # Carried by `authenticate`, which knows how this agent shows it.
     signer = agent.strip().lower()
@@ -289,11 +318,14 @@ def _sign_in(
             admit(site)
         subject_token = card if card is not None else fetch_card(signer, http, post_host)
 
+        # An API key goes to the site's issuer only, which ``admit`` already checked.
+        issuer = _trim(site["issuer"]) if admit is not None else _issuer_for(site, subject_token)
+
         # 1. Pidgeon: the card and the grant, for this site, from whoever can show they are the agent.
-        discovery = _json(http.get(f"{re.sub(r'/$', '', site['issuer'])}/.well-known/openid-configuration"))
+        discovery = _json(http.get(f"{issuer}/.well-known/openid-configuration"))
         token_endpoint = discovery.get("token_endpoint")
         if not isinstance(token_endpoint, str):
-            raise SignInError("pidgeon", 0, None, f"{site['issuer']} has no token endpoint.")
+            raise SignInError("pidgeon", 0, None, f"{issuer} has no token endpoint.")
         values = {
             "grant_type": TOKEN_EXCHANGE,
             "subject_token": subject_token,

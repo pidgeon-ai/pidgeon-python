@@ -330,6 +330,27 @@ def sign_in_button_html(href: str = "/api/auth/pidgeon/login", label: str = "Sig
     )
 
 
+def _origin_of(url: str) -> str | None:
+    """A URL's origin as WHATWG URL writes it: scheme, lower-cased host, port unless the default."""
+    parts = urlsplit(url)
+    if not parts.scheme or not parts.hostname:
+        return None
+    try:
+        port = parts.port
+    except ValueError:
+        return None
+    default = {"http": 80, "https": 443}.get(parts.scheme.lower())
+    host = f"[{parts.hostname}]" if ":" in parts.hostname else parts.hostname
+    return f"{parts.scheme.lower()}://{host}" + (f":{port}" if port is not None and port != default else "")
+
+
+def _same_origin(url: Any, issuer: str) -> bool:
+    if not isinstance(url, str):
+        return False
+    origin = _origin_of(url)
+    return origin is not None and origin == _origin_of(issuer)
+
+
 def _safe_path(value: str | None) -> str | None:
     """A path on this site, never another origin."""
     if value and value.startswith("/") and not value.startswith("//") and "\\" not in value:
@@ -536,6 +557,7 @@ class PidgeonSignIn:
         url: str,
         secret: str,
         issuer: str | None = None,
+        issuers: Iterable[str] | None = None,
         base_path: str | None = None,
         after_sign_in: str | None = None,
         session_seconds: int | None = None,
@@ -548,7 +570,10 @@ class PidgeonSignIn:
         ``client_id``: the site's ``client_id`` at Pidgeon, from registering it.
         ``url``: the site's origin, as agents and browsers reach it: ``https://shop.example``.
         ``secret``: at least 32 characters; signs the session and the sign-in in progress.
-        ``issuer``: Pidgeon's issuer, default :data:`PIDGEON_ISSUER`.
+        ``issuer``: Pidgeon's issuer, default :data:`PIDGEON_ISSUER`. A person signs in here.
+        ``issuers``: more issuers whose agents may sign in, beside ``issuer``: a company's own,
+        self-hosted, as ``https://post.acme.com``. Only these are ever contacted; an ID token
+        from any other is refused before anything is fetched. Default none.
         ``base_path``: where the routes live, default ``/api/auth/pidgeon``.
         ``after_sign_in``: where a person lands after signing in, default ``/``.
         ``session_seconds``: how long a session lasts, default a day.
@@ -563,6 +588,8 @@ class PidgeonSignIn:
         self.url = url
         self.secret = secret
         self.issuer = re.sub(r"/$", "", issuer if issuer is not None else PIDGEON_ISSUER)
+        #: Every issuer an agent may sign in from: ``issuer`` first, then ``issuers``.
+        self.issuers: list[str] = list(dict.fromkeys([self.issuer, *(re.sub(r"/$", "", i) for i in issuers or [])]))
         self.base_path = re.sub(r"/$", "", base_path if base_path is not None else "/api/auth/pidgeon")
         self.after_sign_in = after_sign_in
         self.session_seconds = session_seconds if session_seconds is not None else 86_400
@@ -570,8 +597,8 @@ class PidgeonSignIn:
         self._http = http_client or httpx.Client(follow_redirects=True)
         self._now = now or (lambda: math.floor(time.time()))
         self.replay = replay if replay is not None else memory_replay_store(self._now)
-        self._discovery: tuple[float, dict[str, Any]] | None = None
-        self._keys: tuple[float, dict[str, str]] | None = None
+        self._discovery: dict[str, tuple[float, dict[str, Any]]] = {}
+        self._keys: dict[str, tuple[float, dict[str, str]]] = {}
 
     @property
     def _origin(self) -> str:
@@ -655,6 +682,7 @@ class PidgeonSignIn:
             _json_dumps(
                 {
                     "issuer": self.issuer,
+                    "issuers": self.issuers,
                     "client_id": self.client_id,
                     "token_endpoint": self.token_url,
                     "grant_types_supported": [JWT_BEARER],
@@ -733,7 +761,7 @@ class PidgeonSignIn:
 
     def _login(self, url: str) -> SignInResponse:
         """The person: off to Pidgeon, with PKCE, a state and a nonce kept in a sealed cookie."""
-        discovery = self._discover()
+        discovery = self._discover(self.issuer)
         verifier = _b64url(secrets.token_bytes(32))
         flow = {
             "state": _b64url(secrets.token_bytes(16)),
@@ -788,7 +816,7 @@ class PidgeonSignIn:
                 ],
             )
 
-        discovery = self._discover()
+        discovery = self._discover(self.issuer)
         response = self._http.post(
             str(discovery["token_endpoint"]),
             headers={"content-type": "application/x-www-form-urlencoded"},
@@ -843,8 +871,9 @@ class PidgeonSignIn:
     # --- The ID token -------------------------------------------------------------
 
     def verify_id_token(self, token: str, nonce: str | None = None) -> dict[str, Any]:
-        """An ID token from Pidgeon, checked: signed by a key in the issuer's JWKS (EdDSA),
-        for this site, from this issuer, current, and with ``nonce`` when one is given."""
+        """An ID token from Pidgeon, checked: from an issuer this site lists (a person's, from
+        ``issuer`` only), signed by a key in that issuer's JWKS (EdDSA), for this site, current,
+        and with ``nonce`` when one is given."""
         parts = token.split(".")
         if len(parts) != 3:
             raise SignInRefused("invalid_grant", "That is not an ID token.")
@@ -857,7 +886,13 @@ class PidgeonSignIn:
             raise SignInRefused("invalid_grant", "That is not an ID token.")
         if not isinstance(header, dict) or header.get("alg") != "EdDSA" or not _truthy(header.get("kid")):
             raise SignInRefused("invalid_grant", "The ID token is not signed the way Pidgeon signs.")
-        x = self._key(header["kid"])
+        # The issuer is chosen from the list before any key is looked for, so an
+        # unlisted one is never contacted. A browser's answer comes from ``issuer`` only.
+        iss = re.sub(r"/$", "", claims["iss"]) if isinstance(claims.get("iss"), str) else ""
+        accepted = [self.issuer] if nonce is not None else self.issuers
+        if iss not in accepted:
+            raise SignInRefused("invalid_grant", "The ID token is from another issuer.")
+        x = self._key(iss, header["kid"])
         signed = False
         if x:
             try:
@@ -869,10 +904,6 @@ class PidgeonSignIn:
 
         now = self._now()
         aud = claims.get("aud")
-        # `String(claims.iss)`, as the TypeScript compares it.
-        iss = _js_string(claims["iss"]) if "iss" in claims else "undefined"
-        if re.sub(r"/$", "", iss) != self.issuer:
-            raise SignInRefused("invalid_grant", "The ID token is from another issuer.")
         if not (aud == self.client_id or (isinstance(aud, list) and self.client_id in aud)):
             raise SignInRefused("invalid_grant", "The ID token is for another site.")
         exp = claims.get("exp")
@@ -887,24 +918,38 @@ class PidgeonSignIn:
             raise SignInRefused("invalid_grant", "The ID token says nothing about who signed in.")
         return claims
 
-    def _discover(self) -> dict[str, Any]:
-        if self._discovery is not None and self._discovery[0] > self._now() - 300:
-            return self._discovery[1]
-        response = self._http.get(f"{self.issuer}/.well-known/openid-configuration")
+    def _discover(self, issuer: str) -> dict[str, Any]:
+        """An issuer's configuration. It must name the issuer it was fetched from (OpenID
+        Connect Discovery §4.3) and keep its keys on that issuer's origin, so a host that copies
+        another issuer's document cannot point a site at keys of its own."""
+        held = self._discovery.get(issuer)
+        if held is not None and held[0] > self._now() - 300:
+            return held[1]
+        response = self._http.get(f"{issuer}/.well-known/openid-configuration")
         if not response.is_success:
-            raise RuntimeError(f"{self.issuer} answered {response.status_code} for its configuration.")
+            raise RuntimeError(f"{issuer} answered {response.status_code} for its configuration.")
         value = response.json()
-        self._discovery = (self._now(), value)
+        named = value.get("issuer") if isinstance(value, dict) else None
+        if not isinstance(named, str) or re.sub(r"/$", "", named) != issuer:
+            raise SignInRefused("invalid_grant", f"{issuer}'s configuration names another issuer.")
+        if not _same_origin(value.get("jwks_uri"), issuer):
+            raise SignInRefused("invalid_grant", f"{issuer}'s keys are not on its own host.")
+        self._discovery[issuer] = (self._now(), value)
         return value
 
-    def _key(self, kid: Any) -> str | None:
-        """A key from the JWKS by ``kid``, fetched again once when the ``kid`` is new (a rotation)."""
+    def _key(self, issuer: str, kid: Any) -> str | None:
+        """A key from the issuer's JWKS by ``kid``, fetched again once when the ``kid`` is new (a rotation)."""
         now = self._now()
-        fresh = self._keys is not None and self._keys[0] > now - 300
-        if not fresh or kid not in self._keys[1]:  # type: ignore[index]
-            if fresh and self._keys[0] > now - 10:  # type: ignore[index]
+        held = self._keys.get(issuer)
+        fresh = held is not None and held[0] > now - 300
+        try:
+            known = held is not None and kid in held[1]
+        except TypeError:  # an unhashable kid
+            return None
+        if not fresh or not known:
+            if fresh and held[0] > now - 10:  # type: ignore[index]
                 return None
-            discovery = self._discover()
+            discovery = self._discover(issuer)
             response = self._http.get(str(discovery["jwks_uri"]))
             try:
                 jwks = response.json()
@@ -922,11 +967,8 @@ class PidgeonSignIn:
                     and entry.get("crv") == "Ed25519"
                 ):
                     value[entry["kid"]] = entry["x"]
-            self._keys = (self._now(), value)
-        try:
-            return self._keys[1].get(kid)  # type: ignore[index]
-        except TypeError:  # an unhashable kid
-            return None
+            self._keys[issuer] = (self._now(), value)
+        return self._keys[issuer][1].get(kid)
 
     # --- Sessions -----------------------------------------------------------------
 
