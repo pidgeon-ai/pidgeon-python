@@ -16,10 +16,13 @@ class PodsUpdateBody:
     Attributes:
         name (str | Unset):
         client_id (None | str | Unset): Your own id for this pod. Carried and returned, never parsed.
+        private (bool | Unset): `true`: mail in this pod is readable only with its own keys, not by the account’s keys
+            or people. Anyone who administers the pod may turn it on; only one of its own keys at `admin` turns it off.
     """
 
     name: str | Unset = UNSET
     client_id: None | str | Unset = UNSET
+    private: bool | Unset = UNSET
 
     def to_dict(self) -> dict[str, Any]:
         name = self.name
@@ -30,6 +33,8 @@ class PodsUpdateBody:
         else:
             client_id = self.client_id
 
+        private = self.private
+
         field_dict: dict[str, Any] = {}
 
         field_dict.update({})
@@ -37,6 +42,8 @@ class PodsUpdateBody:
             field_dict["name"] = name
         if client_id is not UNSET:
             field_dict["client_id"] = client_id
+        if private is not UNSET:
+            field_dict["private"] = private
 
         return field_dict
 
@@ -54,9 +61,12 @@ class PodsUpdateBody:
 
         client_id = _parse_client_id(d.pop("client_id", UNSET))
 
+        private = d.pop("private", UNSET)
+
         pods_update_body = cls(
             name=name,
             client_id=client_id,
+            private=private,
         )
 
         return pods_update_body

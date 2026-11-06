@@ -16,6 +16,7 @@ class Pod:
         name (str):
         client_id (None | str): Your own id for this pod — a customer id, whatever your side calls it.
         is_default (bool): Where an address lands when a create call names no pod. Exactly one per account.
+        private (bool): Mail in this pod is readable only with its own keys, not by the account’s keys or people.
         identity_count (int): Addresses in it.
         created_at (str): ISO-8601, UTC.
     """
@@ -24,6 +25,7 @@ class Pod:
     name: str
     client_id: None | str
     is_default: bool
+    private: bool
     identity_count: int
     created_at: str
 
@@ -37,6 +39,8 @@ class Pod:
 
         is_default = self.is_default
 
+        private = self.private
+
         identity_count = self.identity_count
 
         created_at = self.created_at
@@ -49,6 +53,7 @@ class Pod:
                 "name": name,
                 "client_id": client_id,
                 "is_default": is_default,
+                "private": private,
                 "identity_count": identity_count,
                 "created_at": created_at,
             }
@@ -72,6 +77,8 @@ class Pod:
 
         is_default = d.pop("is_default")
 
+        private = d.pop("private")
+
         identity_count = d.pop("identity_count")
 
         created_at = d.pop("created_at")
@@ -81,6 +88,7 @@ class Pod:
             name=name,
             client_id=client_id,
             is_default=is_default,
+            private=private,
             identity_count=identity_count,
             created_at=created_at,
         )

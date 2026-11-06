@@ -21,6 +21,8 @@ class PodsCreateBody:
     Attributes:
         name (str):
         client_id (None | str | Unset): Your own id for this pod. Carried and returned, never parsed.
+        private (bool | Unset): `true`: mail in this pod is readable only with its own keys, not by the account’s keys
+            or people. Anyone who administers the pod may turn it on; only one of its own keys at `admin` turns it off.
         address (PodsCreateBodyAddress | Unset): An address to create in the new pod. The same fields as `POST
             /identities`.
         key (PodsCreateBodyKey | Unset): A key for the new pod, reaching its addresses and nothing else. Its token is in
@@ -29,6 +31,7 @@ class PodsCreateBody:
 
     name: str
     client_id: None | str | Unset = UNSET
+    private: bool | Unset = UNSET
     address: PodsCreateBodyAddress | Unset = UNSET
     key: PodsCreateBodyKey | Unset = UNSET
 
@@ -40,6 +43,8 @@ class PodsCreateBody:
             client_id = UNSET
         else:
             client_id = self.client_id
+
+        private = self.private
 
         address: dict[str, Any] | Unset = UNSET
         if not isinstance(self.address, Unset):
@@ -58,6 +63,8 @@ class PodsCreateBody:
         )
         if client_id is not UNSET:
             field_dict["client_id"] = client_id
+        if private is not UNSET:
+            field_dict["private"] = private
         if address is not UNSET:
             field_dict["address"] = address
         if key is not UNSET:
@@ -82,6 +89,8 @@ class PodsCreateBody:
 
         client_id = _parse_client_id(d.pop("client_id", UNSET))
 
+        private = d.pop("private", UNSET)
+
         _address = d.pop("address", UNSET)
         address: PodsCreateBodyAddress | Unset
         if isinstance(_address, Unset):
@@ -99,6 +108,7 @@ class PodsCreateBody:
         pods_create_body = cls(
             name=name,
             client_id=client_id,
+            private=private,
             address=address,
             key=key,
         )
