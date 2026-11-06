@@ -254,7 +254,19 @@ def sign_in_with_api_key(
             headers["post-grant"] = re.sub(r"\s+", "", grant)
         return headers
 
-    return _sign_in(ephemeral, agent, site, grant, card, post_host, delegation, client, authenticate)
+    def admit(metadata: dict[str, str]) -> None:
+        # Before anything is fetched from it: an issuer the site names is not
+        # contacted at all unless it is ours, as the TypeScript does.
+        if re.sub(r"/$", "", metadata["issuer"]) != trusted:
+            raise SignInError(
+                "site",
+                0,
+                "unknown_issuer",
+                f"{metadata['token_endpoint']} signs in with {metadata['issuer']}, not {trusted}, "
+                "so your API key is not sent there.",
+            )
+
+    return _sign_in(ephemeral, agent, site, grant, card, post_host, delegation, client, authenticate, admit)
 
 
 def _sign_in(
@@ -267,11 +279,14 @@ def _sign_in(
     delegation: bool,
     client: httpx.Client | None,
     authenticate: _Authenticate,
+    admit: Callable[[dict[str, str]], None] | None = None,
 ) -> PidgeonSignIn:
     del grant  # Carried by `authenticate`, which knows how this agent shows it.
     signer = agent.strip().lower()
     with _http(client) as http:
         site = site_metadata(site_url, http)
+        if admit is not None:
+            admit(site)
         subject_token = card if card is not None else fetch_card(signer, http, post_host)
 
         # 1. Pidgeon: the card and the grant, for this site, from whoever can show they are the agent.
