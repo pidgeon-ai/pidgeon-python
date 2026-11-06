@@ -13,7 +13,7 @@
 # `prd/one-source-of-capability.md`.
 [project]
 name = "pidgeon"
-version = "1.66.1"
+version = "1.67.0"
 description = "Email inboxes for AI agents — Python SDK for Pidgeon: create addresses, send, receive and reply."
 authors = [{ name = "Pidgeon" }]
 requires-python = ">=3.11"
@@ -39,9 +39,12 @@ classifiers = [
     "Topic :: Communications :: Email",
     "Typing :: Typed",
 ]
+# `cryptography` is the agent's identity (`pidgeon.identity`): Ed25519 and
+# SHA-256, from OpenSSL rather than a pure-Python reimplementation.
 dependencies = [
     "httpx>=0.23.1,<0.29.0",
     "attrs>=22.2.0",
+    "cryptography>=42",
 ]
 
 [project.urls]
