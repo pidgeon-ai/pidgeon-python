@@ -28,6 +28,8 @@ class MessagesSendBody:
         text (str | Unset): The plain-text body. Send this even when you send `html` — some clients only read it.
             Default: ''.
         html (str | Unset): The rich body. Sanitised on the way in; scripts and remote content are removed.
+        reply_to (str | Unset): Where replies go, when not to `from`: one of your own addresses, or an address on a
+            domain you have verified.
         data (MessagesSendBodyData | Unset): Typed data: structured JSON sent beside the text, for software at the other
             end to read as fields. Travels as its own part; it is never mixed into the text.
         attachment_ids (list[UUID] | Unset): Ids from `POST /attachments`, uploaded before the message that carries
@@ -47,6 +49,7 @@ class MessagesSendBody:
     subject: str | Unset = ""
     text: str | Unset = ""
     html: str | Unset = UNSET
+    reply_to: str | Unset = UNSET
     data: MessagesSendBodyData | Unset = UNSET
     attachment_ids: list[UUID] | Unset = UNSET
     grant_ids: list[UUID] | Unset = UNSET
@@ -87,6 +90,8 @@ class MessagesSendBody:
         text = self.text
 
         html = self.html
+
+        reply_to = self.reply_to
 
         data: dict[str, Any] | Unset = UNSET
         if not isinstance(self.data, Unset):
@@ -144,6 +149,8 @@ class MessagesSendBody:
             field_dict["text"] = text
         if html is not UNSET:
             field_dict["html"] = html
+        if reply_to is not UNSET:
+            field_dict["reply_to"] = reply_to
         if data is not UNSET:
             field_dict["data"] = data
         if attachment_ids is not UNSET:
@@ -214,6 +221,8 @@ class MessagesSendBody:
         text = d.pop("text", UNSET)
 
         html = d.pop("html", UNSET)
+
+        reply_to = d.pop("reply_to", UNSET)
 
         _data = d.pop("data", UNSET)
         data: MessagesSendBodyData | Unset
@@ -289,6 +298,7 @@ class MessagesSendBody:
             subject=subject,
             text=text,
             html=html,
+            reply_to=reply_to,
             data=data,
             attachment_ids=attachment_ids,
             grant_ids=grant_ids,
