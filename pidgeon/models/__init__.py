@@ -513,6 +513,10 @@ from .sent_rejected_item import SentRejectedItem
 from .sent_status import SentStatus
 from .setup_link import SetupLink
 from .setup_link_reason_type_0 import SetupLinkReasonType0
+from .sign_in_approval import SignInApproval
+from .sign_in_approval_app import SignInApprovalApp
+from .sign_ins_approve_body import SignInsApproveBody
+from .sign_ins_approve_response_201 import SignInsApproveResponse201
 from .signed_upload import SignedUpload
 from .signed_upload_upload import SignedUploadUpload
 from .signed_upload_upload_headers import SignedUploadUploadHeaders
@@ -1082,6 +1086,10 @@ __all__ = (
     "SignedUpload",
     "SignedUploadUpload",
     "SignedUploadUploadHeaders",
+    "SignInApproval",
+    "SignInApprovalApp",
+    "SignInsApproveBody",
+    "SignInsApproveResponse201",
     "TenantSuspended",
     "TestInboundBody",
     "TestInboundBodyData",
