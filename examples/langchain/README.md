@@ -5,7 +5,7 @@ A command-line agent for one Pidgeon inbox, built with LangChain's
 [`langchain-pidgeon`](https://pypi.org/project/langchain-pidgeon/).
 
 Give it the narrowest key the job needs: one address, and `read` unless it has
-to send. Create one at [pidgeon.ai/app/developers/keys](https://pidgeon.ai/app/developers/keys).
+to send. Create one at [pidgeon.ai/app/keys](https://pidgeon.ai/app/keys).
 
 ```sh
 pip install -r requirements.txt

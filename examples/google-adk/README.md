@@ -5,7 +5,7 @@ An ADK agent for one Pidgeon inbox, connected to the hosted MCP server at
 `McpToolset` takes the server as it is.
 
 Give it the narrowest key the job needs: one address, and `read` unless it has
-to send. Create one at [pidgeon.ai/app/developers/keys](https://pidgeon.ai/app/developers/keys).
+to send. Create one at [pidgeon.ai/app/keys](https://pidgeon.ai/app/keys).
 
 ```sh
 pip install -r requirements.txt
