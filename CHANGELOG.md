@@ -1,5 +1,31 @@
 # Changelog
 
+## 2.1.1
+
+- `email.calendar.events`: `create` and `update` take `attendees` and
+  `send_invites`, and `remove` takes `send_invites`: the attendees get an
+  invitation, an update or a cancellation from the inbox.
+
+## 2.1.0
+
+The whole Email API, and webhooks. Additive: 2.0 code runs unchanged, and
+`inboxes`, `messages`, `drafts`, `rules` and `suppressions` stay on the client
+as well as under `email`.
+
+- `client.email`: `inboxes` (now `update` for `hold_suspicious`, and `create`
+  takes `domain`), `messages` (`list`, `wait` for `…/messages/await`, `get`,
+  `update` for `seen`; `send` takes `attachment_ids`), `drafts` (take
+  `attachment_ids`), `threads` (`list`, `get`, `update`, `remove`,
+  `add_label`, `remove_label`), `labels`, `contacts`, `attachments` (`upload`
+  of bytes or a path; `upload_large` describes, puts and completes a file of
+  up to 25 MB in one call; `get`), `domains` (`enable_mail`, `disable_mail`,
+  `check`), `app_passwords`, `calendar.events`, `search`, `storage` and
+  `test_inbound`.
+- `client.webhooks`: `list`, `create`, `remove`.
+- `request` takes `files` (multipart) and a per-call `timeout`.
+- `UNSET`: what a PATCH method's field defaults to, so that `None` can clear
+  it (a contact's `notes`, an event's `location`, a thread's `assignee_id`).
+
 ## 2.0.0
 
 For the new Pidgeon: Passport, Bouncer, Email and Auth. A new major version,

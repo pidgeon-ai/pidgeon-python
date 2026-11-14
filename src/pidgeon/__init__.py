@@ -13,9 +13,10 @@ Sign in with Pidgeon (``pidgeon.auth``): ``sign_in_as_agent`` for an agent,
 ``verify_id_token`` and ``verify_agent_sign_in`` for a site.
 
 For an operator's tooling and coding agents: ``.agents.set_up()`` registers
-an agent, makes its key here and publishes the public half; ``.inboxes``,
-``.messages`` and ``.drafts`` are Email; ``.sites`` and ``.mandates`` are
-Auth; ``.events`` and ``.pods`` are the account.
+an agent, makes its key here and publishes the public half; ``.email`` is
+Email (inboxes, messages, threads, labels, contacts, attachments, domains,
+calendars); ``.sites`` and ``.mandates`` are Auth; ``.events``, ``.webhooks``
+and ``.pods`` are the account.
 """
 
 from . import auth
@@ -26,6 +27,7 @@ from .client import (
     AgentSetUp,
     Pidgeon,
     PidgeonError,
+    UNSET,
     agent_from_env,
     signed_async_client,
     signed_client,
@@ -43,7 +45,7 @@ from .credential import (
     verify_agent_request,
 )
 
-__version__ = "2.0.0"
+__version__ = "2.1.1"
 
 from .webhooks import sign_webhook, verify_webhook
 
@@ -60,6 +62,7 @@ __all__ = [
     "AgentKey",
     "Pidgeon",
     "PidgeonError",
+    "UNSET",
     "Verification",
     "agent_from_env",
     "directory_url",

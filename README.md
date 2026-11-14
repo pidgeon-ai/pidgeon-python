@@ -127,18 +127,47 @@ Or by hand: `generate_agent_key()` (`key.kid`, `key.public_jwk`,
 
 ## Email
 
+Everything Email does is under `pidgeon.email`; each call answers the API's
+JSON as a `dict`.
+
 ```python
-inbox = pidgeon.inboxes.create("bookings", agent_id=made.agent["id"])
-pidgeon.messages.send(inbox["id"], to=["ana@example.com"], subject="Table for two", text="Friday at 8?")
+inbox = pidgeon.email.inboxes.create("bookings", agent_id=made.agent["id"])
+
+# Send, with a file:
+pdf = pidgeon.email.attachments.upload(inbox["id"], "menu.pdf")
+pidgeon.email.messages.send(inbox["id"], to=["ana@example.com"], subject="Table for two",
+                            text="Friday at 8?", attachment_ids=[pdf["id"]])
+
+# Wait for the answer (up to 50 seconds a call), then read it cleaned:
+got = pidgeon.email.messages.wait(inbox["id"], timeout=50)
+for message in got["data"]:
+    pidgeon.email.messages.get(message["id"], body="clean")
+    pidgeon.email.messages.update(message["id"], seen=True)
 
 # A person looks first:
-draft = pidgeon.drafts.create(inbox["id"], to=["ana@example.com"], subject="…", text="…")
-pidgeon.drafts.request_approval(draft["id"])
+draft = pidgeon.email.drafts.create(inbox["id"], to=["ana@example.com"], subject="…", text="…")
+pidgeon.email.drafts.request_approval(draft["id"])
+
+# Hand a conversation to a person:
+thread = pidgeon.email.threads.list(inbox_id=inbox["id"], status="open")["data"][0]
+pidgeon.email.threads.update(thread["id"], owner_type="human", status="human_review")
 ```
 
-Also `pidgeon.rules`, `pidgeon.suppressions`, `pidgeon.sites` and
-`pidgeon.mandates` (Auth), `pidgeon.events`, `pidgeon.pods`, and
-`pidgeon.request(method, path, body)` for any `/v1` call.
+Also under `pidgeon.email`: `messages.list`, `search(q)`, `threads`
+(`get`, `remove`, `add_label`, `remove_label`), `labels`, `contacts`,
+`attachments.upload_large` (up to 25 MB: describe, put and complete in one
+call) and `attachments.get`, `storage()`, `inboxes.update(hold_suspicious=True)`,
+`domains` (`enable_mail`, `disable_mail`, `check`), `app_passwords` for mail
+apps, `calendar.events`, `rules`, `suppressions`, and `test_inbound` (with a
+test key, deliver mail to your inbox as if someone sent it).
+
+A PATCH sends only the fields you pass; `None` clears one that can be cleared
+(`contacts.update(id, notes=None)`).
+
+`pidgeon.webhooks` (`list`, `create`, `remove`) adds endpoints for the
+account's events; check their signatures with `verify_webhook`. Also
+`pidgeon.sites` and `pidgeon.mandates` (Auth), `pidgeon.events`,
+`pidgeon.pods`, and `pidgeon.request(method, path, body)` for any `/v1` call.
 
 The key id is the key's RFC 7638 JWK thumbprint.
 
