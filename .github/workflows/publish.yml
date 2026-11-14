@@ -1,0 +1,55 @@
+name: Publish
+
+# Tag-driven: `python-v2.0.0` publishes `pidgeon` 2.0.0 to PyPI from this
+# repository's root. The release job in the private repository
+# (`scripts/release.ts`) cuts the tag after the sync that put this tree here
+# succeeded.
+#
+# This file is generated from `mirrors/python/` in the private repository and
+# overwritten on every sync: change it there.
+#
+# No PyPI token exists anywhere: trusted publishing exchanges this job's OIDC
+# token, and the upload carries PEP 740 attestations pointing at this public
+# commit. A version PyPI already has is skipped.
+on:
+  push:
+    tags: ['python-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # The environment PyPI's trusted publisher is pinned to, so no other
+    # workflow here can upload.
+    environment: pypi
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v7
+
+      - name: The tag matches the version
+        if: github.event_name == 'push'
+        run: |
+          declared=$(grep -m1 '^version = ' pyproject.toml | cut -d'"' -f2)
+          tagged="${GITHUB_REF_NAME#python-v}"
+          if [ "$declared" != "$tagged" ]; then
+            echo "Tag says $tagged; pyproject.toml says $declared." >&2
+            exit 1
+          fi
+
+      - name: Test
+        run: uv run pytest
+
+      - name: Build
+        run: uv build --out-dir dist
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          attestations: true
+          skip-existing: true
