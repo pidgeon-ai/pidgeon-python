@@ -553,14 +553,18 @@ class _Pods(_Group):
 
 
 class _Webhooks(_Group):
-    """Endpoints that hear about the whole account; they take a key of the whole account."""
+    """Endpoints that hear about the whole account or listed inboxes; they take a key of the whole account."""
 
     def list(self) -> Json:
         return self._c.request("GET", "/v1/webhooks")
 
-    def create(self, url: str, events: _Strings) -> Json:
-        """``url`` is https; ``events`` the event types to send. Answers the secret once."""
-        return self._c.request("POST", "/v1/webhooks", {"url": url, "events": events})
+    def create(self, url: str, events: _Strings, inbox_ids: Optional[_Strings] = None) -> Json:
+        """``url`` is https; ``events`` the event types to send; ``inbox_ids``, if given,
+        the only inboxes it hears (otherwise the whole account). Answers the secret once."""
+        body: dict[str, Any] = {"url": url, "events": events}
+        if inbox_ids is not None:
+            body["inbox_ids"] = inbox_ids
+        return self._c.request("POST", "/v1/webhooks", body)
 
     def remove(self, webhook_id: str) -> None:
         self._c.request("DELETE", f"/v1/webhooks/{_seg(webhook_id)}")

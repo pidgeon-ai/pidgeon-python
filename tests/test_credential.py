@@ -206,4 +206,4 @@ class TestVerifying:
 
 
 def test_version():
-    assert pidgeon.__version__ == "2.1.1"
+    assert pidgeon.__version__ == "2.2.0"

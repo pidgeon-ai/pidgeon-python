@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.0
+
+- `webhooks.create` takes `inbox_ids`: the endpoint hears only those
+  inboxes' events. A listed webhook has `inbox_ids`, `None` for one of the
+  whole account.
+
 ## 2.1.1
 
 - `email.calendar.events`: `create` and `update` take `attendees` and
