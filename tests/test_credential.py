@@ -17,7 +17,7 @@ NOW = 1_700_000_000
 
 # A key the TypeScript SDK made (generateAgentKey), with what it signed for it:
 # signAgentRequest(new Request("https://Shop.example:8443/a b/c?x=1", {method: "post"}),
-#   {privateJwk, directory: DIRECTORY, now: new Date(1700000000500)}).
+#   {privateJwk, directory: DIRECTORY, now: new Date(1700000000500), nonce: NONCE}).
 TS_PRIVATE_JWK = {
     "key_ops": ["sign"],
     "ext": True,
@@ -27,12 +27,13 @@ TS_PRIVATE_JWK = {
     "d": "6lgW_k0NzhnUKzzqaDO8rhFU7J_SC-tq6SCYkdStyc4",
 }
 TS_KID = "DxAKKZ5ZL9dtgumxvPjP61jT_DWFQyaL-e8_KpVGc3k"
+NONCE = "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0-Pw"
 TS_SIGNATURE_INPUT = (
-    'sig1=("@authority" "signature-agent" "@method" "@path");created=1700000000;'
-    f'keyid="{TS_KID}";alg="ed25519";expires=1700000060;tag="web-bot-auth"'
+    'sig1=("@authority" "signature-agent" "@method" "@path" "@query");created=1700000000;'
+    f'keyid="{TS_KID}";alg="ed25519";expires=1700000060;nonce="{NONCE}";tag="web-bot-auth"'
 )
 TS_SIGNATURE = (
-    "sig1=:ypvRAqX/Y4Tns5C46UVSbQPhGzLyv4DDsZ24+DkvpkqWHXUyg8F+CQAsjLUPO5A1z8k4oFb2hsKtLviOC6VHDg==:"
+    "sig1=:EJ76QDnnpDvop3MPw9FVy77EXN2jo1EMOStSqC2zvUS4FZpggtS2ZvVZJXo8wPemDsciKNBbpIFzl2NwCOKcCg==:"
 )
 
 
@@ -45,9 +46,9 @@ def publishing(*keys):
     return lambda kid: table.get(kid)
 
 
-def signed(url="https://shop.example/signup", method="POST", now=None, key=None):
+def signed(url="https://shop.example/signup", method="POST", now=None, key=None, nonce=None):
     key = key or generate_agent_key()
-    headers = sign_request(method, url, None, key.private_jwk, DIRECTORY, now=now)
+    headers = sign_request(method, url, None, key.private_jwk, DIRECTORY, now=now, nonce=nonce)
     return key, headers
 
 
@@ -87,7 +88,7 @@ class TestKeys:
 class TestSigning:
     def test_matches_the_typescript_sdk_byte_for_byte(self):
         headers = sign_request("post", "https://Shop.example:8443/a b/c?x=1", None,
-                               TS_PRIVATE_JWK, DIRECTORY, now=NOW + 0.5)
+                               TS_PRIVATE_JWK, DIRECTORY, now=NOW + 0.5, nonce=NONCE)
         assert headers == {
             "signature-agent": f'"{DIRECTORY}"',
             "signature-input": TS_SIGNATURE_INPUT,
@@ -95,11 +96,12 @@ class TestSigning:
         }
 
     def test_shape(self):
-        key, headers = signed(now=NOW)
+        key, headers = signed(now=NOW, nonce=NONCE)
         assert headers["signature-agent"] == f'"{DIRECTORY}"'
         assert headers["signature-input"] == (
-            'sig1=("@authority" "signature-agent" "@method" "@path");'
-            f'created={NOW};keyid="{key.kid}";alg="ed25519";expires={NOW + 60};tag="web-bot-auth"'
+            'sig1=("@authority" "signature-agent" "@method" "@path" "@query");'
+            f'created={NOW};keyid="{key.kid}";alg="ed25519";expires={NOW + 60};'
+            f'nonce="{NONCE}";tag="web-bot-auth"'
         )
         assert headers["signature"].startswith("sig1=:") and headers["signature"].endswith(":")
         assert len(base64.b64decode(headers["signature"][6:-1])) == 64
@@ -111,6 +113,7 @@ class TestSigning:
             f'"signature-agent": "{DIRECTORY}"',
             '"@method": POST',
             '"@path": /signup',
+            '"@query": ?ref=1',
             '"@signature-params": ' + headers["signature-input"][len("sig1="):],
         ]).encode()
         raw = base64.b64decode(headers["signature"][6:-1])
@@ -125,9 +128,23 @@ class TestSigning:
         assert f"expires={NOW + 300}" in headers["signature-input"]
 
     def test_authority_drops_the_default_port_and_path_defaults_to_slash(self):
-        key, a = signed("https://Shop.Example:443", method="GET", now=NOW)
-        _, b = signed("https://shop.example/", method="GET", now=NOW, key=key)
+        key, a = signed("https://Shop.Example:443", method="GET", now=NOW, nonce=NONCE)
+        _, b = signed("https://shop.example/", method="GET", now=NOW, key=key, nonce=NONCE)
         assert a == b
+
+    def test_every_signature_has_a_fresh_nonce(self):
+        key, a = signed(now=NOW)
+        _, b = signed(now=NOW, key=key)
+        nonces = [h["signature-input"].split('nonce="')[1].split('"')[0] for h in (a, b)]
+        assert nonces[0] != nonces[1]
+        assert all(len(base64.urlsafe_b64decode(n + "==")) == 64 for n in nonces)
+        result = verify_agent_request("POST", "https://shop.example/signup", a, publishing(key),
+                                      now=NOW)
+        assert result.ok and result.nonce == nonces[0]
+
+    def test_refuses_a_nonce_that_is_not_64_bytes(self):
+        with pytest.raises(ValueError):
+            signed(nonce="c2hvcnQ")
 
 
 class TestVerifying:
@@ -162,6 +179,15 @@ class TestVerifying:
     def test_refuses_a_changed_method_or_path(self, method, url):
         key, headers = signed()
         assert not verify_agent_request(method, url, headers, publishing(key)).ok
+
+    def test_refuses_a_changed_or_added_query(self):
+        key, headers = signed("https://shop.example/pay?amount=10")
+        for url in ("https://shop.example/pay?amount=1000", "https://shop.example/pay"):
+            assert not verify_agent_request("POST", url, headers, publishing(key)).ok
+        key, headers = signed("https://shop.example/pay")
+        assert not verify_agent_request(
+            "POST", "https://shop.example/pay?amount=1000", headers, publishing(key)
+        ).ok
 
     def test_refuses_a_swapped_signature_agent(self):
         key, headers = signed()
@@ -206,4 +232,4 @@ class TestVerifying:
 
 
 def test_version():
-    assert pidgeon.__version__ == "2.2.0"
+    assert pidgeon.__version__ == "2.4.0"

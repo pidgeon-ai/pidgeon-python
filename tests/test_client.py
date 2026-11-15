@@ -130,6 +130,22 @@ def test_email_groups_share_the_top_level_ones():
     assert client.email.drafts is client.drafts
 
 
+def test_agents_update_revoke_and_revoke_key():
+    assert call(lambda c: c.agents.update(INBOX, name="Booking agent"))[:4] == (
+        "PATCH", f"/v1/agents/{INBOX}", {}, {"name": "Booking agent"}
+    )
+    assert call(lambda c: c.agents.revoke(INBOX), status=204)[:2] == (
+        "DELETE", f"/v1/agents/{INBOX}"
+    )
+    assert call(lambda c: c.agents.revoke_key(INBOX, "kid_1"), status=204)[:2] == (
+        "DELETE", f"/v1/agents/{INBOX}/keys/kid_1"
+    )
+
+
+def test_pods_remove():
+    assert call(lambda c: c.pods.remove(OTHER), status=204)[:2] == ("DELETE", f"/v1/pods/{OTHER}")
+
+
 def test_inboxes_create_with_domain():
     assert call(lambda c: c.email.inboxes.create("bookings", domain="acme.com"))[:4] == (
         "POST", "/v1/email/inboxes", {}, {"name": "bookings", "kind": "agent", "domain": "acme.com"}

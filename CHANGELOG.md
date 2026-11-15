@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.4.0
+
+- Every signature carries a fresh 64-byte nonce and covers `@query` (`?`
+  when the URL has none), so neither the query nor the signature can be
+  reused: sign again to retry. `new_nonce()`; `sign_request` takes `nonce`
+  for tests. `verify_agent_request` answers the signature's `nonce` and
+  refuses a malformed one.
+- `agents.update`, `agents.revoke`, `agents.revoke_key` and `pods.remove`.
+
+## 2.3.0
+
+- `email.search` takes `body="clean"`, as reading does.
+- `InboxKind` is `"agent"` or `"events"`, the kinds the API makes.
+- `inboxes.update(hold_suspicious=True)`: `True` is the only value a key
+  may send, so it is the default and the only one typed.
+- `subject` is optional when sending or drafting, as in the API.
+- `drafts.update` no longer takes `reply_to`: a draft keeps its conversation.
+
 ## 2.2.0
 
 - `webhooks.create` takes `inbox_ids`: the endpoint hears only those

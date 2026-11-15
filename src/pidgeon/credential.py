@@ -3,7 +3,7 @@ The agent credential: Web Bot Auth, unchanged.
 
 An agent signs each request with its Ed25519 key under HTTP Message
 Signatures (RFC 9421), tagged ``web-bot-auth``, covering the request's
-authority, method and path and the ``Signature-Agent`` header, which points at
+authority, method, path and query and the ``Signature-Agent`` header, which points at
 its operator's directory on Pidgeon. This module produces exactly what the
 TypeScript SDK (Cloudflare's ``web-bot-auth``) produces, byte for byte: the
 same key id, the same Signature-Input, and, Ed25519 being deterministic, the
@@ -16,6 +16,8 @@ Choices, each the TypeScript SDK's:
   requires today; the verifier accepts the working group's dictionary form
   too.
 - A minute's lifetime by default, so a captured request is useless soon.
+- A fresh nonce in every signature, so a verifier that remembers them accepts
+  each signature once.
 """
 
 from __future__ import annotations
@@ -24,6 +26,7 @@ import base64
 import hashlib
 import json
 import math
+import os
 import re
 import time
 from collections.abc import Callable, Iterable, Mapping
@@ -47,6 +50,7 @@ __all__ = [
     "generate_agent_key",
     "is_public_jwk",
     "key_id_of",
+    "new_nonce",
     "sign_request",
     "verify_agent_request",
 ]
@@ -67,7 +71,12 @@ TAG = "web-bot-auth"
 LABEL = "sig1"
 
 #: What the signature covers, in order: the authority, the Signature-Agent, then ours.
-COVERED = ("@authority", "signature-agent", "@method", "@path")
+#: The query is covered when the URL has none too (its value is then ``?``), so
+#: one cannot be added in transit.
+COVERED = ("@authority", "signature-agent", "@method", "@path", "@query")
+
+#: A nonce is 64 random bytes (Web Bot Auth §4.2.2).
+NONCE_BYTES = 64
 
 Headers = Union[Mapping[str, Any], Iterable[tuple[str, str]], httpx.Headers, None]
 Now = Union[datetime, float, int, None]
@@ -256,6 +265,23 @@ def _signature_base(target: _Target, headers: dict[str, str], inner: _sf.InnerLi
     return "\n".join(lines).encode("ascii")
 
 
+def new_nonce() -> str:
+    """A fresh nonce: 64 random bytes, base64url."""
+    return _b64url(os.urandom(NONCE_BYTES))
+
+
+def _valid_nonce(nonce: object) -> bool:
+    """64 bytes, in canonical base64 or unpadded base64url, as the verifier Pidgeon runs accepts."""
+    if not isinstance(nonce, str) or isinstance(nonce, _sf.Token):
+        return False
+    normalized = nonce.replace("-", "+").replace("_", "/")
+    try:
+        raw = base64.b64decode(normalized + "=" * (-len(normalized) % 4), validate=True)
+    except (ValueError, TypeError):
+        return False
+    return len(raw) == NONCE_BYTES and nonce in (_b64url(raw), base64.b64encode(raw).decode("ascii"))
+
+
 def sign_request(
     method: str,
     url: Union[str, httpx.URL],
@@ -264,12 +290,15 @@ def sign_request(
     directory: str,
     lifetime_seconds: float = DEFAULT_LIFETIME_SECONDS,
     now: Now = None,
+    nonce: Optional[str] = None,
 ) -> dict[str, str]:
     """
     Sign a request as an agent: returns the headers to add (``signature-agent``,
     ``signature-input``, ``signature``). Any Signature-Agent the request carries
     is replaced by this one. No other header is covered, so ``headers`` does not
-    change the signature.
+    change the signature. Every signature has a fresh nonce, so sign again for
+    each send, retries included; ``nonce`` is for tests that need the same
+    bytes twice.
     """
     key = _private_key(private_jwk)
     created_at = _seconds(now)
@@ -278,6 +307,8 @@ def sign_request(
     expires = math.floor(created_at + lifetime)
     if created > expires:
         raise ValueError("lifetime_seconds must not be negative.")
+    if nonce is not None and not _valid_nonce(nonce):
+        raise ValueError("nonce must be 64 bytes, base64url or base64.")
 
     signature_agent = _sf.serialize_bare_item(directory)
     fields = _header_map(headers)
@@ -290,6 +321,7 @@ def sign_request(
             "keyid": key_id_of(private_jwk),
             "alg": "ed25519",
             "expires": expires,
+            "nonce": new_nonce() if nonce is None else nonce,
             "tag": TAG,
         },
     )
@@ -315,6 +347,8 @@ class Verification:
     directory: Optional[str] = None
     created: Optional[datetime] = None
     expires: Optional[datetime] = None
+    #: The signature's nonce, when it has one: remember it to refuse the same signature twice.
+    nonce: Optional[str] = None
     detail: str = ""
 
 
@@ -418,6 +452,8 @@ def verify_agent_request(
             raise _Rejected("invalid", f"tag must be '{TAG}'.")
         if created > expires:
             raise _Rejected("invalid", "created must not be after expires.")
+        if "nonce" in params and not _valid_nonce(params["nonce"]):
+            raise _Rejected("invalid", "nonce must be 64 bytes, base64url or base64.")
         candidate = params["keyid"]
         if not isinstance(candidate, str) or isinstance(candidate, _sf.Token) or not candidate:
             raise _Rejected("invalid", "keyid must be a non-empty string.")
@@ -445,6 +481,7 @@ def verify_agent_request(
             directory=directory,
             created=datetime.fromtimestamp(created, timezone.utc),
             expires=datetime.fromtimestamp(expires, timezone.utc),
+            nonce=params.get("nonce") if isinstance(params.get("nonce"), str) else None,
         )
     except _Rejected as rejected:
         return Verification(

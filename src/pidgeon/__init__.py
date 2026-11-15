@@ -41,11 +41,12 @@ from .credential import (
     generate_agent_key,
     is_public_jwk,
     key_id_of,
+    new_nonce,
     sign_request,
     verify_agent_request,
 )
 
-__version__ = "2.2.0"
+__version__ = "2.4.0"
 
 from .webhooks import sign_webhook, verify_webhook
 
@@ -69,6 +70,7 @@ __all__ = [
     "generate_agent_key",
     "is_public_jwk",
     "key_id_of",
+    "new_nonce",
     "sign_request",
     "signed_async_client",
     "signed_client",

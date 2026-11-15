@@ -27,7 +27,7 @@ DEFAULT_BASE_URL = "https://pidgeon.ai"
 
 Band = Literal["unverified", "new", "good", "flagged", "suspended"]
 ReportCategory = Literal["fraud", "abuse", "scraping", "spam", "fake_signups", "other"]
-InboxKind = Literal["person", "shared", "agent", "events"]
+InboxKind = Literal["agent", "events"]
 Body = Literal["original", "clean"]
 Folder = Literal["inbox", "archive", "spam", "trash"]
 ThreadStatus = Literal["open", "waiting", "resolved", "human_review"]
@@ -87,7 +87,7 @@ def _read_file(
 
 def _message(
     to: list[str],
-    subject: str,
+    subject: Optional[str],
     text: Optional[str],
     html: Optional[str],
     cc: Optional[list[str]],
@@ -259,6 +259,22 @@ class _Agents(_Group):
         """The agent, its keys, its directory and its operator's reputation."""
         return self._c.request("GET", f"/v1/agents/{_seg(agent_id)}")
 
+    def update(
+        self, agent_id: str, *, name: Optional[str] = None, purpose: Optional[str] = None
+    ) -> Json:
+        """Rename the agent, or change what it does: what websites see when it arrives."""
+        return self._c.request(
+            "PATCH", f"/v1/agents/{_seg(agent_id)}", _drop_none({"name": name, "purpose": purpose})
+        )
+
+    def revoke(self, agent_id: str) -> None:
+        """Revoke the agent and every key it has. None verifies again; it cannot be undone."""
+        self._c.request("DELETE", f"/v1/agents/{_seg(agent_id)}")
+
+    def revoke_key(self, agent_id: str, kid: str) -> None:
+        """Revoke one of the agent's keys, by its ``kid``. Its other keys stay."""
+        self._c.request("DELETE", f"/v1/agents/{_seg(agent_id)}/keys/{_seg(kid)}")
+
     def set_up(self, name: str, purpose: str = "", *, pod_id: Optional[str] = None) -> "AgentSetUp":
         """
         Register an agent, make its key here, and publish the public half signed
@@ -312,7 +328,7 @@ class _Inboxes(_Group):
             ),
         )
 
-    def update(self, inbox_id: str, *, hold_suspicious: bool) -> Json:
+    def update(self, inbox_id: str, *, hold_suspicious: Literal[True] = True) -> Json:
         """
         ``hold_suspicious=True`` holds mail the Firewall calls suspicious for a
         person. A key turns it on, never off: a person of the account does that.
@@ -378,7 +394,7 @@ class _Messages(_Group):
         inbox_id: str,
         *,
         to: list[str],
-        subject: str,
+        subject: Optional[str] = None,
         text: Optional[str] = None,
         html: Optional[str] = None,
         cc: Optional[list[str]] = None,
@@ -403,7 +419,7 @@ class _Drafts(_Group):
         inbox_id: str,
         *,
         to: list[str],
-        subject: str,
+        subject: Optional[str] = None,
         text: Optional[str] = None,
         html: Optional[str] = None,
         cc: Optional[list[str]] = None,
@@ -425,19 +441,18 @@ class _Drafts(_Group):
         draft_id: str,
         *,
         to: list[str],
-        subject: str,
+        subject: Optional[str] = None,
         text: Optional[str] = None,
         html: Optional[str] = None,
         cc: Optional[list[str]] = None,
         bcc: Optional[list[str]] = None,
-        reply_to: Optional[str] = None,
         attachment_ids: Optional[list[str]] = None,
     ) -> Json:
-        """Replace a draft's addresses, body and files."""
+        """Replace a draft's addresses, body and files. Its thread stays: no ``reply_to``."""
         return self._c.request(
             "PATCH",
             f"/v1/email/drafts/{_seg(draft_id)}",
-            _message(to, subject, text, html, cc, bcc, reply_to, attachment_ids),
+            _message(to, subject, text, html, cc, bcc, None, attachment_ids),
         )
 
     def remove(self, draft_id: str) -> None:
@@ -550,6 +565,10 @@ class _Pods(_Group):
 
     def create(self, name: str) -> Json:
         return self._c.request("POST", "/v1/pods", {"name": name})
+
+    def remove(self, pod_id: str) -> None:
+        """Remove an empty pod: not the default one, nor one with agents, domains or endpoints."""
+        self._c.request("DELETE", f"/v1/pods/{_seg(pod_id)}")
 
 
 class _Webhooks(_Group):
@@ -929,12 +948,16 @@ class _Email(_Group):
         inbox_id: Optional[str] = None,
         limit: Optional[int] = None,
         cursor: Optional[str] = None,
+        body: Optional[Body] = None,
     ) -> Json:
-        """Messages whose subject, sender or text match ``q``, newest first. Held mail is not found."""
+        """
+        Messages whose subject, sender or text match ``q``, newest first. Held
+        mail is not found. ``body="clean"`` serves the Firewall's text, as a read does.
+        """
         return self._c.request(
             "GET",
             "/v1/email/search",
-            query={"q": q, "inbox_id": inbox_id, "limit": limit, "cursor": cursor},
+            query={"q": q, "inbox_id": inbox_id, "limit": limit, "cursor": cursor, "body": body},
         )
 
     def storage(self) -> Json:

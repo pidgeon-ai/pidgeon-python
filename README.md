@@ -44,7 +44,10 @@ headers = sign_request("POST", "https://shop.example/signup", None,
 ```
 
 `AgentAuth(private_jwk, directory)` is the same signer as an `httpx.Auth`, for
-a client you already have, sync or async. A signature lasts a minute.
+a client you already have, sync or async. A signature covers the host,
+method, path and query, carries a new nonce, and lasts a minute. Pidgeon
+accepts a signature once, so sign again to retry; never resend old signature
+headers.
 
 ## For a website
 
@@ -54,7 +57,7 @@ answers with the agent, its operator and their reputation.
 ```python
 from pidgeon import Pidgeon, PidgeonError
 
-pidgeon = Pidgeon(api_key="pk_…")
+pidgeon = Pidgeon(api_key="pgn_…")
 
 answer = pidgeon.verify(request.method, request.url, request.headers)
 if answer["valid"] and answer["reputation"]["band"] in ("new", "good"):

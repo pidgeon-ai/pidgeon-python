@@ -4,7 +4,7 @@ prints the answer as JSON, so the TypeScript side can check the Python SDK.
 
   {"op": "generate"}                                  -> {kid, public_jwk, private_jwk}
   {"op": "kid", "jwk": {...}}                         -> {kid}
-  {"op": "sign", "method", "url", "private_jwk", "directory", "now"?}  -> headers
+  {"op": "sign", "method", "url", "private_jwk", "directory", "now"?, "nonce"?}  -> headers
   {"op": "verify", "method", "url", "headers", "public_jwk", "now"?}   -> verification
   {"op": "auth_request", "site", "private_jwk", "directory", "issuer"}  -> {url, headers, body}
   {"op": "auth_verify", "id_token", "client_id", "issuer", "jwks"}       -> claims or {error}
@@ -82,6 +82,7 @@ def main() -> None:
             command["private_jwk"],
             command["directory"],
             now=command.get("now"),
+            nonce=command.get("nonce"),
         )
     elif op == "verify":
         published = command["public_jwk"]
