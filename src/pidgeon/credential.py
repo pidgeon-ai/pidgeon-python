@@ -418,9 +418,18 @@ def verify_agent_request(
             raise _Rejected("invalid", f"Malformed signature fields: {error}")
         if set(inputs) != set(signatures):
             raise _Rejected("invalid", "Signature and Signature-Input label sets differ.")
-        if len(inputs) != 1:
-            raise _Rejected("invalid", "Expected exactly one signature.")
-        label = next(iter(inputs))
+        # A proxy may add its own signature (RFC 9421 §4.3): check the web-bot-auth one.
+        if len(inputs) == 1:
+            label = next(iter(inputs))
+        else:
+            tagged = [
+                name
+                for name, member in inputs.items()
+                if isinstance(member, _sf.InnerList) and member.params.get("tag") == TAG
+            ]
+            if not tagged:
+                raise _Rejected("invalid", "No signature is tagged web-bot-auth.")
+            label = tagged[0]
         inner, signed = inputs[label], signatures[label]
         if not isinstance(inner, _sf.InnerList):
             raise _Rejected("invalid", "Signature-Input members must be inner lists.")
@@ -432,7 +441,8 @@ def verify_agent_request(
                 raise _Rejected("invalid", "Component identifiers must be lower-case strings.")
 
         params = inner.params
-        for required in ("created", "expires", "keyid", "alg", "tag"):
+        # alg and nonce are optional (draft-ietf-webbotauth-httpsig-protocol-01 §5.2, RFC 9421 §2.3).
+        for required in ("created", "expires", "keyid", "tag"):
             if required not in params:
                 raise _Rejected("invalid", f"Required parameter {required} is absent.")
         created, expires = params["created"], params["expires"]
@@ -446,14 +456,16 @@ def verify_agent_request(
             raise _Rejected("expired", "Signature has expired.")
         if at - created > MAX_LIFETIME_SECONDS + CLOCK_SKEW_SECONDS:
             raise _Rejected("expired", "Signature is too old.")
-        if params["alg"] != "ed25519":
+        if "alg" in params and params["alg"] != "ed25519":
             raise _Rejected("invalid", "Only ed25519 is accepted.")
         if params["tag"] != TAG:
             raise _Rejected("invalid", f"tag must be '{TAG}'.")
         if created > expires:
             raise _Rejected("invalid", "created must not be after expires.")
-        if "nonce" in params and not _valid_nonce(params["nonce"]):
-            raise _Rejected("invalid", "nonce must be 64 bytes, base64url or base64.")
+        if "nonce" in params and (
+            not isinstance(params["nonce"], str) or isinstance(params["nonce"], _sf.Token)
+        ):
+            raise _Rejected("invalid", "nonce must be a string.")
         candidate = params["keyid"]
         if not isinstance(candidate, str) or isinstance(candidate, _sf.Token) or not candidate:
             raise _Rejected("invalid", "keyid must be a non-empty string.")

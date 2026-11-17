@@ -46,7 +46,7 @@ from .credential import (
     verify_agent_request,
 )
 
-__version__ = "2.5.0"
+__version__ = "2.6.0"
 
 from .webhooks import sign_webhook, verify_webhook
 

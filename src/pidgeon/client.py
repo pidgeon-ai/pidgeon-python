@@ -215,7 +215,17 @@ class Pidgeon:
     # Bouncer
 
     def verify(self, method: str, url: str, headers: Headers) -> Json:
-        """Who stands behind an agent's request, and how they stand. Forward it as you received it."""
+        """
+        Who stands behind an agent's request, and how they stand. Forward it as you received it.
+
+        ``result`` is one of four: ``verified`` (a Pidgeon operator's key; ``valid`` is True,
+        with ``agent``, ``operator`` and ``reputation``), ``signed_known`` (the signature holds
+        against a directory outside Pidgeon on Pidgeon's recognised list), ``signed_unknown``
+        (it holds against a directory nobody vouches for) or ``refused`` (unsigned, a bad
+        signature, expired, revoked or replayed; see ``reason``). The two signed results name
+        the directory in ``signature_agent`` (``directory``, ``host``, ``operator``) and keep
+        ``valid`` False with ``reason`` ``unknown_key``, as before.
+        """
         return self._call(
             "/v1/verify",
             {"request": {"method": method, "url": str(url), "headers": _header_map(headers)}},

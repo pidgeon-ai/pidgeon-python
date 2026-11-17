@@ -230,6 +230,35 @@ class TestVerifying:
                                       now=NOW + 1)
         assert result.ok and result.directory == DIRECTORY
 
+    def test_accepts_what_the_draft_allows_no_alg_a_short_nonce_and_a_proxy_signature(self):
+        # draft-ietf-webbotauth-httpsig-protocol-01 §5.2: alg and the nonce are optional,
+        # and a proxy may add its own signature beside the agent's (RFC 9421 §4.3).
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
+        from pidgeon import _sf
+        from pidgeon.credential import _signature_base, _target
+
+        key = generate_agent_key()
+        d = base64.urlsafe_b64decode(key.private_jwk["d"] + "=")
+        signer = Ed25519PrivateKey.from_private_bytes(d)
+        inner = _sf.InnerList(
+            [_sf.Item("@authority"), _sf.Item("signature-agent", {"key": "sig1"})],
+            {"created": NOW, "keyid": key.kid, "expires": NOW + 60, "nonce": "short",
+             "tag": "web-bot-auth"},
+        )
+        proxy = _sf.InnerList([_sf.Item("@authority")],
+                              {"created": NOW, "expires": NOW + 60, "keyid": "cdn", "tag": "cdn"})
+        headers = {"signature-agent": f'sig1="{DIRECTORY}"'}
+        target = _target("GET", "https://shop.example/")
+        headers["signature-input"] = _sf.serialize_dictionary({"sig1": inner, "proxy": proxy})
+        headers["signature"] = _sf.serialize_dictionary({
+            "sig1": _sf.Item(signer.sign(_signature_base(target, headers, inner))),
+            "proxy": _sf.Item(signer.sign(_signature_base(target, headers, proxy))),
+        })
+        result = verify_agent_request("GET", "https://shop.example/", headers, publishing(key),
+                                      now=NOW + 1)
+        assert result.ok and result.nonce == "short" and result.directory == DIRECTORY
+
 
 def test_version():
-    assert pidgeon.__version__ == "2.5.0"
+    assert pidgeon.__version__ == "2.6.0"

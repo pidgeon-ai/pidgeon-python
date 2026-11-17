@@ -66,6 +66,12 @@ if answer["valid"] and answer["reputation"]["band"] in ("new", "good"):
 pidgeon.report(answer["verification_id"], "fake_signups", "Forty signups in a minute.")
 ```
 
+`answer["result"]` is one of four: `verified` (a Pidgeon operator's agent,
+the only one with `valid` True), `signed_known` (a key from an outside
+directory Pidgeon recognises, named in `answer["signature_agent"]["operator"]`),
+`signed_unknown` (an outside directory nobody vouches for) and `refused`
+(unsigned, a bad signature, expired, revoked or replayed).
+
 Errors raise `PidgeonError` with `status`, `code` and `message`.
 
 Checking only the signature is free and offline: `verify_agent_request(method,

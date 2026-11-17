@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.6.0
+
+- `verify` answers `result`: `verified`, `signed_known`, `signed_unknown` or
+  `refused`, with `signature_agent` for the signed ones. `valid` is
+  unchanged (true for `verified` only).
+- `verify_agent_request` accepts what draft-ietf-webbotauth-httpsig-protocol-01
+  allows: no `alg`, a nonce of any length, and a proxy's signature beside the
+  agent's `web-bot-auth` one.
+
 ## 2.5.0
 
 - `sites.update(client_id, name=, redirect_uris=)` and
