@@ -30,6 +30,8 @@ def api_tour(base_url: str, api_key: str, inbox_name: str) -> dict:
         edited = client.drafts.update(draft["id"], to=["bo@example.com"], subject="D", text="2")
         draft_sent = client.drafts.send(draft["id"])
         site = client.sites.create("Shop", ["https://shop.example/callback"])
+        client.sites.update(site["client_id"], name="Shop 2")
+        client.sites.rotate_secret(site["client_id"])
         client.sites.remove(site["client_id"])
         pod = client.pods.create("Customer A")
         rule = client.rules.create("receive", "block", "spam.example")

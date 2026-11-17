@@ -520,6 +520,24 @@ class _Sites(_Group):
             _drop_none({"name": name, "redirect_uris": redirect_uris, "pod_id": pod_id}),
         )
 
+    def update(
+        self,
+        client_id: str,
+        *,
+        name: Optional[str] = None,
+        redirect_uris: Optional[_Strings] = None,
+    ) -> Json:
+        """Rename it, or replace its return addresses (the whole list); its id and secret stay."""
+        return self._c.request(
+            "PATCH",
+            f"/v1/auth/clients/{_seg(client_id)}",
+            _drop_none({"name": name, "redirect_uris": redirect_uris}),
+        )
+
+    def rotate_secret(self, client_id: str) -> Json:
+        """Answers a new ``client_secret`` once; the old one stops working at once."""
+        return self._c.request("POST", f"/v1/auth/clients/{_seg(client_id)}/rotate-secret")
+
     def remove(self, client_id: str) -> None:
         self._c.request("DELETE", f"/v1/auth/clients/{_seg(client_id)}")
 

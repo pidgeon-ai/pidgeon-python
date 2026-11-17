@@ -20,7 +20,7 @@ import time
 from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode, urlsplit
 
 import httpx
 from cryptography.exceptions import InvalidSignature
@@ -28,7 +28,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicNumbers
 
-from .credential import Headers, key_id_of, sign_request, verify_agent_request
+from .credential import Headers, directory_url, key_id_of, sign_request, verify_agent_request
 
 DEFAULT_ISSUER = "https://pidgeon.ai"
 TOKEN_EXCHANGE = "urn:ietf:params:oauth:grant-type:token-exchange"
@@ -41,7 +41,16 @@ LEEWAY_SECONDS = 60
 
 
 class SignInError(Exception):
-    """A sign-in was not accepted. ``reason``: refused, invalid_token, not_an_agent, unsigned or wrong_key."""
+    """
+    A sign-in was not accepted. ``reason``: ``refused`` (Pidgeon refused the
+    exchange), ``invalid_token``, ``not_an_agent``, ``unsigned``, ``wrong_key``
+    (signed with another key than the token names), ``wrong_request`` (the
+    signature does not cover this request's method, path or host), ``expired``
+    (the signature is too old or dated ahead), ``wrong_directory``
+    (``Signature-Agent`` is not the agent's own directory) or
+    ``mandate_ended`` (the mandate was stopped or ran out; checked only with
+    ``client_secret``).
+    """
 
     def __init__(self, reason: str, message: str) -> None:
         super().__init__(message)
@@ -235,6 +244,25 @@ def verify_id_token(
     return claims
 
 
+_DIRECTORY_PATH = "/.well-known/http-message-signatures-directory"
+
+
+def same_directory(named: str | None, directory: str) -> bool:
+    """Whether ``Signature-Agent`` names ``directory``: the same origin, bare or with the well-known path."""
+    if not named:
+        return False
+    try:
+        a, b = urlsplit(named), urlsplit(directory)
+    except ValueError:
+        return False
+    path = a.path.rstrip("/")
+    return (
+        (a.scheme, a.netloc.lower()) == (b.scheme, b.netloc.lower())
+        and path in ("", _DIRECTORY_PATH)
+        and not a.query
+    )
+
+
 def verify_agent_sign_in(
     method: str,
     url: str | httpx.URL,
@@ -243,25 +271,82 @@ def verify_agent_sign_in(
     issuer: str = DEFAULT_ISSUER,
     jwks: Mapping[str, Any] | None = None,
     client: httpx.Client | None = None,
+    client_secret: str | None = None,
 ) -> dict[str, Any]:
     """
     The site's side, for an agent's request: the ID token in
-    ``Authorization: Bearer``, and the request signed with the key that
-    token names. Answers who the agent is and who stands behind it.
+    ``Authorization: Bearer``, the request signed with the key that token
+    names, and its ``Signature-Agent`` the agent's own directory. Answers who
+    the agent is and who stands behind it.
+
+    With ``client_secret`` (your site's), a token issued under a mandate is
+    also checked with Pidgeon (``/oauth/introspect``), so a mandate the person
+    stopped is refused at once instead of when the token expires.
+
+    A token under a test mandate (asked with a test key) carries
+    ``"test": True`` and verifies like any other; refuse it in production.
     """
     fields = {k.lower(): v for k, v in (headers.items() if hasattr(headers, "items") else headers)}
     authorization = fields.get("authorization", "")
     if not authorization.lower().startswith("bearer "):
         raise SignInError("unsigned", "Send the ID token as `Authorization: Bearer`.")
-    claims = verify_id_token(authorization[7:].strip(), client_id, issuer, jwks=jwks, client=client)
+    token = authorization[7:].strip()
+    claims = verify_id_token(token, client_id, issuer, jwks=jwks, client=client)
     bound = (claims.get("cnf") or {}).get("jwk")
     if claims.get("kind") != "agent" or not bound:
         raise SignInError("not_an_agent", "This token is not an agent's.")
     bound_kid = key_id_of(bound)
-    proof = verify_agent_request(method, url, headers, lambda kid: bound if kid == bound_kid else None)
+    proof = verify_agent_request(
+        method, url, headers, lambda kid: bound if kid == bound_kid else None
+    )
     if not proof.ok:
+        if proof.reason == "unsigned":
+            raise SignInError("unsigned", "Sign the request with the key the token was issued to.")
+        if proof.reason == "expired":
+            raise SignInError(
+                "expired",
+                "The signature has expired, is over five minutes old, or is dated ahead. Sign the request again.",
+            )
+        if proof.reason == "unknown_key":
+            raise SignInError(
+                "wrong_key", "The request must be signed with the key the token was issued to."
+            )
         raise SignInError(
-            "unsigned" if proof.reason == "unsigned" else "wrong_key",
-            "The request must be signed with the key the token was issued to.",
+            "wrong_request",
+            "The signature does not match this request: sign it as it is sent (method, path and host).",
         )
+    # Tokens from before ``agent.directory`` was a claim name the operator by its slug.
+    directory = (claims.get("agent") or {}).get("directory")
+    slug = (claims.get("account") or {}).get("slug")
+    if not directory and slug:
+        directory = directory_url(slug)
+    if not directory or not same_directory(proof.directory, directory):
+        raise SignInError(
+            "wrong_directory",
+            f"Signature-Agent must name the agent's own directory{', ' + directory if directory else ''}.",
+        )
+    if claims.get("mandate") and client_secret is not None:
+        basic = base64.b64encode(
+            f"{quote(client_id, safe='')}:{quote(client_secret, safe='')}".encode()
+        ).decode()
+        http = client or httpx.Client(timeout=10)
+        try:
+            response = http.post(
+                f"{_trim(issuer)}/oauth/introspect",
+                headers={"authorization": f"Basic {basic}"},
+                data={"token": token},
+            )
+        finally:
+            if client is None:
+                http.close()
+        if response.status_code != 200:
+            raise SignInError(
+                "refused",
+                f"Pidgeon did not answer the mandate check (HTTP {response.status_code}): check your client secret.",
+            )
+        if response.json().get("active") is not True:
+            raise SignInError(
+                "mandate_ended",
+                "The mandate this token was issued under has been stopped or has run out.",
+            )
     return claims

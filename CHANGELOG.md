@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.5.0
+
+- `sites.update(client_id, name=, redirect_uris=)` and
+  `sites.rotate_secret(client_id)`: edit a site, and give it a new secret
+  (answered once; the old one stops working at once).
+- `verify_agent_sign_in` requires the request's `Signature-Agent` to be the
+  agent's own directory (the token's `agent.directory`), as Pidgeon's token
+  exchange now does: `wrong_directory` otherwise.
+- `SignInError.reason` says which: `wrong_request` (signed for another
+  method, path or host) and `expired` (the signature is too old or dated
+  ahead) are no longer reported as `wrong_key`.
+- `verify_agent_sign_in` takes `client_secret`: a token issued under a
+  mandate is checked with Pidgeon's `/oauth/introspect`, and one whose
+  mandate was stopped is refused at once (`mandate_ended`).
+- `same_directory(named, directory)`.
+
 ## 2.4.0
 
 - Every signature carries a fresh 64-byte nonce and covers `@query` (`?`
