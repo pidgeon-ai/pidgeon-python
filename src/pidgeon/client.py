@@ -116,7 +116,7 @@ class Pidgeon:
 
     The products' calls are grouped: ``agents`` (Passport), ``email`` (inboxes,
     messages, threads, labels, contacts, attachments, domains, the calendar
-    and more), ``sites`` and ``mandates`` (Auth), ``events``, ``webhooks`` and
+    and more), ``sites`` and ``mandates`` (Auth), ``events``, ``keys``, ``webhooks`` and
     ``pods`` (the account); ``verify`` and ``report`` are Bouncer's. Email's
     first groups are also on the client itself (``inboxes``, ``messages``,
     ``drafts``, ``rules``, ``suppressions``), as in 2.0.
@@ -145,6 +145,7 @@ class Pidgeon:
         self.sites = _Sites(self)
         self.mandates = _Mandates(self)
         self.events = _Events(self)
+        self.keys = _Keys(self)
         self.webhooks = _Webhooks(self)
         self.pods = _Pods(self)
         self.email = _Email(self)
@@ -597,6 +598,34 @@ class _Pods(_Group):
     def remove(self, pod_id: str) -> None:
         """Remove an empty pod: not the default one, nor one with agents, domains or endpoints."""
         self._c.request("DELETE", f"/v1/pods/{_seg(pod_id)}")
+
+
+class _Keys(_Group):
+    """The account's API keys; making and revoking take an admin key of the whole account."""
+
+    def list(self) -> Json:
+        return self._c.request("GET", "/v1/keys")
+
+    def create(
+        self,
+        name: str,
+        *,
+        access: Optional[str] = None,
+        pod_id: Optional[str] = None,
+        test: Optional[bool] = None,
+    ) -> Json:
+        """Answers ``key`` once. Never stronger than the key making it; a test key makes test keys."""
+        body: dict[str, Any] = {"name": name}
+        if access is not None:
+            body["access"] = access
+        if pod_id is not None:
+            body["pod_id"] = pod_id
+        if test is not None:
+            body["test"] = test
+        return self._c.request("POST", "/v1/keys", body)
+
+    def revoke(self, key_id: str) -> None:
+        self._c.request("DELETE", f"/v1/keys/{_seg(key_id)}")
 
 
 class _Webhooks(_Group):

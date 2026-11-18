@@ -1,0 +1,52 @@
+[project]
+name = "llama-index-tools-pidgeon"
+version = "1.0.0"
+description = "Pidgeon for LlamaIndex agents: an inbox of the agent's own, its identity and reputation, and checking who stands behind an agent's request."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "Pidgeon" }]
+keywords = ["llama-index", "pidgeon", "ai-agents", "email", "inbox", "web-bot-auth"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+  "Topic :: Communications :: Email",
+  "Typing :: Typed",
+]
+dependencies = ["pidgeon>=2.6.0,<3", "llama-index-core>=0.13.0,<0.15"]
+
+[project.urls]
+Homepage = "https://pidgeon.ai"
+Documentation = "https://pidgeon.ai/docs"
+Repository = "https://github.com/pidgeon-ai/pidgeon-python/tree/main/llamaindex"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# `llama_index` and `llama_index.tools` are namespace packages, shared with
+# every other LlamaIndex integration: no `__init__.py` in either.
+[tool.hatch.build.targets.wheel]
+packages = ["src/llama_index"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+# What LlamaHub reads from an integration package.
+[tool.llamahub]
+contains_example = false
+import_path = "llama_index.tools.pidgeon"
+
+[tool.llamahub.class_authors]
+PidgeonToolSpec = "pidgeon-ai"

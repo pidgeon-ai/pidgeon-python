@@ -1,0 +1,43 @@
+[project]
+name = "langchain-pidgeon"
+version = "1.0.0"
+description = "Pidgeon for LangChain agents: an inbox of the agent's own, its identity and reputation, and checking who stands behind an agent's request."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "Pidgeon" }]
+keywords = ["langchain", "langgraph", "pidgeon", "ai-agents", "email", "inbox", "web-bot-auth"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+  "Topic :: Communications :: Email",
+  "Typing :: Typed",
+]
+dependencies = ["pidgeon>=2.6.0,<3", "langchain-core>=1.0.0,<2"]
+
+[project.urls]
+Homepage = "https://pidgeon.ai"
+Documentation = "https://pidgeon.ai/docs"
+Repository = "https://github.com/pidgeon-ai/pidgeon-python/tree/main/langchain"
+
+[dependency-groups]
+dev = ["pytest>=8", "langchain-tests>=1.0.0,<2"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/langchain_pidgeon"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

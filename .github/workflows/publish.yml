@@ -1,20 +1,32 @@
 name: Publish
 
-# Tag-driven: `python-v2.0.0` publishes `pidgeon` 2.0.0 to PyPI from this
-# repository's root. The release job in the private repository
-# (`scripts/release.ts`) cuts the tag after the sync that put this tree here
-# succeeded.
+# Tag-driven, one PyPI project per tag prefix:
+#
+#   python-v2.0.0       pidgeon                     from the root
+#   langchain-v1.0.0    langchain-pidgeon           from langchain/
+#   llamaindex-v1.0.0   llama-index-tools-pidgeon   from llamaindex/
+#
+# The release job in the private repository (`scripts/release.ts`) cuts the
+# tags after the sync that put this tree here succeeded.
 #
 # This file is generated from `mirrors/python/` in the private repository and
 # overwritten on every sync: change it there.
 #
 # No PyPI token exists anywhere: trusted publishing exchanges this job's OIDC
 # token, and the upload carries PEP 740 attestations pointing at this public
-# commit. A version PyPI already has is skipped.
+# commit. Each project has its own trusted publisher, and each names this
+# repository, this workflow and the `pypi` environment. A version PyPI
+# already has is skipped.
 on:
   push:
-    tags: ['python-v*']
+    tags: ['python-v*', 'langchain-v*', 'llamaindex-v*']
   workflow_dispatch:
+    inputs:
+      package:
+        description: Which project to publish
+        type: choice
+        options: [python, langchain, llamaindex]
+        default: python
 
 permissions:
   contents: read
@@ -23,7 +35,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    # The environment PyPI's trusted publisher is pinned to, so no other
+    # The environment PyPI's trusted publishers are pinned to, so no other
     # workflow here can upload.
     environment: pypi
     steps:
@@ -33,21 +45,39 @@ jobs:
 
       - uses: astral-sh/setup-uv@v7
 
+      - name: Which project
+        id: project
+        env:
+          PACKAGE: ${{ inputs.package }}
+        run: |
+          key="${PACKAGE:-${GITHUB_REF_NAME%%-v*}}"
+          case "$key" in
+            python) dir=. ;;
+            langchain) dir=langchain ;;
+            llamaindex) dir=llamaindex ;;
+            *) echo "No project for $key." >&2; exit 1 ;;
+          esac
+          echo "key=$key" >> "$GITHUB_OUTPUT"
+          echo "dir=$dir" >> "$GITHUB_OUTPUT"
+
       - name: The tag matches the version
         if: github.event_name == 'push'
+        env:
+          KEY: ${{ steps.project.outputs.key }}
+          DIR: ${{ steps.project.outputs.dir }}
         run: |
-          declared=$(grep -m1 '^version = ' pyproject.toml | cut -d'"' -f2)
-          tagged="${GITHUB_REF_NAME#python-v}"
+          declared=$(grep -m1 '^version = ' "$DIR/pyproject.toml" | cut -d'"' -f2)
+          tagged="${GITHUB_REF_NAME#"$KEY"-v}"
           if [ "$declared" != "$tagged" ]; then
-            echo "Tag says $tagged; pyproject.toml says $declared." >&2
+            echo "Tag says $tagged; $DIR/pyproject.toml says $declared." >&2
             exit 1
           fi
 
       - name: Test
-        run: uv run pytest
+        run: uv run --directory "${{ steps.project.outputs.dir }}" pytest
 
       - name: Build
-        run: uv build --out-dir dist
+        run: uv build --directory "${{ steps.project.outputs.dir }}" --out-dir "$GITHUB_WORKSPACE/dist"
 
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
