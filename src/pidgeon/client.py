@@ -348,6 +348,13 @@ class _Inboxes(_Group):
             "PATCH", f"/v1/email/inboxes/{_seg(inbox_id)}", {"hold_suspicious": hold_suspicious}
         )
 
+    def set_signature(self, inbox_id: str, signature: Optional[str]) -> Json:
+        """The lines the mail client adds under mail a person writes from this
+        address; ``None`` clears it. Needs ``admin``."""
+        return self._c.request(
+            "PATCH", f"/v1/email/inboxes/{_seg(inbox_id)}", {"signature": signature}
+        )
+
     def remove(self, inbox_id: str) -> None:
         """Remove an inbox. Its address is retired, never given to anyone again."""
         self._c.request("DELETE", f"/v1/email/inboxes/{_seg(inbox_id)}")
