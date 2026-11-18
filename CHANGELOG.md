@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.7.0
+
+- `client.keys`: `list`, `create` and `revoke` API keys (`/v1/keys`). A key is
+  never stronger than the one making it; a test key makes only test keys.
+
 ## 2.6.0
 
 - `verify` answers `result`: `verified`, `signed_known`, `signed_unknown` or
