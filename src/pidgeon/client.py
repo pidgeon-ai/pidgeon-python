@@ -215,7 +215,7 @@ class Pidgeon:
 
     # Bouncer
 
-    def verify(self, method: str, url: str, headers: Headers) -> Json:
+    def verify(self, method: str, url: str, headers: Headers, ip: Optional[str] = None) -> Json:
         """
         Who stands behind an agent's request, and how they stand. Forward it as you received it.
 
@@ -226,11 +226,33 @@ class Pidgeon:
         signature, expired, revoked or replayed; see ``reason``). The two signed results name
         the directory in ``signature_agent`` (``directory``, ``host``, ``operator``) and keep
         ``valid`` False with ``reason`` ``unknown_key``, as before.
+
+        Every result but ``refused`` carries ``verdict``: the same, signed by Pidgeon for five
+        minutes, to hand a sign-up hook (``pidgeon.verdict``). ``ip``, the agent's address as
+        your server saw it, is written into it.
         """
-        return self._call(
-            "/v1/verify",
-            {"request": {"method": method, "url": str(url), "headers": _header_map(headers)}},
-        )
+        body: dict[str, Any] = {
+            "request": {"method": method, "url": str(url), "headers": _header_map(headers)}
+        }
+        if ip:
+            body["ip"] = ip
+        return self._call("/v1/verify", body)
+
+    def check_verdict(
+        self, verdict: str, origin: Optional[str] = None, ip: Optional[str] = None
+    ) -> Json:
+        """
+        Check a verdict with Pidgeon, for a sign-up hook, and spend it: signed by Pidgeon, for
+        this account (and ``origin`` and ``ip``, when given), not expired, its key and agent not
+        revoked since, and never checked before. Answers ``valid`` with the ``verdict``'s
+        claims, or ``valid`` False and ``reason``.
+        """
+        body: dict[str, Any] = {"verdict": verdict}
+        if origin:
+            body["origin"] = origin
+        if ip:
+            body["ip"] = ip
+        return self._call("/v1/verify/verdict", body)
 
     def report(self, verification_id: str, category: ReportCategory, evidence: str) -> Json:
         """Report an agent from one of your verifications: what it did, in your words."""
@@ -601,6 +623,10 @@ class _Pods(_Group):
 
     def create(self, name: str) -> Json:
         return self._c.request("POST", "/v1/pods", {"name": name})
+
+    def rename(self, pod_id: str, name: str) -> Json:
+        """Rename a pod. Its id, and everything in it, stay as they are."""
+        return self._c.request("PATCH", f"/v1/pods/{_seg(pod_id)}", {"name": name})
 
     def remove(self, pod_id: str) -> None:
         """Remove an empty pod: not the default one, nor one with agents, domains or endpoints."""

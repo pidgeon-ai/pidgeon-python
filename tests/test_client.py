@@ -142,6 +142,12 @@ def test_agents_update_revoke_and_revoke_key():
     )
 
 
+def test_pods_rename():
+    assert call(lambda c: c.pods.rename(OTHER, "Acme Ltd"))[:4] == (
+        "PATCH", f"/v1/pods/{OTHER}", {}, {"name": "Acme Ltd"}
+    )
+
+
 def test_pods_remove():
     assert call(lambda c: c.pods.remove(OTHER), status=204)[:2] == ("DELETE", f"/v1/pods/{OTHER}")
 
@@ -502,3 +508,24 @@ def test_webhooks_remove():
     assert call(lambda c: c.webhooks.remove(OTHER), status=204)[:2] == (
         "DELETE", f"/v1/webhooks/{OTHER}"
     )
+
+
+def test_verify_sends_the_address_for_the_verdict():
+    seen, http = recording({"valid": True, "verdict": "v.v.v"})
+    Pidgeon("pk_test", client=http).verify(
+        "POST", "https://shop.example/signup", {"Signature": "x"}, ip="203.0.113.7"
+    )
+    assert json.loads(seen[0].content)["ip"] == "203.0.113.7"
+
+
+def test_check_verdict_posts_the_verdict():
+    seen, http = recording({"valid": False, "reason": "used"})
+    answer = Pidgeon("pk_test", client=http).check_verdict(
+        "v.v.v", origin="https://shop.example", ip="203.0.113.7"
+    )
+    assert answer == {"valid": False, "reason": "used"}
+    (request,) = seen
+    assert str(request.url) == "https://pidgeon.ai/v1/verify/verdict"
+    assert json.loads(request.content) == {
+        "verdict": "v.v.v", "origin": "https://shop.example", "ip": "203.0.113.7"
+    }

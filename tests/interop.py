@@ -121,6 +121,17 @@ def main() -> None:
                 )
         except pidgeon.auth.SignInError as error:
             out = {"error": error.reason}
+    elif op == "verdict_verify":
+        # Several cases in one run: each answers its claims or the refusal's reason.
+        out = []
+        for case in command["cases"]:
+            try:
+                out.append(pidgeon.verdict.verify_verdict(
+                    case["token"], case["origin"], case.get("account"), case.get("ip"),
+                    command["issuer"], jwks=command["jwks"],
+                ))
+            except pidgeon.verdict.VerdictError as error:
+                out.append({"error": error.reason})
     elif op == "api_tour":
         out = api_tour(command["base_url"], command["api_key"], command["inbox_name"])
     else:

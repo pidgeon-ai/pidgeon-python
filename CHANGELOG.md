@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.8.0
+
+- `client.pods.rename(pod_id, name)` (`PATCH /v1/pods/{id}`).
+- Verdicts at sign-up: `verify` answers `verdict` (not for `refused`), and
+  takes `ip`. `pidgeon.verdict.verify_verdict` checks one offline;
+  `client.check_verdict` checks and spends one with Pidgeon.
+
 ## 2.7.0
 
 - `client.keys`: `list`, `create` and `revoke` API keys (`/v1/keys`). A key is

@@ -12,6 +12,9 @@ reports one that misbehaved.
 Sign in with Pidgeon (``pidgeon.auth``): ``sign_in_as_agent`` for an agent,
 ``verify_id_token`` and ``verify_agent_sign_in`` for a site.
 
+Verdicts at sign-up (``pidgeon.verdict``): ``verify_verdict`` checks the
+verdict ``verify`` answered, offline, in a hook that cannot see the request.
+
 For an operator's tooling and coding agents: ``.agents.set_up()`` registers
 an agent, makes its key here and publishes the public half; ``.email`` is
 Email (inboxes, messages, threads, labels, contacts, attachments, domains,
@@ -19,7 +22,7 @@ calendars); ``.sites`` and ``.mandates`` are Auth; ``.events``, ``.webhooks``
 and ``.pods`` are the account.
 """
 
-from . import auth
+from . import auth, verdict
 from .client import (
     DEFAULT_BASE_URL,
     Agent,
@@ -46,12 +49,13 @@ from .credential import (
     verify_agent_request,
 )
 
-__version__ = "2.7.0"
+__version__ = "2.8.0"
 
 from .webhooks import sign_webhook, verify_webhook
 
 __all__ = [
     "auth",
+    "verdict",
     "sign_webhook",
     "verify_webhook",
     "DEFAULT_BASE_URL",
