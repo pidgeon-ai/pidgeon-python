@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.10.0
+
+- Site rules for Bouncer: `client.site_rules.get()` and `.set(rules)` (`/v1/site-rules`).
+- `client.verify(..., place=)`: every answer carries `place`, `decision`, `would` and `rule`.
+
 ## 2.9.0
 
 - `client.pods.move(pod_id, type, id)` (`POST /v1/pods/{id}/move`).

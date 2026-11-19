@@ -148,6 +148,7 @@ class Pidgeon:
         self.keys = _Keys(self)
         self.webhooks = _Webhooks(self)
         self.pods = _Pods(self)
+        self.site_rules = _SiteRules(self)
         self.email = _Email(self)
 
     @property
@@ -215,7 +216,14 @@ class Pidgeon:
 
     # Bouncer
 
-    def verify(self, method: str, url: str, headers: Headers, ip: Optional[str] = None) -> Json:
+    def verify(
+        self,
+        method: str,
+        url: str,
+        headers: Headers,
+        ip: Optional[str] = None,
+        place: Optional[str] = None,
+    ) -> Json:
         """
         Who stands behind an agent's request, and how they stand. Forward it as you received it.
 
@@ -230,12 +238,18 @@ class Pidgeon:
         Every result but ``refused`` carries ``verdict``: the same, signed by Pidgeon for five
         minutes, to hand a sign-up hook (``pidgeon.verdict``). ``ip``, the agent's address as
         your server saw it, is written into it.
+
+        ``place`` (``signup``, ``checkout``, ``api`` or ``other``, the default) says where on
+        your site the agent is: every answer carries what your site rule for it decided,
+        ``decision`` (``allow``, ``limit``, ``block``, or ``watch`` with ``would``) and ``rule``.
         """
         body: dict[str, Any] = {
             "request": {"method": method, "url": str(url), "headers": _header_map(headers)}
         }
         if ip:
             body["ip"] = ip
+        if place:
+            body["place"] = place
         return self._call("/v1/verify", body)
 
     def check_verdict(
@@ -615,6 +629,20 @@ class _Events(_Group):
         return self._c.request(
             "GET", "/v1/events", query={"limit": limit, "cursor": cursor, "type": type}
         )
+
+
+class _SiteRules(_Group):
+    """Bouncer's site rules: per place, who gets in, and whether the rule acts or only watches."""
+
+    def get(self) -> Json:
+        return self._c.request("GET", "/v1/site-rules")
+
+    def set(self, rules: dict[str, dict[str, Any]]) -> Json:
+        """
+        Change some places, as ``{"signup": {"require": "verified", "enforce": True}}``; the rest
+        stay. Needs an admin key of the whole account.
+        """
+        return self._c.request("PUT", "/v1/site-rules", rules)
 
 
 class _Pods(_Group):

@@ -1,6 +1,6 @@
 [project]
 name = "pidgeon"
-version = "2.9.0"
+version = "2.10.0"
 description = "Pidgeon's Python SDK: Passport, Bouncer, Email and Auth. Sign your agents' requests, verify agents at your site, send from agent inboxes, and Sign in with Pidgeon."
 readme = "README.md"
 license = "Apache-2.0"
