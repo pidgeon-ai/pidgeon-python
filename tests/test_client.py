@@ -148,6 +148,12 @@ def test_pods_rename():
     )
 
 
+def test_pods_move():
+    assert call(lambda c: c.pods.move(OTHER, "agent", INBOX))[:4] == (
+        "POST", f"/v1/pods/{OTHER}/move", {}, {"type": "agent", "id": INBOX}
+    )
+
+
 def test_pods_remove():
     assert call(lambda c: c.pods.remove(OTHER), status=204)[:2] == ("DELETE", f"/v1/pods/{OTHER}")
 

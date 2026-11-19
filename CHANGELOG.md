@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.9.0
+
+- `client.pods.move(pod_id, type, id)` (`POST /v1/pods/{id}/move`).
+- `client.webhooks.create(..., pod_id=)`. A key of one pod lists, adds and removes its
+  own pod's webhooks.
+
 ## 2.8.0
 
 - `client.pods.rename(pod_id, name)` (`PATCH /v1/pods/{id}`).

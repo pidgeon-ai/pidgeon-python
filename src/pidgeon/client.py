@@ -628,6 +628,11 @@ class _Pods(_Group):
         """Rename a pod. Its id, and everything in it, stay as they are."""
         return self._c.request("PATCH", f"/v1/pods/{_seg(pod_id)}", {"name": name})
 
+    def move(self, pod_id: str, type: str, id: str) -> Json:
+        """Move an agent, an address (``inbox``), a domain, a webhook endpoint or a site
+        (by client id) into a pod. An agent takes its addresses and their mail with it."""
+        return self._c.request("POST", f"/v1/pods/{_seg(pod_id)}/move", {"type": type, "id": id})
+
     def remove(self, pod_id: str) -> None:
         """Remove an empty pod: not the default one, nor one with agents, domains or endpoints."""
         self._c.request("DELETE", f"/v1/pods/{_seg(pod_id)}")
@@ -662,17 +667,27 @@ class _Keys(_Group):
 
 
 class _Webhooks(_Group):
-    """Endpoints that hear about the whole account or listed inboxes; they take a key of the whole account."""
+    """Endpoints that hear about the whole account, one pod, or listed inboxes. A key of one pod
+    lists, adds and removes its own pod's only."""
 
     def list(self) -> Json:
         return self._c.request("GET", "/v1/webhooks")
 
-    def create(self, url: str, events: _Strings, inbox_ids: Optional[_Strings] = None) -> Json:
+    def create(
+        self,
+        url: str,
+        events: _Strings,
+        inbox_ids: Optional[_Strings] = None,
+        pod_id: Optional[str] = None,
+    ) -> Json:
         """``url`` is https; ``events`` the event types to send; ``inbox_ids``, if given,
-        the only inboxes it hears (otherwise the whole account). Answers the secret once."""
+        the only inboxes it hears; ``pod_id`` its pod (otherwise the default pod, which hears
+        the whole account). Answers the secret once."""
         body: dict[str, Any] = {"url": url, "events": events}
         if inbox_ids is not None:
             body["inbox_ids"] = inbox_ids
+        if pod_id is not None:
+            body["pod_id"] = pod_id
         return self._c.request("POST", "/v1/webhooks", body)
 
     def remove(self, webhook_id: str) -> None:
