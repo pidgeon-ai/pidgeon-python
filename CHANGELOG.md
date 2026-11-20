@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.12.0
+
+- Domains from the API: `client.domains.create(domain, pod_id=None)`, `.list()`, `.get(id)`,
+  `.verify(id)` and `.remove(id)` (`/v1/domains`). A key of one pod reaches its own pod's
+  domains only.
+
 ## 2.11.0
 
 - The description, keywords and README lead with what Pidgeon is now: email inboxes

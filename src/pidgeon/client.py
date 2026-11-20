@@ -137,6 +137,7 @@ class Pidgeon:
         self._owns_client = client is None
         self._client = client or httpx.Client(timeout=timeout)
         self.agents = _Agents(self)
+        self.domains = _PassportDomains(self)
         self.inboxes = _Inboxes(self)
         self.messages = _Messages(self)
         self.drafts = _Drafts(self)
@@ -940,7 +941,7 @@ class _Attachments(_Group):
 
 
 class _Domains(_Group):
-    """The account's proved domains and the mail on each (a key of the whole account)."""
+    """The account's proved domains and the mail on each; a key of one pod, its pod's."""
 
     def list(self) -> Json:
         return self._c.request("GET", "/v1/email/domains")
@@ -960,6 +961,31 @@ class _Domains(_Group):
     def check(self, domain_id: str) -> Json:
         """Ask SES and DNS where the domain stands now."""
         return self._c.request("POST", f"/v1/email/domains/{_seg(domain_id)}/check")
+
+
+class _PassportDomains(_Group):
+    """Your domains, waiting and proved (``/v1/domains``): add one, publish its
+    ``records``, verify it. A key of one pod reaches its own pod's only. Mail
+    on a proved domain is ``email.domains``."""
+
+    def list(self) -> Json:
+        return self._c.request("GET", "/v1/domains")
+
+    def get(self, domain_id: str) -> Json:
+        """One domain: whether it is proved, its mail, and every DNS record to publish."""
+        return self._c.request("GET", f"/v1/domains/{_seg(domain_id)}")
+
+    def create(self, domain: str, *, pod_id: Optional[str] = None) -> Json:
+        """Add a domain; answers it with the ``_pidgeon`` TXT record that proves it."""
+        return self._c.request("POST", "/v1/domains", body={"domain": domain, "pod_id": pod_id})
+
+    def verify(self, domain_id: str) -> Json:
+        """Look for the TXT record now; ``verified`` is true once it is found."""
+        return self._c.request("POST", f"/v1/domains/{_seg(domain_id)}/verify")
+
+    def remove(self, domain_id: str) -> None:
+        """Remove a domain; a proved one's mail is turned off first, and no inbox may be left at it."""
+        self._c.request("DELETE", f"/v1/domains/{_seg(domain_id)}")
 
 
 class _AppPasswords(_Group):
