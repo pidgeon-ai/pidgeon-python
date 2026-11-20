@@ -227,15 +227,18 @@ class Pidgeon:
         """
         Who stands behind an agent's request, and how they stand. Forward it as you received it.
 
-        ``result`` is one of four: ``verified`` (a Pidgeon operator's key; ``valid`` is True,
+        ``result`` is one of five: ``verified`` (a Pidgeon operator's key; ``valid`` is True,
         with ``agent``, ``operator`` and ``reputation``), ``signed_known`` (the signature holds
         against a directory outside Pidgeon on Pidgeon's recognised list), ``signed_unknown``
-        (it holds against a directory nobody vouches for) or ``refused`` (unsigned, a bad
+        (it holds against a directory nobody vouches for), ``declared`` (unsigned, but its
+        User-Agent names an agent on Pidgeon's list; ``declared`` has its ``name``,
+        ``operator``, ``purpose`` and ``ip``: ``confirmed`` or ``mismatch`` against the
+        vendor's published addresses, or ``unchecked``) or ``refused`` (unsigned, a bad
         signature, expired, revoked or replayed; see ``reason``). The two signed results name
         the directory in ``signature_agent`` (``directory``, ``host``, ``operator``) and keep
         ``valid`` False with ``reason`` ``unknown_key``, as before.
 
-        Every result but ``refused`` carries ``verdict``: the same, signed by Pidgeon for five
+        Every result but ``declared`` and ``refused`` carries ``verdict``: the same, signed by Pidgeon for five
         minutes, to hand a sign-up hook (``pidgeon.verdict``). ``ip``, the agent's address as
         your server saw it, is written into it.
 
@@ -267,6 +270,18 @@ class Pidgeon:
         if ip:
             body["ip"] = ip
         return self._call("/v1/verify/verdict", body)
+
+    def record_visits(self, visits: list[dict[str, Any]]) -> Json:
+        """
+        Record visits of agents that only name themselves in their User-Agent (ChatGPT-User,
+        Claude-User, ...), up to 100 at a time, after the responses: each a dict with
+        ``method``, ``url`` (leave the query string out; it is never stored), ``user_agent``
+        and, optionally, ``ip`` (checked against the vendor's published addresses, not
+        stored), ``place`` and ``at`` (ISO 8601, within the last hour). Stored as ``declared``
+        and not counted as verifications; a User-Agent not on Pidgeon's list is skipped.
+        Answers ``recorded`` and ``skipped``. Send signed requests to ``verify``.
+        """
+        return self._call("/v1/visits", {"visits": visits})
 
     def report(self, verification_id: str, category: ReportCategory, evidence: str) -> Json:
         """Report an agent from one of your verifications: what it did, in your words."""
