@@ -1,13 +1,13 @@
 [project]
 name = "llama-index-tools-pidgeon"
-version = "1.0.0"
-description = "Pidgeon for LlamaIndex agents: an inbox of the agent's own, its identity and reputation, and checking who stands behind an agent's request."
+version = "1.0.1"
+description = "Email inboxes for AI agents, as a LlamaIndex tool spec: send, wait for the reply and answer in the thread, on @pidgeon.email or your domain."
 readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.11"
 authors = [{ name = "Pidgeon" }]
-keywords = ["llama-index", "pidgeon", "ai-agents", "email", "inbox", "web-bot-auth"]
+keywords = ["email", "inbox", "ai-agents", "agent-email", "llama-index", "pidgeon"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Operating System :: OS Independent",

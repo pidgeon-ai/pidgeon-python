@@ -107,17 +107,17 @@ def _seg(value: str) -> str:
 
 class Pidgeon:
     """
-    The client for Pidgeon's API: the website's, the operator's, and a coding
-    agent's. Keep the API key on a server.
+    The client for Pidgeon's API: email inboxes for AI agents, pods, agents
+    and Sign in with Pidgeon. Keep the API key on a server.
 
     ``api_key`` is an API key (``pgn_…``) or an OAuth access token. ``client``
     is an optional ``httpx.Client`` to send through (for proxies, timeouts or
     tests); the Pidgeon client closes only one it made itself.
 
-    The products' calls are grouped: ``agents`` (Passport), ``email`` (inboxes,
-    messages, threads, labels, contacts, attachments, domains, the calendar
-    and more), ``sites`` and ``mandates`` (Auth), ``events``, ``keys``, ``webhooks`` and
-    ``pods`` (the account); ``verify`` and ``report`` are Bouncer's. Email's
+    The calls are grouped: ``email`` (inboxes, messages, threads, labels,
+    contacts, attachments, domains, the calendar and more), ``pods``,
+    ``events``, ``keys`` and ``webhooks`` (the account), ``agents``, and
+    ``sites`` and ``mandates`` (Sign in with Pidgeon). Email's
     first groups are also on the client itself (``inboxes``, ``messages``,
     ``drafts``, ``rules``, ``suppressions``), as in 2.0.
     """

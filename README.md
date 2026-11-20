@@ -1,17 +1,11 @@
 # pidgeon
 
-Pidgeon's Python SDK for its four products: Passport (your agents' keys and
-reputation), Bouncer (verify agents at your site), Email (inboxes for agents)
-and Auth (Sign in with Pidgeon).
+Email inboxes for AI agents. Give each agent its own address on
+@pidgeon.email or your own domain, or give every user of your platform inboxes
+of their own. Plus Sign in with Pidgeon. https://pidgeon.ai
 
 Version 2 is for the new Pidgeon. Code written for 1.x (the old email API at
 `/api/v1`) keeps working on 1.68.0 until that API is retired.
-
-An agent signs each request with its own Ed25519 key under
-[Web Bot Auth](https://datatracker.ietf.org/wg/webbotauth/about/) (HTTP Message
-Signatures, RFC 9421). The signature names the operator's directory on
-Pidgeon, so a website can tell who stands behind the agent and how they stand.
-The output is byte for byte what the TypeScript SDK (`@pidgeon-ai/sdk`) sends.
 
 ```sh
 pip install pidgeon
@@ -19,7 +13,88 @@ pip install pidgeon
 
 Python 3.10 or later. Depends on `cryptography` and `httpx`.
 
-## For an agent
+## Give an agent an inbox
+
+Everything Email does is under `pidgeon.email`; each call answers the API's
+JSON as a `dict`. Create an inbox, send, and wait for the reply:
+
+```python
+from pidgeon import Pidgeon
+
+pidgeon = Pidgeon(api_key="pgn_…")
+inbox = pidgeon.email.inboxes.create("bookings")  # bookings@pidgeon.email
+
+# Send, with a file:
+pdf = pidgeon.email.attachments.upload(inbox["id"], "menu.pdf")
+pidgeon.email.messages.send(inbox["id"], to=["ana@example.com"], subject="Table for two",
+                            text="Friday at 8?", attachment_ids=[pdf["id"]])
+
+# Wait for the answer (up to 50 seconds a call), then read it cleaned:
+got = pidgeon.email.messages.wait(inbox["id"], timeout=50)
+for message in got["data"]:
+    pidgeon.email.messages.get(message["id"], body="clean")
+    pidgeon.email.messages.update(message["id"], seen=True)
+
+# A person looks first:
+draft = pidgeon.email.drafts.create(inbox["id"], to=["ana@example.com"], subject="…", text="…")
+pidgeon.email.drafts.request_approval(draft["id"])
+
+# Hand a conversation to a person:
+thread = pidgeon.email.threads.list(inbox_id=inbox["id"], status="open")["data"][0]
+pidgeon.email.threads.update(thread["id"], owner_type="human", status="human_review")
+```
+
+On your own domain, pass `domain="example.com"` once mail is on for it
+(`pidgeon.email.domains.enable_mail`).
+
+Also under `pidgeon.email`: `messages.list`, `search(q)`, `threads`
+(`get`, `remove`, `add_label`, `remove_label`), `labels`, `contacts`,
+`attachments.upload_large` (up to 25 MB: describe, put and complete in one
+call) and `attachments.get`, `storage()`, `inboxes.update(hold_suspicious=True)`,
+`domains` (`enable_mail`, `disable_mail`, `check`), `app_passwords` for mail
+apps, `calendar.events`, `rules`, `suppressions`, and `test_inbound` (with a
+test key, deliver mail to your inbox as if someone sent it).
+
+Errors raise `PidgeonError` with `status`, `code` and `message`. A PATCH
+sends only the fields you pass; `None` clears one that can be cleared
+(`contacts.update(id, notes=None)`).
+
+`pidgeon.webhooks` (`list`, `create`, `remove`) adds endpoints for the
+account's events; check their signatures with `verify_webhook`. Also
+`pidgeon.sites` and `pidgeon.mandates` (Sign in with Pidgeon), `pidgeon.events`,
+`pidgeon.pods`, and `pidgeon.request(method, path, body)` for any `/v1` call.
+
+## For platforms
+
+Give every user of your platform inboxes of their own, white-labelled on their
+own domain. Each user gets a pod; a key of that pod reaches only its mail.
+
+```python
+pod = pidgeon.pods.create("Acme Ltd")
+# acme.com is the user's domain, with mail on, in their pod.
+inbox = pidgeon.email.inboxes.create("support", pod_id=pod["id"], domain="acme.com")
+key = pidgeon.keys.create("Acme", access="send", pod_id=pod["id"])["key"]
+```
+
+## Sign in with Pidgeon
+
+Agents sign in to websites as themselves, with a key of their own.
+
+### Set an agent up
+
+Set an agent up in one call: it is registered, its key is made here, and only
+the public half is published, in a request signed with the key itself (which
+is how Pidgeon knows you hold it).
+
+```python
+made = pidgeon.agents.set_up("Booking agent", "Books tables.")
+made.key.private_jwk    # keep it where the agent runs; Pidgeon never sees it
+```
+
+Or by hand: `generate_agent_key()` (`key.kid`, `key.public_jwk`,
+`key.private_jwk`), then `pidgeon.publish_key(agent_id, key, directory)`.
+
+### Sign its requests
 
 Your agent's page on pidgeon.ai gives you `PIDGEON_AGENT_KEY` and
 `PIDGEON_DIRECTORY`. Then every request you send through the client is signed:
@@ -49,35 +124,12 @@ method, path and query, carries a new nonce, and lasts a minute. Pidgeon
 accepts a signature once, so sign again to retry; never resend old signature
 headers.
 
-## For a website
+An agent's key id is the key's RFC 7638 JWK thumbprint.
 
-Forward the request as you received it; Pidgeon checks the signature and
-answers with the agent, its operator and their reputation.
+### Your site
 
-```python
-from pidgeon import Pidgeon, PidgeonError
-
-pidgeon = Pidgeon(api_key="pgn_…")
-
-answer = pidgeon.verify(request.method, request.url, request.headers)
-if answer["valid"] and answer["reputation"]["band"] in ("new", "good"):
-    ...
-
-pidgeon.report(answer["verification_id"], "fake_signups", "Forty signups in a minute.")
-```
-
-`answer["result"]` is one of four: `verified` (a Pidgeon operator's agent,
-the only one with `valid` True), `signed_known` (a key from an outside
-directory Pidgeon recognises, named in `answer["signature_agent"]["operator"]`),
-`signed_unknown` (an outside directory nobody vouches for) and `refused`
-(unsigned, a bad signature, expired, revoked or replayed).
-
-Errors raise `PidgeonError` with `status`, `code` and `message`.
-
-Checking only the signature is free and offline: `verify_agent_request(method,
-url, headers, find_key)` takes a function from key id to public JWK.
-
-## Sign in with Pidgeon
+Register it with `pidgeon.sites.create(name, redirect_uris)`, and ask a person
+to let your agent act for them with `pidgeon.mandates.create(…)`.
 
 People sign in to your site with any OpenID Connect library: the issuer is
 `https://pidgeon.ai`, with the client id and secret you registered. Check an ID
@@ -115,70 +167,6 @@ id_jag = request_id_jag("https://auth.example.com", "https://agent.example.com/o
                         key.private_jwk, "https://acme.agents.pidgeon.ai",
                         resource="https://mcp.example.com/mcp")
 ```
-
-## For an operator's tooling
-
-Set an agent up in one call: it is registered, its key is made here, and only
-the public half is published, in a request signed with the key itself (which
-is how Pidgeon knows you hold it).
-
-```python
-from pidgeon import Pidgeon
-
-pidgeon = Pidgeon(api_key="pgn_…")
-made = pidgeon.agents.set_up("Booking agent", "Books tables.")
-made.key.private_jwk    # keep it where the agent runs; Pidgeon never sees it
-pidgeon.agents.get(made.agent["id"])["reputation"]["band"]
-```
-
-Or by hand: `generate_agent_key()` (`key.kid`, `key.public_jwk`,
-`key.private_jwk`), then `pidgeon.publish_key(agent_id, key, directory)`.
-
-## Email
-
-Everything Email does is under `pidgeon.email`; each call answers the API's
-JSON as a `dict`.
-
-```python
-inbox = pidgeon.email.inboxes.create("bookings", agent_id=made.agent["id"])
-
-# Send, with a file:
-pdf = pidgeon.email.attachments.upload(inbox["id"], "menu.pdf")
-pidgeon.email.messages.send(inbox["id"], to=["ana@example.com"], subject="Table for two",
-                            text="Friday at 8?", attachment_ids=[pdf["id"]])
-
-# Wait for the answer (up to 50 seconds a call), then read it cleaned:
-got = pidgeon.email.messages.wait(inbox["id"], timeout=50)
-for message in got["data"]:
-    pidgeon.email.messages.get(message["id"], body="clean")
-    pidgeon.email.messages.update(message["id"], seen=True)
-
-# A person looks first:
-draft = pidgeon.email.drafts.create(inbox["id"], to=["ana@example.com"], subject="…", text="…")
-pidgeon.email.drafts.request_approval(draft["id"])
-
-# Hand a conversation to a person:
-thread = pidgeon.email.threads.list(inbox_id=inbox["id"], status="open")["data"][0]
-pidgeon.email.threads.update(thread["id"], owner_type="human", status="human_review")
-```
-
-Also under `pidgeon.email`: `messages.list`, `search(q)`, `threads`
-(`get`, `remove`, `add_label`, `remove_label`), `labels`, `contacts`,
-`attachments.upload_large` (up to 25 MB: describe, put and complete in one
-call) and `attachments.get`, `storage()`, `inboxes.update(hold_suspicious=True)`,
-`domains` (`enable_mail`, `disable_mail`, `check`), `app_passwords` for mail
-apps, `calendar.events`, `rules`, `suppressions`, and `test_inbound` (with a
-test key, deliver mail to your inbox as if someone sent it).
-
-A PATCH sends only the fields you pass; `None` clears one that can be cleared
-(`contacts.update(id, notes=None)`).
-
-`pidgeon.webhooks` (`list`, `create`, `remove`) adds endpoints for the
-account's events; check their signatures with `verify_webhook`. Also
-`pidgeon.sites` and `pidgeon.mandates` (Auth), `pidgeon.events`,
-`pidgeon.pods`, and `pidgeon.request(method, path, body)` for any `/v1` call.
-
-The key id is the key's RFC 7638 JWK thumbprint.
 
 ## License
 

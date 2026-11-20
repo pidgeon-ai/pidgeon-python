@@ -1,16 +1,17 @@
 [project]
 name = "pidgeon"
-version = "2.10.0"
-description = "Pidgeon's Python SDK: Passport, Bouncer, Email and Auth. Sign your agents' requests, verify agents at your site, send from agent inboxes, and Sign in with Pidgeon."
+version = "2.11.0"
+description = "Pidgeon's Python SDK. Email inboxes for AI agents: give each agent its own address on @pidgeon.email or your domain, or white-label inboxes for every user of your platform. Plus Sign in with Pidgeon."
 readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.10"
 authors = [{ name = "Pidgeon" }]
-keywords = ["ai-agents", "web-bot-auth", "http-message-signatures", "rfc9421", "ed25519"]
+keywords = ["email", "inbox", "ai-agents", "agent-email", "multi-tenant", "white-label", "email-api", "openid-connect"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Operating System :: OS Independent",
+  "Topic :: Communications :: Email",
   "Topic :: Internet :: WWW/HTTP",
   "Topic :: Security :: Cryptography",
 ]

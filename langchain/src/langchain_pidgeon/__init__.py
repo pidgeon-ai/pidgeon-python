@@ -1,4 +1,4 @@
-"""Pidgeon for LangChain agents: an inbox of its own, its identity, and checking a request."""
+"""Pidgeon for LangChain agents: an email inbox of its own, and a key for Sign in with Pidgeon."""
 
 from langchain_pidgeon._version import __version__
 from langchain_pidgeon.toolkit import PidgeonToolkit

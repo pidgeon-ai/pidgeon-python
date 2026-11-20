@@ -1,25 +1,17 @@
 """
-Pidgeon's Python SDK.
+Pidgeon's Python SDK: email inboxes for AI agents.
 
-For an agent: ``signed_client`` or ``agent_from_env().client()`` signs every
-request with the agent's key, so a website that checks can tell who stands
-behind it.
+``Pidgeon(api_key).email`` is Email: inboxes on @pidgeon.email or your own
+domain, messages, waiting for mail, threads, labels, contacts, attachments,
+domains and calendars. For a platform, ``.pods`` gives each of your users
+inboxes of their own; ``.keys``, ``.webhooks`` and ``.events`` are the account.
 
-For a website: ``Pidgeon(api_key).verify(method, url, headers)`` asks Pidgeon
-who stands behind an agent's request and how they stand; ``.report()``
-reports one that misbehaved.
-
-Sign in with Pidgeon (``pidgeon.auth``): ``sign_in_as_agent`` for an agent,
-``verify_id_token`` and ``verify_agent_sign_in`` for a site.
-
-Verdicts at sign-up (``pidgeon.verdict``): ``verify_verdict`` checks the
-verdict ``verify`` answered, offline, in a hook that cannot see the request.
-
-For an operator's tooling and coding agents: ``.agents.set_up()`` registers
-an agent, makes its key here and publishes the public half; ``.email`` is
-Email (inboxes, messages, threads, labels, contacts, attachments, domains,
-calendars); ``.sites`` and ``.mandates`` are Auth; ``.events``, ``.webhooks``
-and ``.pods`` are the account.
+Sign in with Pidgeon: ``.agents.set_up()`` registers an agent, makes its key
+here and publishes the public half; ``signed_client`` or
+``agent_from_env().client()`` signs its requests; ``pidgeon.auth`` has
+``sign_in_as_agent`` for an agent, and ``verify_id_token`` and
+``verify_agent_sign_in`` for a site. ``.sites`` and ``.mandates`` register
+sites and ask people's permission.
 """
 
 from . import auth, verdict
@@ -49,7 +41,7 @@ from .credential import (
     verify_agent_request,
 )
 
-__version__ = "2.10.0"
+__version__ = "2.11.0"
 
 from .webhooks import sign_webhook, verify_webhook
 

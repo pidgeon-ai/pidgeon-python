@@ -1,13 +1,13 @@
 [project]
 name = "langchain-pidgeon"
-version = "1.0.0"
-description = "Pidgeon for LangChain agents: an inbox of the agent's own, its identity and reputation, and checking who stands behind an agent's request."
+version = "1.0.1"
+description = "Email inboxes for AI agents, as LangChain tools: send, wait for the reply and answer in the thread, on @pidgeon.email or your domain."
 readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.11"
 authors = [{ name = "Pidgeon" }]
-keywords = ["langchain", "langgraph", "pidgeon", "ai-agents", "email", "inbox", "web-bot-auth"]
+keywords = ["email", "inbox", "ai-agents", "agent-email", "langchain", "langgraph", "pidgeon"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Operating System :: OS Independent",

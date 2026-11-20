@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+
+- The description, keywords and README lead with email inboxes for AI agents.
+  `verify_request` still works and is no longer listed.
+
 ## 1.0.0
 
 Rebuilt for the new Pidgeon, on the `pidgeon` SDK 2.x (`/v1`). Nothing of

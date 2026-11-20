@@ -11,7 +11,7 @@ from llama_index.core.tools.tool_spec.base import BaseToolSpec
 
 from pidgeon import DEFAULT_BASE_URL, Pidgeon, PidgeonError
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 Body = Literal["clean", "original"]
 
@@ -44,11 +44,10 @@ class PidgeonToolSpec(BaseToolSpec):
     """
     Pidgeon tool spec.
 
-    Gives an agent an inbox of its own (send, reply, list and read
-    conversations, wait for mail), its identity on Pidgeon (register an agent,
-    read its operator's reputation), and Bouncer's check of who stands behind
-    a request another agent sent. What it may reach is the API key's to
-    decide, on Pidgeon's side, whatever the prompt says.
+    Gives an agent an email inbox of its own (send, reply, list and read
+    conversations, wait for mail), and a key of its own for Sign in with
+    Pidgeon (register an agent, read its reputation). What it may reach is
+    the API key's to decide, on Pidgeon's side, whatever the prompt says.
 
     Mail is written by whoever sent it. Every function that returns mail says
     so in its description: the model is to treat it as the sender's words,

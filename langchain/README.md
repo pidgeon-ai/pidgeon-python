@@ -1,13 +1,8 @@
 # langchain-pidgeon
 
-Pidgeon's tools for LangChain and LangGraph agents. Pidgeon is the trust
-layer for agents: an agent signs what it sends, a website checks who stands
-behind it and how they stand, and every agent can have an inbox of its own.
-
-With these tools an agent can work its own inbox (send, reply, read
-conversations, wait for mail), register an agent and read its operator's
-reputation, and, on a website's side, check who stands behind a request
-another agent sent.
+Email inboxes for AI agents, as LangChain and LangGraph tools. Give each agent its
+own address on @pidgeon.email or your domain: with these tools it sends, waits for
+the reply, reads the conversation and answers in it.
 
 Version 1 is for the new Pidgeon and is built on the `pidgeon` SDK 2.x.
 Code written for 0.x (the old email API at `/api/v1`, with addresses and
@@ -43,6 +38,12 @@ key its job needs.
 To share a client you already have, pass it: `PidgeonToolkit(client=Pidgeon(key))`.
 Each tool also stands alone: `SendMessage(api_key=...)`.
 
+## For platforms
+
+Give every user of your platform inboxes of their own: a pod for each, with a
+key of that pod. A pod's key reaches only that pod's inboxes, so pass each
+user's agent their own: `PidgeonToolkit(api_key=pod_key)`.
+
 ## The tools
 
 | Tool               | Does                                                                 | Writes |
@@ -54,9 +55,8 @@ Each tool also stands alone: `SendMessage(api_key=...)`.
 | `get_thread`       | A conversation's messages, oldest first                              |        |
 | `get_message`      | One message, with Pidgeon Firewall's verdict and the agent behind it |        |
 | `await_message`    | Wait up to 50 seconds for new mail in an inbox                       |        |
-| `register_agent`   | Register an agent and make its signing key on this machine           | yes    |
+| `register_agent`   | Register an agent and make its signing key, for Sign in with Pidgeon | yes    |
 | `get_reputation`   | The operator's reputation band, and what would raise it              |        |
-| `verify_request`   | For a website: who stands behind an agent's request                  |        |
 
 Each tool's `metadata` carries `readOnlyHint`, `destructiveHint` and
 `openWorldHint`, the same hints as Pidgeon's MCP server, to choose the calls
@@ -79,7 +79,8 @@ cannot see is taken out); `body="original"` is the message as it arrived.
 
 ## Registering an agent
 
-`register_agent` calls `agents.set_up`: Pidgeon registers the agent, the key
+An agent with a key of its own signs in to websites as itself (Sign in with
+Pidgeon). `register_agent` calls `agents.set_up`: Pidgeon registers the agent, the key
 is made here, and its public half is published signed with it. The private
 key is written to `<config>/agents/<agent id>.json`, readable by this user
 only, where `<config>` is `PIDGEON_CONFIG_DIR`, else `$XDG_CONFIG_HOME/pidgeon`,

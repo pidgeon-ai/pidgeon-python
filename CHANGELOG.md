@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.11.0
+
+- The description, keywords and README lead with what Pidgeon is now: email inboxes
+  for AI agents, pods for platforms, then Sign in with Pidgeon.
+- Declared agents: `verify` answers a fifth `result`, `declared`, for an unsigned request
+  whose User-Agent names an AI agent on Pidgeon's list (ChatGPT-User, Claude-User, …), with
+  `declared` (`name`, `operator`, `purpose`, and `ip`: `confirmed`, `mismatch` or
+  `unchecked`). Never `valid`, and no verdict.
+- `client.record_visits(visits)` (`POST /v1/visits`): record up to 100 visits of declared
+  agents after the responses. Not counted as verifications.
+
 ## 2.10.0
 
 - Site rules for Bouncer: `client.site_rules.get()` and `.set(rules)` (`/v1/site-rules`).

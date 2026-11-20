@@ -12,7 +12,7 @@ from langchain_pidgeon.tools import TOOLS, RegisterAgent, client_from_env
 
 
 class PidgeonToolkit(BaseToolkit):
-    """Pidgeon's tools for one API key: the agent's inbox, its identity, and checking a request.
+    """Pidgeon's tools for one API key: the agent's email inbox, and its Sign in with Pidgeon key.
 
     The key is the access control: it decides, on Pidgeon's side, which
     inboxes a tool reaches and whether it may send, whatever the prompt says.
