@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.13.0
+
+- `client.inboxes.set_agent(inbox_id, agent_id)`: link an existing inbox to an agent
+  identity in its pod, so its mail is signed as that agent, or pass `None` to unlink it.
+  Needs `admin` and a verified domain.
+- `client.agents` is described as agent identities; linking an inbox to one stays
+  optional. `domains.list` and `domains.remove` say what they do now.
+
 ## 2.12.0
 
 - Domains from the API: `client.domains.create(domain, pod_id=None)`, `.list()`, `.get(id)`,

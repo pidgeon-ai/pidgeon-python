@@ -309,38 +309,40 @@ class _Group:
 
 
 class _Agents(_Group):
+    """Agent identities (once Passport): optional; an inbox works without one."""
+
     def list(self, *, limit: Optional[int] = None, cursor: Optional[str] = None) -> Json:
         return self._c.request("GET", "/v1/agents", query={"limit": limit, "cursor": cursor})
 
     def create(self, name: str, purpose: str = "", *, pod_id: Optional[str] = None) -> Json:
-        """Register an agent. It has no key until you make one where it runs and publish it."""
+        """Register an agent identity. It has no key until you make one where it runs and publish it."""
         return self._c.request(
             "POST", "/v1/agents", _drop_none({"name": name, "purpose": purpose, "pod_id": pod_id})
         )
 
     def get(self, agent_id: str) -> Json:
-        """The agent, its keys, its directory and its operator's reputation."""
+        """The agent identity, its keys, its directory and its operator's reputation."""
         return self._c.request("GET", f"/v1/agents/{_seg(agent_id)}")
 
     def update(
         self, agent_id: str, *, name: Optional[str] = None, purpose: Optional[str] = None
     ) -> Json:
-        """Rename the agent, or change what it does: what websites see when it arrives."""
+        """Rename the agent identity, or change what its agent does: what websites see when it arrives."""
         return self._c.request(
             "PATCH", f"/v1/agents/{_seg(agent_id)}", _drop_none({"name": name, "purpose": purpose})
         )
 
     def revoke(self, agent_id: str) -> None:
-        """Revoke the agent and every key it has. None verifies again; it cannot be undone."""
+        """Revoke the agent identity and every key it has. None verifies again; it cannot be undone."""
         self._c.request("DELETE", f"/v1/agents/{_seg(agent_id)}")
 
     def revoke_key(self, agent_id: str, kid: str) -> None:
-        """Revoke one of the agent's keys, by its ``kid``. Its other keys stay."""
+        """Revoke one of the agent identity's keys, by its ``kid``. Its other keys stay."""
         self._c.request("DELETE", f"/v1/agents/{_seg(agent_id)}/keys/{_seg(kid)}")
 
     def set_up(self, name: str, purpose: str = "", *, pod_id: Optional[str] = None) -> "AgentSetUp":
         """
-        Register an agent, make its key here, and publish the public half signed
+        Register an agent identity, make its key here, and publish the public half signed
         with it. Keep ``key.private_jwk`` where the agent runs: Pidgeon never sees it.
         """
         agent = self.create(name, purpose, pod_id=pod_id)
@@ -379,8 +381,9 @@ class _Inboxes(_Group):
     ) -> Json:
         """
         ``name`` is the part before the @; ``domain`` one of the account's
-        mail domains (left out, the account's address on Pidgeon). Bind an
-        agent's inbox to it with ``agent_id``.
+        mail domains (left out, the account's address on Pidgeon). Optionally
+        link it to an agent identity with ``agent_id``: its mail is then signed
+        as that agent.
         """
         return self._c.request(
             "POST",
@@ -405,6 +408,13 @@ class _Inboxes(_Group):
         address; ``None`` clears it. Needs ``admin``."""
         return self._c.request(
             "PATCH", f"/v1/email/inboxes/{_seg(inbox_id)}", {"signature": signature}
+        )
+
+    def set_agent(self, inbox_id: str, agent_id: Optional[str]) -> Json:
+        """Link the inbox to an agent identity in its pod, so its mail is signed
+        as that agent; ``None`` unlinks it. Needs ``admin`` and a verified domain."""
+        return self._c.request(
+            "PATCH", f"/v1/email/inboxes/{_seg(inbox_id)}", {"agent_id": agent_id}
         )
 
     def remove(self, inbox_id: str) -> None:
